@@ -1,0 +1,42 @@
+@import "theme";
+.card {
+    border-radius: 16px;
+    box-shadow: 0px 8px 8px 0px #00000017;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 256px;
+    justify-content: center;
+    margin-bottom: 5px;
+    padding: 32px 16px;
+    width: 269px;
+    &__text {
+        color: map-get($primary-color, 500);
+        font-family: "g-bold", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        text-align: center;
+    }
+    &__span {
+        color: map-get($primary-color, 300);
+        font-family: "g-bold", sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+        letter-spacing: 0em;
+        line-height: 25px;
+        text-align: center;
+    }
+    &__title {
+        color: map-get($primary-color, 500);
+        font-family: "g-bold", sans-serif;
+        font-size: 64px;
+        font-weight: 400;
+        text-align: center;
+    }
+    &__box{
+        & > h2{
+            font-size: 32px;
+        }
+    }
+}

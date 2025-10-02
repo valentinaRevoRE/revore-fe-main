@@ -1,0 +1,33 @@
+.login {
+    &__intro {
+        margin-bottom: 48px;
+    }
+
+    &__title {
+        margin-bottom: 13px;
+    }
+    &__welcome {
+        margin-top: 16px;
+        margin-bottom: 52px;
+    }
+    .form {
+        &__input-last {
+            margin-bottom: 33px;
+        }
+        &__label {
+            margin-bottom: 14px;
+        }
+        &__options {
+            margin-bottom: 36px;
+        }
+        &__submit {
+            margin-bottom: 30px;
+        }
+    }
+    &__outro {
+        margin-bottom: 34px;
+    }
+    &__separator {
+        margin-bottom: 40px;
+    }
+}

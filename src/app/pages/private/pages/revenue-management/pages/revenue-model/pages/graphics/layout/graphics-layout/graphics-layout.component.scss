@@ -1,0 +1,13 @@
+.graphics {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 50px;
+    width: 100%;
+    &__container{
+        min-width: 560px;
+    }
+    .loading-icon{
+        filter: none;
+    }
+}

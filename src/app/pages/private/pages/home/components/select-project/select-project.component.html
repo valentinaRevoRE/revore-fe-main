@@ -1,0 +1,12 @@
+<p-dialog [(visible)]="visible" [modal]="true" [closable]="false" (onHide)="closeModal()" [closable]="closable">
+    <br><br>
+    <h2 class="modalform__title">Selecciona un proyecto para continuar</h2>
+    <section class="projects">
+        @for (project of projects; track project._id) {
+            <button class="projects__card" (click)="activeProject(project._id)">
+                <img class="projects__img" src="/assets/home/project.webp" alt="Project cover">
+                <h4>{{ project.name }} </h4>
+            </button>
+        }
+    </section>
+</p-dialog>

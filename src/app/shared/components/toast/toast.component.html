@@ -1,0 +1,11 @@
+<section [ngClass]="{
+    'isOpenToast': !data.isOpen,
+    'toast': true,
+    'toast-success': data.type === 'success',
+    'toast-warning': data.type === 'warning',
+    'toast-error': data.type === 'error',
+    }">
+    <img class="toast__img" [src]="iconUrl" alt="Icono toast">
+    <p class="toast__text">{{ data.message }} </p>
+    <button class="toast__button" (click)="closeToast()">Ok</button>
+</section>

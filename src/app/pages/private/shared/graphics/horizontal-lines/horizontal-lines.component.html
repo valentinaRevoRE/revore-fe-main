@@ -1,0 +1,9 @@
+<div class="graphic">
+    <h3 class="graphic__title"> {{ title }} </h3>
+    @if (graphicData.colums.length == 0) {
+        <p class="graphic__text">Aún no tenemos datos para representarlos en la gráfica.</p>
+    }
+    <div [id]="containerID" class="graphic__table" style="width: 492px; height: 318px;">
+
+    </div>
+</div>

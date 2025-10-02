@@ -1,0 +1,21 @@
+.modalform{
+    min-height: 500px;
+    &__btncont{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    &__group {
+        min-height: 0;
+        &-inline{
+            & label{
+                width: 20%;
+            }
+            & input{
+                width: 78%;
+                text-align: left;
+                padding: 22px 29px;
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+.login {
+    &__logo {
+        margin-bottom: 36px;
+    }
+    &__intro {
+        margin-bottom: 48px;
+    }
+    &__title {
+        margin-bottom: 13px;
+    }
+    &__welcome {
+        margin-bottom: 52px;
+        margin-top: 72px;
+    }
+    .form {
+        &__input-last {
+            margin-bottom: 15px;
+        }
+        &__label {
+            margin-bottom: 14px;
+        }
+        &__options {
+            margin-bottom: 36px;
+        }
+        &__submit {
+            margin-bottom: 30px;
+        }
+    }
+    &__outro {
+        margin-bottom: 34px;
+    }
+    &__separator {
+        margin-bottom: 40px;
+    }
+}

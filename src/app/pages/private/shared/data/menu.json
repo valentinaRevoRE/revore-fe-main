@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Home",
+    "icon": "home.svg",
+    "link": "/dashboard/home",
+    "active": true,
+    "children": []
+  },
+  {
+    "name": "Revenue Management",
+    "icon": "diagram.svg",
+    "link": "/dashboard/revenue-management",
+    "active": true,
+    "children": [
+      {
+        "name": "Mi dashboard",
+        "link": "/dashboard/revenue-management/dashboard",
+        "active": true
+      },
+      {
+        "name": "Reportes",
+        "link": "/dashboard/revenue-management/reportes",
+        "active": true
+      },
+      {
+        "name": "Modelo Revenue",
+        "link": "/dashboard/revenue-management/revenue-model/finantial",
+        "active": true
+      }
+    ]
+  },
+  {
+    "name": "Sales Tools",
+    "icon": "moneys.svg",
+    "link": "/dashboard/sales-tools",
+    "active": true,
+    "children": []
+  },
+  {
+    "name": "Product Definition",
+    "icon": "box.svg",
+    "link": "/dashboard/product-definition",
+    "active": true,
+    "children": []
+  },
+  {
+    "name": "Marketing",
+    "icon": "monitor-mobbile.svg",
+    "link": "/dashboard/marketing",
+    "active": true,
+    "children": [{}, {}]
+  }
+]

@@ -1,0 +1,44 @@
+<div class="table">
+    <div class="table__col">
+        @for (row of tableHeader; track $index) {
+            <div class="table__row table__row-header">
+                {{ row }}
+                <img src="/assets/icons/arrow-down.svg" alt="Flecha abajo" />
+            </div>
+        }
+        @if (tableBody.length > 0 && !isLoading) {
+        @for (col of tableBody; track $index) {
+            <div class="table__row table__row-body">{{ col.entrysTarget | currency }}</div>
+            <div class="table__row table__row-body">{{ col.sales | currency }}</div>
+            <div class="table__row table__row-body">{{ col.priceList | currency }}</div>
+            <div class="table__row table__row-body">{{ col.accumulatedNPV | currency}}</div>
+            <div class="table__row table__row-body">{{ col.currentRevenue | currency}}</div>
+            <div class="table__row table__row-body">{{ col.revenueSimulations | currency}}</div>
+            <!-- <div class="table__row table__row-body">{{ col.currentMarket25 }}</div>
+            <div class="table__row table__row-body">{{ col.currentMarket75 }}</div>
+            <div class="table__row table__row-body">{{ col.finalMarket25 }}</div>
+            <div class="table__row table__row-body">{{ col.finalMarket75 }}</div>
+            <div class="table__row table__row-body">{{ col.simulatedAppreciation }}</div> -->
+            <div class="table__row table__row-body">{{ col.currentPricePerM2 | currency }}</div>
+            <div class="table__row table__row-body">{{ col.finalPricePerM2 | currency }}</div>
+            <!-- <div class="table__row table__row-body">{{ col.currentPrice25 | currency }}</div>
+            <div class="table__row table__row-body">{{ col.currentPrice75 | currency }}</div>
+            <div class="table__row table__row-body">{{ col.finalPrice25 | currency }}</div>
+            <div class="table__row table__row-body">{{ col.finalPrice75 | currency }}</div> -->
+            <div class="table__row table__row-body">{{ col.currentAveragePrice| currency }}</div>
+            <div class="table__row table__row-body">{{ col.finalAveragePrice | currency }}</div>
+        }
+        } 
+        @if(tableBody.length == 0 && !isLoading) {
+            <div class="table__row table__row-body table__row-loading">
+              Aún no tenemos precios para mostrar
+            </div>
+          } 
+      
+          @if(tableBody.length == 0 && isLoading) {
+            <div class="table__row table__row-body table__row-loading">
+              <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+            </div>
+          }
+    </div>
+</div>

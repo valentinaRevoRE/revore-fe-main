@@ -1,0 +1,32 @@
+@import "theme";
+.projects {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    width: 630px;
+    min-height: 500px;
+    &__card {
+        align-items: center;
+        border-radius: 16px;
+        box-shadow: 0 8px 8px #00000017;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: 150px;
+        justify-content: center;
+        padding: 10px;
+        width: 150px;
+        &:hover{
+            cursor: pointer;
+            border: 2px solid map-get($secondary-color, 500);
+        }
+    }
+    &__img {
+        width: 100px;
+        height: 100px;
+        border-radius: 7px;
+    }
+}

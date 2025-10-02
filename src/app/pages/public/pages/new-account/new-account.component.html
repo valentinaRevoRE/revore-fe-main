@@ -1,0 +1,84 @@
+<div class="login">
+  <img class="login__logo" src="/assets/logo.png" alt="Logo Revore" />
+  <p class="login__welcome">¡Bienvenido!</p>
+  <h1 class="login__title">Crea una cuenta</h1>
+  <span class="login__intro">Crea tu cuenta con estos datos</span>
+  <form class="form" [formGroup]="formAccount" (submit)="submitForm()" >
+    <label class="form__label" for="name">Nombre Completo</label>
+    <div class="form__inputcont">
+      <input
+        class="form__input"
+        type="text"
+        name="name"
+        placeholder="Escribe tu nombre completo"
+        formControlName="name"
+      />
+    </div>
+    @if (formAccount.get('name')?.touched && formAccount.get('name')?.errors ) {
+      <span class="error-label">Campo Obligatorio</span>
+    }
+    <label class="form__label" for="email">Correo electrónico</label>
+    <div class="form__inputcont">
+      <input
+        class="form__input"
+        type="email"
+        name="email"
+        placeholder="Escribe tu correo electrónico"
+        formControlName="email"
+      />
+    </div>
+    @if (formAccount.get('email')?.touched && formAccount.get('email')?.errors ) {
+      <span class="error-label">Campo Obligatorio</span>
+    }
+    <label class="form__label" for="password">Contraseña</label>
+    <div class="form__inputcont">
+      <input
+        formControlName="password"
+        class="form__input form__input-last"
+        type="password"
+        name="password"
+        placeholder="Escribe tu contraseña"
+        #pass
+      />
+      <button
+        class="btn-oninput"
+        type="button"
+        (click)="seePassword(!passHidden, pass)"
+      >
+        <img src="/assets/icons/eye-slash.svg" alt="Eye" />
+      </button>
+    </div>
+    @if (formAccount.get('password')?.touched && formAccount.get('password')?.errors ) {
+      <span class="error-label">Campo Obligatorio</span>
+    }
+    <input
+        formControlName="image"
+        type="hidden"
+        name="image"
+      />
+    <button class="form__submit">
+      Ingresar @if(isLoading){
+      <img
+        class="loading-icon"
+        src="/assets/icons/loading.svg"
+        alt="Cargando"
+      />
+      }@else {
+      <img src="/assets/icons/login.svg" alt="Icono Login" />
+      }
+    </button>
+  </form>
+  <p class="login__outro">
+    ¿Ya tienes una cuenta?
+    <a class="outro__link" routerLink="/login">Ingresa ahora</a>
+  </p>
+  <!-- <div class="login__separator">
+    <div class="separator__line"></div>
+    <span class="separator__text">O continuar con</span>
+  </div>
+  <button class="login__google">
+    <img src="/assets/icons/google.svg" alt="Icono Login" />
+    Ingresa con Google
+  </button> -->
+</div>
+<app-toast [data]="toastData"></app-toast>

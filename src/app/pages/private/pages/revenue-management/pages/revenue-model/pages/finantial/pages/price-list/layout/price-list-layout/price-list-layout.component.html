@@ -1,0 +1,61 @@
+<section class="buttonstoolbar">
+  <div class="buttonstoolbar__separator">
+    @if (tableBody.length > 0) {
+    <app-button icon="/assets/icons/add.svg" theme="primary" [isLoading]="false" name="Registrar venta"
+      (onClickButton)="showModalSale()" />
+    <app-button icon="/assets/icons/minus.svg" theme="warning" [isLoading]="false" name="Registrar depreciación"
+      (onClickButton)="showModalDep()" />
+    <app-button icon="/assets/icons/refresh-circle.svg" theme="light" [isLoading]="false" name="Ajuste precios 1"
+      (onClickButton)="showAdjustPrice1 = true" />
+    <app-button icon="/assets/icons/refresh-circle.svg" theme="light" [isLoading]="false" name="Ajuste precios 2"
+      (onClickButton)="showAdjustPrice2 = true" />
+    }
+  </div>
+  <div class="buttonstoolbar__separator">
+    @if (tableBody.length == 0) {
+      <app-button icon="/assets/icons/document-upload.svg" theme="primary" [isLoading]="isUpploadingFile"
+        name="Cargar lista" (onClickButton)="input.click()" />
+    } @else {
+      <app-button icon="/assets/icons/document-download.svg" theme="light" [isLoading]="isDownloadingFile"
+      name="Descargar" (onClickButton)="downloadPriceList()" />
+      <app-button icon="/assets/icons/trash.svg" theme="warning" [isLoading]="isDeletingList" name="Eliminar lista"
+        (onClickButton)="showDeletingList = true" />
+    }
+  </div>
+  <input type="file" style="display: none;" accept="file_extension/.xls,.xlsx" #input (change)="validateFile($event)">
+</section>
+<div class="table">
+  <div class="table__col" [ngStyle]="{ 'grid-template-columns': gridColums}">
+    @for (row of tableHeader; track row) {
+    <div class="table__row table__row-header">
+      {{ row.name }}
+      <img src="/assets/icons/arrow-down.svg" alt="Flecha abajo" />
+    </div>
+    }
+    @if (tableBody.length > 0 && !isLoading) {
+      @for (col of tableBody; track $index) {
+        @for (row of tableHeader; track row.key) {
+        <div class="table__row table__row-body">{{ col[row.key] }}</div>
+        }
+      }
+    } 
+    @if(tableBody.length == 0 && !isLoading) {
+      <div class="table__row table__row-body table__row-loading">
+        Aún no tenemos precios para mostrar
+      </div>
+    } 
+
+    @if(tableBody.length == 0 && isLoading) {
+      <div class="table__row table__row-body table__row-loading">
+        <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+      </div>
+    }
+  </div>
+</div>
+<app-new-sale [visible]="showNewSale" (onClose)="showCustomToast($event)" [availableDepas]="availableDepas" />
+<app-new-depreciation [visible]="showNewDepreciation" (onClose)="showCustomToast($event)" [saleDepas]="saleDepas" />
+<app-new-appreciation-calc [visible]="showAprecciationModal" (onClose)="showCustomToast($event)" [closable]="false" />
+<app-adjust-price1 [visible]="showAdjustPrice1" [depasToSelect]="availableDepas" (onClose)="showCustomToast($event)" />
+<app-adjust-price2 [visible]="showAdjustPrice2" [columsOfInteres]="tableHeader" (onClose)="showCustomToast($event)" />
+<app-modal-confirm [visible]="showDeletingList" (onConfirm)="deleteList($event)" />
+<app-toast [data]="toastData"></app-toast>

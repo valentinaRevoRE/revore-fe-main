@@ -1,0 +1,59 @@
+@import "theme";
+
+.toast {
+    align-items: center;
+    border-radius: 16px;
+    top: 40px;
+    box-shadow: 0px 3px 3px 0px #00000017;
+    display: inline-flex;
+    gap: 15px;
+    justify-content: center;
+    left: calc(85% - 150px);
+    min-height: 50px;
+    min-width: 300px;
+    padding: 10px 17px;
+    position: fixed;
+    transition: all .8s ease-out;
+    z-index: 99;
+
+    &__img {
+        width: 25px;
+        height: 25px;
+        filter: invert(1);
+    }
+
+    &__text {
+        color: map-get($text-color, 100);
+        font-family: 'g-medium', sans-serif;
+        font-size: 16px;
+    }
+
+    &__button {
+        background-color: rgba(#fff, .1);
+        border-radius: 4px;
+        color: map-get($text-color, 100);
+        cursor: pointer;
+        font-family: 'g-bold', sans-serif;
+        height: 30px;
+        width: 30px;
+        &:hover {
+            background-color: rgba(#fff, .2);
+        }
+    }
+}
+
+.toast-success {
+    background-color: map-get($aux-color, success);
+}
+
+.toast-warning {
+    background-color: map-get($aux-color, warning);
+}
+
+.toast-error {
+    background-color: map-get($aux-color, error);
+}
+
+.isOpenToast {
+    top: -100px;
+}

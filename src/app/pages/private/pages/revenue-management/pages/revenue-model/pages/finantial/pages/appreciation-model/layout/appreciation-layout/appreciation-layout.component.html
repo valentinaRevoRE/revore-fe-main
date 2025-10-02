@@ -1,0 +1,56 @@
+<section class="appreciation">
+
+  <section class="buttonstoolbar">
+    <div class="buttonstoolbar__separator"></div>
+    <div class="buttonstoolbar__separator">
+      <app-button icon="/assets/icons/add.svg" theme="primary" [isLoading]="false"
+        name="Asignar columnas" (onClickButton)="showApreccationCalculation = true" />
+      @if (tableBody.length > 0) {
+      <app-button icon="/assets/icons/document-download.svg" theme="light" [isLoading]="isDownloadFile"
+        name="Descargar Tabla" (onClickButton)="downloadFile()" />
+      <app-button icon="/assets/icons/document-download.svg" theme="light" [isLoading]="isDownloadFileModel" name="Descargar Modelo"
+        (onClickButton)="downloadAppreciationModel()" />
+      }
+    </div>
+  </section>
+
+  <div class="appreciation__figure">
+    @if(graphicData.header.length > 0){
+    <div style="width: fit-content; margin-left: 10px;">
+      <app-bottom-bars title="Descomposición de apreciación" containerID="appreciation-model" [data]="graphicData" />
+    </div>
+    }
+  </div>
+  <div class="table">
+    <div class="table__col" [ngStyle]="{ 'grid-template-columns': gridColums}">
+      @for (row of tableHeader; track row.key) {
+      <div class="table__row table__row-header">
+        {{ row.name }}
+        <img src="/assets/icons/arrow-down.svg" alt="Flecha abajo" />
+      </div>
+      }
+      @if (tableBody.length > 0 && !isLoading) {
+      @for (col of tableBody; track $index) {
+      @for (row of col; track $index) {
+      <div class="table__row table__row-body">
+        {{ row }}
+      </div>
+      }
+      }
+      }
+      @if(tableBody.length == 0 && !isLoading) {
+      <div class="table__row table__row-body table__row-loading">
+        Aún no tenemos registros para mostrar
+      </div>
+      }
+
+      @if(tableBody.length == 0 && isLoading) {
+      <div class="table__row table__row-body table__row-loading">
+        <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+      </div>
+      }
+    </div>
+  </div>
+</section>
+<app-new-appreciation-calc [visible]="showApreccationCalculation" (onClose)="closeModal($event)" />
+<app-toast [data]="toastData"></app-toast>

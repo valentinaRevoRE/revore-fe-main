@@ -1,0 +1,57 @@
+<p-dialog [(visible)]="visible" (onHide)="closeModal()" [modal]="true" [closable]="closable">
+    
+    <section class="modalform">
+        <h2 class="modalform__title">Asignación columnas modelo de apreciación</h2>
+        <p class="modalform__intro">Selecciona las columnas con las cuales quieres hacer el calculo</p>
+        <form class="modalform__form" [formGroup]="form" (ngSubmit)="sendForm()" autocomplete="off">
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="num">Número de predicciones</label>
+                <input class="modalform__input" formControlName="numPredictions" type="numPredictions"
+                    name="numPredictions">
+            </div>
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="target"> Target </label>
+                <input class="modalform__input" mask="separator.2" prefix="$" thousandSeparator="," type="text"
+                    (keypress)="validateCharacter($event)" formControlName="target" name="target">
+            </div>
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="num">Columnas</label>
+                <p-multiSelect [showHeader]="false" [options]="columsToSelect" optionLabel="nameSP"
+                    [selectedItemsLabel]="selectedLabels" placeholder="Escoge una o varias" [focusOnHover]="true"
+                    (onChange)="changeSelection($event)" [disabled]="disabledSelect" #multiselect></p-multiSelect>
+            </div>
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="price">Asigna porcentajes</label>
+                <p class="modalform__intro" style="text-align: left;">Recuerda que la sumatoria de todos los porcentajes
+                    debe ser igual a 1</p>
+            </div>
+            @if (columsSelected.length > 0 && renderForms) {
+            @for (input of columsSelected; track $index) {
+            <div class="modalform__group modalform__group-inline">
+                <label class="modalform__label" [for]="input.feature"> {{ input.nameSP }} </label>
+                <input class="modalform__input" (keypress)="validateCharacter($event)" [formControlName]="input.feature"
+                    type="text" [name]="input.feature">
+                @if(form.get(''+input.feature+'')?.hasError('max') || form.get(''+input.feature+'')?.hasError('min')) {
+                <span class="modalform__error" style="width: 100%;">Solo se aceptan valores entre 0 y 1</span>
+                }
+                @if(form.get(''+input.feature+'')?.hasError('required')) {
+                <span class="modalform__error" style="width: 100%;">Campo Obligatorio</span>
+                }
+            </div>
+            }
+            <div class="modalform__group modalform__group-inline">
+                <label class="modalform__label" for="allDepts"> Todos Los Depas </label>
+                <input class="modalform__input" type="text" (keypress)="validateCharacter($event)"
+                    formControlName="allDepts" name="allDepts">
+            </div>
+            }
+            @if( formInvalid ){
+            <span class="modalform__error">Formulario invalido, recuerda que la suma de los porcentajes debe ser igual a
+                1</span>
+            }
+            <div class="modalform__btncont">
+                <app-button icon="/assets/icons/add.svg" theme="primary" [isLoading]="isLoading" name="Asignar" />
+            </div>
+        </form>
+    </section>
+</p-dialog>

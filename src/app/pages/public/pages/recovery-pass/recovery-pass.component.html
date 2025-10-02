@@ -1,0 +1,27 @@
+<div class="login">
+  <img class="login__logo" src="/assets/logo.png" alt="Logo Revore" />
+  <h1 class="login__title">Recupera tu contraseña</h1>
+  <span class="login__intro">Escribe tu correo electrónico y enviaremos un código de recuperación</span>
+  <form class="form" [formGroup]="formRecovery" (submit)="onSubmit()" autocomplete="off">
+    <label class="form__label" for="email">Correo electrónico</label>
+    <div class="form__inputcont">
+      <input class="form__input form__input-last" type="email" name="email" placeholder="Escribe tu correo electrónico"
+        formControlName="email" style="margin-bottom: 15px;" />
+    </div>
+    @if (formRecovery.get('email')?.errors && formRecovery.get('email')?.touched ) {
+      <span class="error-label">Correo electrónico incorrecto.</span>
+    }
+    <button class="form__submit" type="submit">
+      Enviar
+      @if(isLoading){
+        <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+      }@else {
+        <img src="/assets/icons/login.svg" alt="Icono Login">
+      }
+    </button>
+    <button class="form__back" routerLink="/login" type="button">
+      Volver al login
+    </button>
+  </form>
+</div>
+<app-toast [data]="toastData"></app-toast>

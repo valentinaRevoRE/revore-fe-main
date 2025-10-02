@@ -1,0 +1,31 @@
+<div class="tabs">
+  @for (tab of tabs; track tab.name; let idx = $index) {
+  <button
+    [ngClass]="{
+      tabs__button: true,
+      'tabs__button-active': tabActive == idx
+    }"
+    class="tabs__button"
+    (click)="navigate(tab.link)"
+  >
+    @if (tab.icon && tab.icon != '') {
+    <img [src]="'/assets/icons/' + tab.icon" [alt]="tab.name" />
+    }
+    {{ tab.name }}
+  </button>
+  }
+</div>
+<div class="tabs">
+  @for (tab of filterTabs; track tab.name; let idx = $index) {
+  <button
+    [ngClass]="{
+      tabs__button: true,
+      'tabs__button-child': true,
+      'tabs__button-active': routeActive.includes(tab.link)
+    }"
+    (click)="navigate(tab.link)"
+  >
+    {{ tab.name }}
+  </button>
+  }
+</div>

@@ -1,0 +1,13 @@
+<div class="card">
+  @if(cardData.text){
+    <p class="card__text">{{ cardData.text }}</p>
+  } 
+  @if(cardData.span && cardData.span != ''){
+    <div class="card__box">
+      <span class="card__span"> {{ cardData.span }} </span>
+      <h2 class="card__title">{{ cardData.title | currency }}</h2>
+    </div>
+  } @else{
+    <h2 class="card__title">{{ cardData.title }}</h2>
+  }
+</div>

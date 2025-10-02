@@ -1,0 +1,9 @@
+<section class="header" [ngStyle]="{marginTop: data.margin_top}">
+  @if(data.introduction){
+  <p class="header__intro">{{ data.introduction }}</p>
+  } @if(data.title){
+  <h1 class="header__title">{{ data.title }}</h1>
+  } @if(data.description){
+  <p class="header__description">{{ data.description }}</p>
+  }
+</section>

@@ -1,0 +1,22 @@
+.login {
+    height: 100%;
+    &__intro {
+        margin-bottom: 48px;
+        width: 70%;
+    }
+    &__title {
+        margin-bottom: 13px;
+        margin-top: 160px;
+    }
+    .form {
+        &__input-last {
+            margin-bottom: 48px;
+        }
+        &__label {
+            margin-bottom: 14px;
+        }
+        &__submit {
+            margin-bottom: 30px;
+        }
+    }
+}

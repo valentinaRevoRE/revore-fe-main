@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Información financiera",
+    "icon": "money-add.svg",
+    "link": "/dashboard/revenue-management/revenue-model/finantial",
+    "children": [
+      {
+        "name": "Lista de precios",
+        "link": "/dashboard/revenue-management/revenue-model/finantial/price-list"
+      },
+      {
+        "name": "Modelo de apreciación",
+        "link": "/dashboard/revenue-management/revenue-model/finantial/appreciation-model"
+      },
+      {
+        "name": "Modelo de revenue",
+        "link": "/dashboard/revenue-management/revenue-model/finantial/revenue-model"
+      }
+    ]
+  },
+  {
+    "name": "Gráficos",
+    "icon": "chart.svg",
+    "link": "/dashboard/revenue-management/revenue-model/graphics"
+  }
+]

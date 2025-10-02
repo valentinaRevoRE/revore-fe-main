@@ -1,0 +1,58 @@
+<div class="login">
+  <img class="login__logo" src="/assets/logo.png" alt="Logo Revore" />
+  <p class="login__welcome">¡Bienvenido!</p>
+  <h1 class="login__title">Iniciar Sesión</h1>
+  <span class="login__intro">Inicia tu sección con estos datos</span>
+  <form class="form" [formGroup]="formLogin" (submit)="onSubmit()">
+    <label class="form__label" for="email">Correo electrónico</label>
+    <div class="form__inputcont">
+      <input class="form__input" type="email" name="email" placeholder="Escribe tu correo electrónico"
+        formControlName="email" />
+    </div>
+    @if (formLogin.get('email')?.touched && formLogin.get('email')?.errors ) {
+      <span class="error-label">Campo Obligatorio</span>
+    }
+    <label class="form__label" for="password">Contraseña</label>
+    <div class="form__inputcont">
+      <input class="form__input form__input-last" type="password" name="password" formControlName="password"
+        placeholder="Escribe tu contraseña" #pass />
+      <button class="btn-oninput" type="button" (click)="seePassword(!passHidden, pass)">
+        <img src="/assets/icons/eye-slash.svg" alt="Eye">
+      </button>
+    </div>
+    @if (formLogin.get('password')?.touched && formLogin.get('password')?.errors ) {
+      <span class="error-label">Campo Obligatorio</span>
+    }
+    <div class="form__options">
+      <div class="options__switch options__label">
+        <input class="look" type="checkbox" name="remember" formControlName="remember">
+        <label for="remember"></label>
+        Recordarme
+      </div>
+      <a class="options__link" routerLink="/login/recuperar-contrasena">Olvidaste tu constraseña
+      </a>
+    </div>
+    <button class="form__submit">
+      Ingresar
+      @if(isLoading){
+          <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+        }@else {
+          <img src="/assets/icons/login.svg" alt="Icono Login">
+      }
+    </button>
+  </form>
+  <p class="login__outro">
+    ¿No tienes acceso a tu cuenta?
+    <a class="outro__link" routerLink="/login/crear-cuenta">Crear una cuenta ahora</a>
+  </p>
+  <!-- 
+  <div class="login__separator">
+    <div class="separator__line"></div>
+    <span class="separator__text">O continuar con</span>
+  </div>
+  <button class="login__google">
+    <img src="/assets/icons/google.svg" alt="Icono Login">
+    Ingresa con Google
+  </button> -->
+</div>
+<app-toast [data]="toastData"></app-toast>

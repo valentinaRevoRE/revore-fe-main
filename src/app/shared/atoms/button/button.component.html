@@ -1,0 +1,14 @@
+<button 
+    [ngClass]="{ 
+        'buttonatom': true,
+        'buttonatom-light': theme == 'light',
+        'buttonatom-warning': theme == 'warning',
+    }" 
+    (click)="clickButton()" [disabled]="isLoading">
+    @if(isLoading){
+    <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+    }@else {
+    <img class="buttonstoolbar__upicon" [src]="icon" alt="Icono Upload">
+    }
+    {{ name }}
+</button>

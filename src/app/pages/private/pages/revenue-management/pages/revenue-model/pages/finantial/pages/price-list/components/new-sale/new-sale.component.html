@@ -1,0 +1,87 @@
+<p-dialog [(visible)]="visible" (onHide)="closeModal()" [modal]="true">
+    <section class="modalform">
+        <h2 class="modalform__title">Registrar Venta</h2>
+        <p class="modalform__intro">Llena los siguientes datos para registrar tu venta</p>
+        <form class="modalform__form" [formGroup]="form" (ngSubmit)="submitForm()" autocomplete="off">
+            <div class="modalform__group">
+                <label class="modalform__label" for="num">Número de departamento</label>
+                <select name="numberDepartment" class="modalform__input modalform__input-select"
+                    formControlName="numberDepartment">
+                    <option value="" selected>Seleccione un departamento</option>
+                    @for (depa of availableDepas; track depa.num) {
+                    <option [value]="depa.num"> {{depa.num}} </option>
+                    }
+                </select>
+                @if (formControls['numberDepartment'].hasError('required') &&
+                formControls['numberDepartment'].touched)
+                {
+                <span class="modalform__error">
+                    Campo Obligatorio
+                </span>
+                }
+            </div>
+            <div class="modalform__group">
+                <label class="modalform__label" for="totalPrice">Precio total</label>
+                <input class="modalform__input" mask="separator.2" thousandSeparator="," type="text"
+                    formControlName="totalPrice" name="totalPrice" prefix="$">
+                @if (formControls['totalPrice'].hasError('required') && formControls['totalPrice'].touched)
+                {
+                <span class="modalform__error">
+                    Campo Obligatorio
+                </span>
+                }
+            </div>
+            <div class="modalform__group">
+                <label class="modalform__label" for="initialPayment">Pago inicial</label>
+                <input class="modalform__input" mask="separator.2" thousandSeparator="," type="text"
+                    formControlName="initialPayment" name="initialPayment" prefix="$">
+                @if (formControls['initialPayment'].hasError('required') && formControls['initialPayment'].touched)
+                {
+                <span class="modalform__error">
+                    Campo Obligatorio
+                </span>
+                }
+            </div>
+            <div class="modalform__group">
+                <label class="modalform__label" for="paymentPerPeriod">Pago por periodo</label>
+                <input class="modalform__input" mask="separator.2" thousandSeparator="," type="text"
+                    formControlName="paymentPerPeriod" name="paymentPerPeriod" prefix="$">
+                @if (formControls['paymentPerPeriod'].hasError('required') && formControls['paymentPerPeriod'].touched)
+                {
+                <span class="modalform__error">
+                    Campo Obligatorio
+                </span>
+                }
+            </div>
+            <div class="modalform__group">
+                <label class="modalform__label" for="numberOfPeriods">Número de periodos</label>
+                <input class="modalform__input" mask="separator.2" thousandSeparator="," type="text"
+                    formControlName="numberOfPeriods" name="numberOfPeriods">
+                @if (formControls['numberOfPeriods'].hasError('required') && formControls['numberOfPeriods'].touched)
+                {
+                <span class="modalform__error">
+                    Campo Obligatorio
+                </span>
+                }
+            </div>
+            <div class="modalform__group">
+                <label class="modalform__label" for="numberOfPeriods">Liquidación</label>
+                <input class="modalform__input" mask="separator.2" thousandSeparator="," type="text"
+                    formControlName="settlement" name="settlement" prefix="$">
+                @if (formControls['settlement'].hasError('required') && formControls['settlement'].touched)
+                {
+                <span class="modalform__error">
+                    Campo Obligatorio
+                </span>
+                }
+            </div>
+            @if (form.errors) {
+                <span class="modalform__error">
+                    Los datos del pago deber ser iguales al precio total
+                </span>
+            }
+            <app-button style="margin: 0 auto;" theme="primary" icon="/assets/icons/add.svg" [isLoading]="isLoading"
+                name="Registrar venta" />
+        </form>
+    </section>
+</p-dialog>

@@ -1,0 +1,27 @@
+@import 'theme';
+@mixin basicInputContainer() {
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+@mixin basicInput() {
+    background: #fff;
+    border-radius: 12px;
+    border: 2px solid map-get($primary-color, 200 );
+    box-sizing: border-box;
+    color: map-get($text-color, 500 );
+    font-family: 'g-medium', sans-serif;
+    font-size: 14px;
+    height: 49px;
+    line-height: 14px;
+    margin-bottom: 28px;
+    padding: 22px 29px;
+    width: 100%;
+    &:invalid{
+        border: 2px solid map-get($secondary-color, 500 );
+    }
+    &:focus{
+        outline: none;
+        border: 2px solid map-get($primary-color, 500 );
+    }
+}

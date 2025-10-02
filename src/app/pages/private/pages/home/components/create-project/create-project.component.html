@@ -1,0 +1,21 @@
+<p-dialog [(visible)]="visible" [modal]="true" [closable]="closable" (onHide)="closeModal()">
+    <section class="modalform">
+        <h2 class="modalform__title">Crear Proyecto</h2>
+        <p class="modalform__intro">Llena los siguientes datos para crear un nuevo proyecto</p>
+        <form class="modalform__form" [formGroup]="form" (ngSubmit)="submitForm()" autocomplete="off">
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="totalPrice">Nombre del proyecto</label>
+                <input class="modalform__input" type="text"
+                    formControlName="name" name="name" >
+                @if (formControls['name'].hasError('required') && formControls['name'].touched)
+                {
+                <span class="modalform__error">
+                    Campo Obligatorio
+                </span>
+                }
+            </div>
+            <app-button style="margin: 0 auto;" theme="primary" icon="/assets/icons/add.svg" [isLoading]="false"
+                name="Crear Proyecto" />
+        </form>
+    </section>
+</p-dialog>

@@ -1,0 +1,31 @@
+<section class="home">
+  <app-header [data]="headerData" />
+  @if (currentProject?.name) {
+    <div class="active-project">
+      <h4 class="active-project__title">Proyecto activo</h4>
+      <img class="active-project__img" src="/assets/home/project.webp" alt="Project cover">
+      <h5>{{ currentProject.name }} </h5>
+    </div>
+  }
+  <div class="home__buttons">
+    <app-button icon="/assets/icons/refresh-circle.svg" theme="primary" [isLoading]="isLoading"
+      name="Seleccionar Proyecto" (onClickButton)="viewSelectProjectModal = true" />
+    <app-button icon="/assets/icons/add.svg" theme="primary" [isLoading]="isLoading" name="Crear Proyecto"
+      (onClickButton)="viewCreatedProjectModal = true" />
+  </div>
+  <div class="home__cards">
+    @if (isLoading) {
+      <img class="loading-icon home__loading" src="/assets/icons/loading.svg" alt="Cargando">
+    } @else {
+      @for(card of cards; track $index){
+        <app-home-cards [cardInfo]="card" />
+      }
+    }
+  </div>
+</section>
+
+<app-select-project [visible]="viewSelectProjectModal" [projects]="projects" [closable]="currentProject?.name != null"
+  (doActiveProject)="activeProject($event)" (doclose)="closeModals()" />
+<app-create-project [visible]="viewCreatedProjectModal" [closable]="projects.length > 0"
+  (doCreateProject)="createProject($event)" (doclose)="closeModals()"/>
+<app-toast [data]="toastData"></app-toast>

@@ -1,0 +1,19 @@
+<section class="graphics">
+    @if(!isLoading){
+        <div class="graphics__container">
+            <app-float-bars title="Modelo revenue" [data]="graphicRevenue" />
+        </div>
+        <div class="graphics__container">
+            <app-bottom-bars title="Descomposición de apreciación" containerID="gp-appreciation"
+                [data]="graphicAppreciation" />
+        </div>
+        <div class="graphics__container">
+            <app-horizontal-lines title="Evolución del precio por mt2" [graphicData]="graphicMtsEvl" containerID="horizontal-lines-1" />
+        </div>
+        <div class="graphics__container">
+            <app-horizontal-lines title="Evolución del precio " [graphicData]="graphicPriceEvl" containerID="horizontal-lines-0" />
+        </div>
+    } @else {
+        <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+    }
+</section>

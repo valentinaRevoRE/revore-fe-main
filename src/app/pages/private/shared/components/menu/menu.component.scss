@@ -1,0 +1,122 @@
+@import "theme";
+@import "mixins";
+
+.menu {
+    background-color: map-get($primary-color, 500);
+    border-radius: 0 32px 32px 0;
+    box-sizing: border-box;
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 100%;
+    grid-template-rows: 29px calc(100% - 218px) 105px;
+    height: 100vh;
+    padding: 42px 11px 42px 16px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    &__logo {
+        display: block;
+        filter: brightness(0) invert(1);
+        margin: 0 auto;
+        width: 125px;
+    }
+    &__nav {
+        overflow-y: auto;
+    }
+    &__ul {
+        list-style: none;
+        text-align: left;
+    }
+    &__li {
+        & ul {
+            padding-left: 36px;
+            box-sizing: border-box;
+            list-style: none;
+        }
+    }
+    &__item {
+        align-items: center;
+        color: map-get($text-color, 100);
+        display: inline-flex;
+        font-family: "g-medium", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        gap: 12px;
+        justify-content: flex-start;
+        margin-bottom: 16px;
+        padding: 14px 0;
+        text-decoration: none;
+        width: 100%;
+        &:hover {
+            text-decoration: underline;
+        }
+        .icon,
+        .arrow {
+            filter: brightness(0) invert(1);
+            transition: all .2s ease-out;
+        }
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+    }
+    &__item-subitem {
+        padding: 0;
+    }
+    &__item-active {
+        color: map-get($secondary-color, 500);
+        .icon,
+        .arrow {
+            filter: invert(70%) sepia(29%) saturate(6579%) hue-rotate(332deg) brightness(92%) contrast(87%);
+        }
+        .arrow {
+            transform: rotate(90deg);
+        }
+    }
+    &__item-disable {
+        color: map-get($primary-color, 300);
+        &:hover {
+            text-decoration: none;
+            cursor: not-allowed;
+        }
+        .icon,
+        .arrow {
+            filter: invert(64%) sepia(15%) saturate(375%) hue-rotate(183deg) brightness(83%) contrast(81%);
+        }
+    }
+    &__submenu{
+        height: 0px;
+        overflow: hidden;
+        transition: all 2s ease-out;
+    }
+    &__submenu-active{
+        height: 100%;
+    }
+
+    &__footer {
+        width: 100%;
+    }
+    &__close {
+        align-items: center;
+        box-sizing: border-box;
+        color: map-get($text-color, 100);
+        cursor: pointer;
+        display: inline-flex;
+        font-family: "g-medium", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        gap: 12px;
+        justify-content: flex-start;
+        margin-bottom: 32px;
+        padding: 16px 0;
+        width: 100%;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    &__powerby {
+        display: block;
+        margin: 0 auto;
+        width: 161px;
+    }
+}

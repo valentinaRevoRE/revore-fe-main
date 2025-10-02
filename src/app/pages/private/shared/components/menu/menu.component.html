@@ -1,0 +1,62 @@
+<div class="menu">
+  <img class="menu__logo" src="/assets/logo.png" alt="Logo Revore" />
+  <nav class="menu__nav">
+    <ul class="menu__ul">
+      @for (item of menuList; track item.name) {
+      <li class="menu__li">
+        <a
+          [ngClass]="{
+            menu__item: true,
+            'menu__item-disable': !item.active,
+            'menu__item-active': routeActive.includes(item.link)
+          }"
+          [routerLink]="item.link"
+        >
+          <img
+            class="icon"
+            [src]="'/assets/icons/' + item.icon"
+            [alt]="item.name"
+          />
+          <span>{{ item.name }}</span>
+          @if (item?.children?.length > 0) {
+          <img
+            class="arrow"
+            src="/assets/icons/arrow-right.svg"
+            alt="Flecha Ir"
+          />
+          }
+        </a>
+        @if (item?.children?.length > 0) {
+        <ul [ngClass]="{'menu__submenu': true, 'menu__submenu-active': routeActive.includes(item.link)}">
+          @for (subItem of item.children; track subItem.name) {
+          <li>
+            <a
+              [ngClass]="{
+                menu__item: true,
+                'menu__item-subitem': true,
+                'menu__item-disable': !subItem.active,
+                'menu__item-active': routeActive.includes(subItem.link)
+              }"
+              [routerLink]="subItem.link"
+              >{{ subItem.name }}</a
+            >
+          </li>
+          }
+        </ul>
+        }
+      </li>
+      }
+    </ul>
+  </nav>
+  <footer class="menu__footer">
+    <button class="menu__close" (click)="closeSession()">
+      <img src="/assets/icons/logout.svg" alt="Cerrar Sesión" />
+      Cerrar Sesión
+    </button>
+    <img
+      class="menu__powerby"
+      src="/assets/powered_by.svg"
+      alt="Power By Revore"
+    />
+  </footer>
+</div>

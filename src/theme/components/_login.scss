@@ -1,0 +1,170 @@
+@import "mixins";
+@import "theme";
+.login {
+    box-sizing: border-box;
+    text-align: left;
+    width: 480px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    &__logo {
+        display: block;
+        height: 36px;
+        margin-left: auto;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 160px;
+    }
+    &__intro {
+        color: map-get($primary-color, 500);
+        display: block;
+        font-family: "g-medium", sans-serif;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    &__title {
+        color: map-get($primary-color, 500);
+        font-family: "g-semi", sans-serif;
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+    &__welcome {
+        color: map-get($primary-color, 500);
+        font-family: "g-bold", sans-serif;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+    .form {
+        &__inputcont {
+            @include basicInputContainer();
+        }
+        &__input {
+            @include basicInput();
+        }
+        &__input-last {
+            margin-bottom: 15px;
+        }
+        &__label {
+            color: map-get($primary-color, 500);
+            display: block;
+            font-family: "g-medium", sans-serif;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+        &__options {
+            align-items: center;
+            display: inline-flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .options {
+            &__label {
+                color: map-get($primary-color, 400);
+                display: inline-block;
+                font-family: "g-medium", sans-serif;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                letter-spacing: 0.3px;
+                line-height: 20px;
+            }
+            &__link {
+                color: map-get($primary-color, 400);
+                font-family: "g-medium", sans-serif;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                letter-spacing: 0.3px;
+                line-height: 20px;
+                text-decoration: none;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            &__switch {
+                @include btnToggle();
+            }
+        }
+        &__submit {
+            @include primaryButton(
+                map-get($primary-color, 500),
+                map-get($text-color, 100),
+                map-get($primary-color, 600)
+            );
+        }
+        &__back {
+            @include primaryButton(#fff, map-get($primary-color, 500), #fff);
+        }
+        .btn-oninput {
+            @include btnOnInput();
+        }
+    }
+
+    &__outro {
+        color: map-get($primary-color, 400);
+        font-family: "g-medium", sans-serif;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+        text-align: center;
+        width: 100%;
+    }
+    .outro {
+        &__link {
+            color: map-get($primary-color, 400);
+            &:hover {
+                color: map-get($primary-color, 500);
+            }
+        }
+    }
+    &__separator {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+    }
+    .separator {
+        &__line {
+            width: 100%;
+            height: 1px;
+            background-color: map-get($primary-color, 200);
+            position: absolute;
+        }
+        &__text {
+            background-color: #fff;
+            color: map-get($primary-color, 200);
+            display: block;
+            font-family: "g-medium", sans-serif;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            padding: 0 8px;
+            position: relative;
+        }
+    }
+    &__google {
+        @include googleButton();
+    }
+    .error-label {
+        color: map-get($secondary-color, 500);
+        display: block;
+        height: 30px;
+        font-family: "g-medium", sans-serif;
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,37 @@
+<p-dialog [(visible)]="visible" (onHide)="closeModal()" [modal]="true">
+    <section class="modalform">
+        <h2 class="modalform__title">Ajuste de precios 2</h2>
+        <p class="modalform__intro">Completa el formulario</p>
+        <form class="modalform__form" [formGroup]="form" (ngSubmit)="sendForm()" autocomplete="off">
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="columnOfFeature">Columna de interes</label>
+                <select class="modalform__input" type="modalform__label" name="columnOfFeature"
+                    formControlName="columnOfFeature" style="padding: 0 29px;">
+                    <option value="" disabled>Seleccione una opción</option>
+                    @for (option of columsOfInteres; track option.key) {
+                        <option [value]="option.key"> {{ option.name }} </option>
+                    }
+                </select>
+            </div>
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="value">Descripción</label>
+                <input class="modalform__input" type="modalform__label" name="value" formControlName="value" type="text"
+                    placeholder="Ej: Grande" />
+            </div>
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="percentage">Porcentaje:</label>
+                <input class="modalform__input" type="modalform__label" name="percentage" formControlName="percentage"
+                    type="text" placeholder="Ej: Solo valores numéricos" (keypress)="validateCharacters($event)" />
+                @if( form.get('percentage')?.hasError('max') ){
+                    <span class="modalform__error">El valor debe estar entre 0 y 1</span>
+                }
+            </div>
+            @if( form.invalid ){
+                <span class="modalform__error">Formulario invalido, Todos los valores son obligatorios</span>
+            }
+            <div class="modalform__btncont">
+                <app-button icon="/assets/icons/add.svg" theme="primary" [isLoading]="isLoading" name="Asignar" />
+            </div>
+        </form>
+    </section>
+</p-dialog>

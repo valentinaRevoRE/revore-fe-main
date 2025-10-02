@@ -1,0 +1,25 @@
+.dashboard{
+    align-items: flex-start;
+    display: inline-flex;
+    gap: 16px;
+    justify-content: flex-start;
+    padding-bottom: 10px;
+    width: 100%;
+    &__cards{
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 23px;
+        max-width: 563px; 
+        width: 49%;
+    }
+    &__graphics{
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        max-width: 560px;
+        width: 45%;
+    }
+    .loading-icon{
+        filter: none;
+    }
+}

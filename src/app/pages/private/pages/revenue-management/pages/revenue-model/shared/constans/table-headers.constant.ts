@@ -1,0 +1,27 @@
+export const CHEADERTABLENAMES: any = {
+  // Lista de precios
+  allDepts: 'Todos Depas',
+  archetype: 'Prototipo',
+  bathrooms: 'Baños',
+  bedrooms: 'Recámara',
+  floors: 'Pisos',
+  level: 'Nivel',
+  m2ext: 'm2 Ext.',
+  m2int: 'm2 Int.',
+  m2total: 'm2 Tot.',
+  m2total110: 'Precio muestra',
+  num: 'Número',
+  parkingLots: 'Estacionamientos',
+  price: '100%',
+  pricePerM2: '$/m2',
+  program: 'Programa',
+  terreceType: 'Tipo terraza',
+  view: 'Vista',
+  viewClumDisaggregated: 'Vista Clum desglosado',
+  // Apreciación
+  compositeAppreciation: 'Apreciación compuesta',
+  features: 'Características',
+  numDeptsAffectedBySale: 'Promedio de depas afectados por venta',
+  percentages: 'Porcentajes',
+  simpleAppreciation: 'Apreciación simple',
+};

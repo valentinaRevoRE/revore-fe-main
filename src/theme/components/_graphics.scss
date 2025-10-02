@@ -1,0 +1,27 @@
+@import "theme";
+.graphic {
+    border-radius: 16px;
+    box-shadow: 0px 8px 8px 0px #00000017;
+    box-sizing: border-box;
+    height: 398px;
+    padding: 24px;
+    width: 100%;
+    &__title {
+        color: map-get($primary-color, 500);
+        font-family: 'g-semi', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24px;
+        margin-bottom: 10px;
+        text-align: left;
+        width: 100%;
+    }
+    &__text{
+        color: map-get($primary-color, 400);
+        font-family: 'g-semi', sans-serif;
+        font-size: 13px;
+        margin-top: 20px;
+        text-align: left;
+        width: 100%;
+    }
+}

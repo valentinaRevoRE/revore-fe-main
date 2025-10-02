@@ -1,0 +1,32 @@
+<p-dialog [(visible)]="visible" (onHide)="closeModal()" [modal]="true">
+    <section class="modalform">
+        <h2 class="modalform__title">Ajuste de precios 1</h2>
+        <p class="modalform__intro">Selecciona los departamentos a ajustar el valor</p>
+        <form class="modalform__form" [formGroup]="form" (ngSubmit)="sendForm()">
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="num">Departamentos</label>
+                <p-multiSelect [showHeader]="false" [options]="depasToSelect" optionLabel="num"
+                    [selectedItemsLabel]="selectedLabels" placeholder="Escoge uno o varios" [focusOnHover]="true"
+                    (onChange)="changeSelection($event)" [disabled]="disabledSelect" #multiselect></p-multiSelect>
+            </div>
+            <div class="modalform__group modalform__group-complete">
+                <label class="modalform__label" for="price">Asignar valores</label>
+            </div>
+            @if (depasSelected.length > 0 ) {
+            @for (input of depasSelected; track input.num) {
+            <div class="modalform__group modalform__group-inline">
+                <label class="modalform__label" for=""> {{ input.num }} </label>
+                <input class="modalform__input" [formControlName]="input.num" mask="separator.2" thousandSeparator=","
+                    type="text" prefix="$" [name]="input.num">
+            </div>
+            }
+            }
+            @if( form.invalid ){
+            <span class="modalform__error">Formulario invalido, Todos los valores son obligatorios</span>
+            }
+            <div class="modalform__btncont">
+                <app-button icon="/assets/icons/add.svg" theme="primary" [isLoading]="isLoading" name="Asignar" />
+            </div>
+        </form>
+    </section>
+</p-dialog>

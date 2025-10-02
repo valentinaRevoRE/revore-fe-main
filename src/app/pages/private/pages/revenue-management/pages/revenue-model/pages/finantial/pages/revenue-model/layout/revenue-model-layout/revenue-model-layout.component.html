@@ -1,0 +1,18 @@
+<section class="revenue">
+    @if (tableBody.length > 0) {
+        <section class="buttonstoolbar">
+            <div class="buttonstoolbar__separator"></div>
+            <div class="buttonstoolbar__separator">
+                <app-button icon="/assets/icons/document-download.svg" theme="light" [isLoading]="isDownloadFile"
+                    name="Descargar" (onClickButton)="downloadFile()" />
+            </div>
+        </section>
+    }
+    @if(graphicData.breakpoints.length > 0){
+        <div style="width: fit-content; margin-left: 10px;">
+            <app-float-bars title="Modelo revenue" [data]="graphicData" />
+        </div>
+    }
+    <br><br>
+    <app-table-revenue [isLoading]="isLoading" [tableBody]="tableBody" />
+</section>

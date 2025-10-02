@@ -1,0 +1,21 @@
+<app-header [data]="headerData" />
+<section class="dashboard">
+  @if (!isLoading) {
+    <div class="dashboard__cards">
+      @if (graphicRevenueData.breakpoints.length > 0) {
+        @for (card of cardsList; track card.title) {
+          <app-cards [cardData]="card" />
+        }
+    } @else {
+      <p class="graphic__text">Aún no tenemos datos para mostrar.</p>
+    }
+    </div>
+    <div class="dashboard__graphics">
+      <app-float-bars title="Modelo revenue" containerID="m-revenue-dashboard" [data]="graphicRevenueData" />
+      <app-bottom-bars title="Descomposición de apreciación" containerID="m-appreciation-dashboard"
+        [data]="graphicAppreciation" />
+    </div>
+  } @else {
+     <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando"> 
+  }
+</section>

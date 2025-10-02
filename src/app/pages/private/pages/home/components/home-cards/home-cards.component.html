@@ -1,0 +1,10 @@
+<article class="card">
+    <a class="card__link" [routerLink]="cardInfo.link" >
+        <img class="card__img" [src]="cardInfo.img" alt="Nombre Card">
+        <div class="card__info">
+            <h2 class="card__title"> {{ cardInfo.title }} </h2>
+            <p class="card__text"> {{ cardInfo.description }} </p>
+        </div>
+        <img class="card__icon" src="/assets/icons/arrow-right.svg" alt="Flecha derecha">
+    </a>
+</article>

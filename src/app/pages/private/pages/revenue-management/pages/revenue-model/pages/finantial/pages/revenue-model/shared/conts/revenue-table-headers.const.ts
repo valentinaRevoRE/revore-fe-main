@@ -1,0 +1,21 @@
+export const REVENUE_TABLE_HEADER: string[] = [
+  'Target de ingresos',
+  'Ventas',
+  'Lista de precios',
+  'Npv acumulado',
+  'Revenue actual',
+  'Revenue Simulaciones',
+  //'Mercado actual 25',
+  //'Mercado actual 75',
+  //'Mercado final 25',
+  //'Mercado final 75',
+  //'Apreciacion simulada',
+  '$*M2 Actual',
+  '$*M2 Final',
+  //'Precio actual 25',
+  //'Precio actual 75',
+  //'Precio final 25',
+  //'Precio final 75',
+  '$ Promedio actual',
+  '$ Promedio final'
+];

@@ -1,0 +1,31 @@
+<p-dialog [(visible)]="visible" (onHide)="closeModal()" [modal]="true">
+    <section class="modalform">
+        <h2 class="modalform__title">Registra depreciación</h2>
+        <p class="modalform__intro">Selecciona un apartamento vendido para realizar su depreciación</p>
+        <form class="modalform__form" [formGroup]="form" (ngSubmit)="submitForm()" style="justify-content: center;">
+            <div class="modalform__group" style="width: 70%;">
+                <label class="modalform__label" for="numberDepartment">Número de departamento</label>
+                <select name="numberDepartment" formControlName="numberDepartment" class="modalform__input modalform__input-select">
+                    <option value="" selected>Seleccione un departamento</option>
+                    @for (depa of saleDepas; track depa.num) {
+                        <option [value]="depa.num"> {{ depa.num }} </option>
+                    }
+                </select>
+                @if (formControls['numberDepartment'].hasError('required') &&
+                    formControls['numberDepartment'].touched)
+                    {
+                        <span class="modalform__error">
+                            Campo Obligatorio
+                        </span>
+                    }
+            </div>
+            <app-button 
+                style="margin: 0 auto;"
+                theme="primary" 
+                icon="/assets/icons/minus.svg" 
+                [isLoading]="isLoading" 
+                name="Registrar depreciación"
+                />
+        </form>
+    </section>
+</p-dialog>
