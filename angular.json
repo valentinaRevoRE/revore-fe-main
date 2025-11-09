@@ -57,7 +57,7 @@
                 }
               ],
               "fileReplacements": [{
-                "replace": "src/environments/environments.local.ts",
+                "replace": "src/environments/environment.ts",
                 "with": "src/environments/environments.prod.ts"
               }],
               "outputHashing": "all"
@@ -76,7 +76,7 @@
                 }
               ],
               "fileReplacements": [{
-                "replace": "src/environments/environments.local.ts",
+                "replace": "src/environments/environment.ts",
                 "with": "src/environments/environments.staging.ts"
               }],
               "outputHashing": "all",
