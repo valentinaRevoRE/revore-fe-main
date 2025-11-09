@@ -7,7 +7,7 @@ export const environment = {
   encryptKey: 'RevoreCompany#2023',
   environment: 'staging',
 
-  enableDebugMode: true, // Para staging, útil ver logs
+  enableDebugMode: true, 
   apiTimeout: 30000,
 };
 
