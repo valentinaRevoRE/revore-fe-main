@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILogin } from '../interfaces/login.interface';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 import { PATHS } from '@shared/constants/paths.const';
 
 @Injectable()

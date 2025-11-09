@@ -1,6 +1,6 @@
 import { AppreciationColModel } from '../models/appreciation-col.model';
 import { appreciationGraphicDto } from '../util/appreciation-graphic.util';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 import { getAppreciationTableBodyUtil } from '../util/aprecciation-table.util';
 import { HttpClient } from '@angular/common/http';
 import { IAppreciationGetModel } from '../interface/appreciation-get-model.interface';

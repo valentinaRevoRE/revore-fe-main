@@ -3,8 +3,7 @@ name: Deploy Angular to AWS Staging
 on:
   push:
     branches:
-      - master
-      - main
+      - staging
 
 jobs:
   build-and-deploy:
