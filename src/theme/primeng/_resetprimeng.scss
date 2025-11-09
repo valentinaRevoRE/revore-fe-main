@@ -1,5 +1,6 @@
 @use "sass:map";
-@use "theme" as *;
+@use "../theme" as t;
+@use "../mixins" as m;
 
 :root {
   font-family: "g-medium", sans-serif;
@@ -14,7 +15,7 @@
   --surface-e: #ffffff;
   --surface-f: #ffffff;
   --text-color: #4b5563;
-  --text-color-secondary: map-get($primary-color, 400);
+  --text-color-secondary: map-get(t.$primary-color, 400);
   ;
   --primary-color: #2E3C59;
   --primary-color-text: #ffffff;
@@ -24,7 +25,7 @@
   --surface-200: #e5e7eb;
   --surface-300: #d1d5db;
   --surface-400: #9ca3af;
-  --surface-500: map-get($primary-color, 400);
+  --surface-500: map-get(t.$primary-color, 400);
   ;
   --surface-600: #4b5563;
   --surface-700: #374151;
@@ -35,7 +36,7 @@
   --gray-200: #e5e7eb;
   --gray-300: #d1d5db;
   --gray-400: #9ca3af;
-  --gray-500: map-get($primary-color, 400);
+  --gray-500: map-get(t.$primary-color, 400);
   ;
   --gray-600: #4b5563;
   --gray-700: #374151;
@@ -53,7 +54,7 @@
   --focus-ring: 0 0 0 0.2rem #BFDBFE;
   --maskbg: rgba(0, 0, 0, 0.4);
   --highlight-bg: #EFF6FF;
-  --highlight-text-color: map-get($primary-color, 600);;
+  --highlight-text-color: map-get(t.$primary-color, 600);;
   color-scheme: light;
 }
 
@@ -63,8 +64,8 @@
   --blue-200: #abc9fb;
   --blue-300: #85b2f9;
   --blue-400: #609af8;
-  --blue-500: map-get($primary-color, 500);
-  --blue-600: map-get($primary-color, 600);
+  --blue-500: map-get(t.$primary-color, 500);
+  --blue-600: map-get(t.$primary-color, 600);
   --blue-700: #295bac;
   --blue-800: #204887;
   --blue-900: #183462;
@@ -172,8 +173,8 @@
   --primary-100: #d0e1fd;
   --primary-200: #abc9fb;
   --primary-300: #85b2f9;
-  --primary-400: map-get($primary-color, 400);
-  --primary-500: map-get($primary-color, 500);
+  --primary-400: map-get(t.$primary-color, 400);
+  --primary-500: map-get(t.$primary-color, 500);
   --primary-600: #326fd1;
   --primary-700: #295bac;
   --primary-800: #204887;
@@ -191,18 +192,18 @@
 }
 
 .p-editor-container .p-editor-toolbar.ql-snow .ql-stroke {
-  stroke: map-get($primary-color, 400);
+  stroke: map-get(t.$primary-color, 400);
   ;
 }
 
 .p-editor-container .p-editor-toolbar.ql-snow .ql-fill {
-  fill: map-get($primary-color, 400);
+  fill: map-get(t.$primary-color, 400);
   ;
 }
 
 .p-editor-container .p-editor-toolbar.ql-snow .ql-picker .ql-picker-label {
   border: 0 none;
-  color: map-get($primary-color, 400);
+  color: map-get(t.$primary-color, 400);
   ;
 }
 
@@ -285,25 +286,25 @@
 .p-editor-container .ql-snow.ql-toolbar button.ql-active,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
-  color: map-get($primary-color, 500);
+  color: map-get(t.$primary-color, 500);
 }
 
 .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-stroke,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke {
-  stroke: map-get($primary-color, 500);
+  stroke: map-get(t.$primary-color, 500);
 }
 
 .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-fill,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill {
-  fill: map-get($primary-color, 500);
+  fill: map-get(t.$primary-color, 500);
 }
 
 .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-picker-label,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-picker-label,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-picker-label {
-  color: map-get($primary-color, 500);
+  color: map-get(t.$primary-color, 500);
 }
 
 @layer primeng {
@@ -333,7 +334,7 @@
   }
 
   .p-text-secondary {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -396,14 +397,14 @@
   }
 
   .p-autocomplete:not(.p-disabled):hover .p-autocomplete-multiple-container {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-autocomplete:not(.p-disabled).p-focus .p-autocomplete-multiple-container {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-autocomplete .p-autocomplete-multiple-container {
@@ -467,7 +468,7 @@
   }
 
   .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -502,13 +503,13 @@
   }
 
   p-autocomplete.p-autocomplete-clearable .p-autocomplete-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 0.75rem;
   }
 
   p-autocomplete.p-autocomplete-clearable .p-autocomplete-dd .p-autocomplete-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 3.75rem;
   }
@@ -521,7 +522,7 @@
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-datepicker {
@@ -557,7 +558,7 @@
   .p-datepicker .p-datepicker-header .p-datepicker-next {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -593,7 +594,7 @@
 
   .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year:enabled:hover,
   .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month:enabled:hover {
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
@@ -627,7 +628,7 @@
   }
 
   .p-datepicker table td>span.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -644,7 +645,7 @@
   }
 
   .p-datepicker table td.p-datepicker-today>span.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -665,7 +666,7 @@
   .p-datepicker .p-timepicker button {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -712,7 +713,7 @@
   }
 
   .p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -727,7 +728,7 @@
   }
 
   .p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -783,13 +784,13 @@
   }
 
   p-calendar.p-calendar-clearable .p-calendar-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 0.75rem;
   }
 
   p-calendar.p-calendar-clearable .p-calendar-w-btn .p-calendar-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 3.75rem;
   }
@@ -810,14 +811,14 @@
   }
 
   .p-cascadeselect:not(.p-disabled):hover {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-cascadeselect:not(.p-disabled).p-focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-cascadeselect .p-cascadeselect-label {
@@ -827,7 +828,7 @@
   }
 
   .p-cascadeselect .p-cascadeselect-label.p-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -838,7 +839,7 @@
 
   .p-cascadeselect .p-cascadeselect-trigger {
     background: transparent;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     width: 3rem;
     border-top-right-radius: 6px;
@@ -871,7 +872,7 @@
   }
 
   .p-cascadeselect-panel .p-cascadeselect-items .p-cascadeselect-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -918,7 +919,7 @@
   }
 
   p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 3rem;
   }
@@ -960,24 +961,24 @@
   }
 
   .p-checkbox .p-checkbox-box.p-highlight {
-    border-color: map-get($primary-color, 300);
-    background: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 300);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
-    border-color: map-get($primary-color, 600);;
-    background: map-get($primary-color, 600);;
+    border-color: map-get(t.$primary-color, 600);;
+    background: map-get(t.$primary-color, 600);;
     color: #ffffff;
   }
 
@@ -990,7 +991,7 @@
   }
 
   .p-input-filled .p-checkbox .p-checkbox-box.p-highlight {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-input-filled .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
@@ -998,7 +999,7 @@
   }
 
   .p-input-filled .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
-    background: map-get($primary-color, 600);;
+    background: map-get(t.$primary-color, 600);;
   }
 
   .p-checkbox-label {
@@ -1010,14 +1011,14 @@
   }
 
   .p-chips:not(.p-disabled):hover .p-chips-multiple-container {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-chips:not(.p-disabled).p-focus .p-chips-multiple-container {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-chips .p-chips-multiple-container {
@@ -1064,7 +1065,7 @@
   }
 
   p-chips.p-chips-clearable .p-chips-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 0.75rem;
   }
@@ -1097,14 +1098,14 @@
   }
 
   .p-dropdown:not(.p-disabled):hover {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-dropdown:not(.p-disabled).p-focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-dropdown.p-dropdown-clearable .p-dropdown-label {
@@ -1117,7 +1118,7 @@
   }
 
   .p-dropdown .p-dropdown-label.p-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1129,7 +1130,7 @@
 
   .p-dropdown .p-dropdown-trigger {
     background: transparent;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     width: 3rem;
     border-top-right-radius: 6px;
@@ -1137,7 +1138,7 @@
   }
 
   .p-dropdown .p-dropdown-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 3rem;
   }
@@ -1171,7 +1172,7 @@
 
   .p-dropdown-panel .p-dropdown-header .p-dropdown-filter-icon {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1190,7 +1191,7 @@
   }
 
   .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -1244,7 +1245,7 @@
 
   .p-inputgroup-addon {
     background: #f3f4f6;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border-top: 1px solid #d1d5db;
     border-left: 1px solid #d1d5db;
@@ -1327,7 +1328,7 @@
   }
 
   p-inputmask.p-inputmask-clearable .p-inputmask-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 0.75rem;
   }
@@ -1341,7 +1342,7 @@
   }
 
   p-inputnumber.p-inputnumber-clearable .p-inputnumber-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 0.75rem;
   }
@@ -1390,7 +1391,7 @@
   }
 
   .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
@@ -1419,14 +1420,14 @@
   }
 
   .p-inputtext:enabled:hover {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-inputtext:enabled:focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-inputtext.ng-dirty.ng-invalid {
@@ -1445,7 +1446,7 @@
 
   .p-float-label>label {
     left: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     transition-duration: 0.2s;
   }
@@ -1457,7 +1458,7 @@
   .p-input-icon-left>.p-icon-wrapper.p-icon,
   .p-input-icon-left>i:first-of-type {
     left: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1472,7 +1473,7 @@
   .p-input-icon-right>.p-icon-wrapper,
   .p-input-icon-right>i:last-of-type {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1481,22 +1482,22 @@
   }
 
   ::-webkit-input-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   :-moz-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   ::-moz-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   :-ms-input-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1546,7 +1547,7 @@
 
   .p-listbox .p-listbox-header .p-listbox-filter-icon {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1569,7 +1570,7 @@
   }
 
   .p-listbox .p-listbox-list .p-listbox-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -1609,7 +1610,7 @@
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   p-listbox.ng-dirty.ng-invalid>.p-listbox {
@@ -1617,18 +1618,18 @@
   }
 
   .p-multiselect {
-    @include basicInput();
+    @include m.basicInput();
   }
 
   .p-multiselect:not(.p-disabled):hover {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-multiselect:not(.p-disabled).p-focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-multiselect .p-multiselect-label {
@@ -1637,12 +1638,12 @@
     text-align: left;
     line-height: 45px;
     padding: 0 5px !important;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     width: 100%;
   }
 
   .p-multiselect .p-multiselect-label.p-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     width: 100%;
     text-align: left;
     line-height: 45px;
@@ -1663,7 +1664,7 @@
 
   .p-multiselect .p-multiselect-trigger {
     background: transparent;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     width: 3rem;
     border-top-right-radius: 6px;
@@ -1679,7 +1680,7 @@
   }
 
   .p-multiselect-clearable .p-multiselect-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 3rem;
   }
@@ -1708,7 +1709,7 @@
 
   .p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-multiselect-filter-icon {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1720,7 +1721,7 @@
     margin-left: 0.5rem;
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -1763,7 +1764,7 @@
   }
 
   .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
     padding: 5px 0 !important;
   }
@@ -1851,7 +1852,7 @@
   }
 
   p-password.p-password-clearable .p-password-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 0.75rem;
   }
@@ -1861,7 +1862,7 @@
   }
 
   p-password.p-password-clearable.p-password-mask .p-password-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 2.5rem;
   }
@@ -1882,14 +1883,14 @@
   }
 
   .p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
@@ -1900,13 +1901,13 @@
   }
 
   .p-radiobutton .p-radiobutton-box.p-highlight {
-    border-color: map-get($primary-color, 500);
-    background: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
-    border-color: map-get($primary-color, 600);;
-    background: map-get($primary-color, 600);;
+    border-color: map-get(t.$primary-color, 600);;
+    background: map-get(t.$primary-color, 600);;
     color: #ffffff;
   }
 
@@ -1923,11 +1924,11 @@
   }
 
   .p-input-filled .p-radiobutton .p-radiobutton-box.p-highlight {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-input-filled .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
-    background: map-get($primary-color, 600);;
+    background: map-get(t.$primary-color, 600);;
   }
 
   .p-radiobutton-label {
@@ -1957,15 +1958,15 @@
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon {
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon.p-rating-cancel {
@@ -1981,7 +1982,7 @@
 
   .p-selectbutton .p-button .p-button-icon-left,
   .p-selectbutton .p-button .p-button-icon-right {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -1997,8 +1998,8 @@
   }
 
   .p-selectbutton .p-button.p-highlight {
-    background: map-get($primary-color, 500);
-    border-color: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
     color: #ffffff;
   }
 
@@ -2050,7 +2051,7 @@
     height: 1.143rem;
     width: 1.143rem;
     background: #ffffff;
-    border: 2px solid map-get($primary-color, 500);
+    border: 2px solid map-get(t.$primary-color, 500);
     border-radius: 50%;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   }
@@ -2062,12 +2063,12 @@
   }
 
   .p-slider .p-slider-range {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-slider:not(.p-disabled) .p-slider-handle:hover {
-    background: map-get($primary-color, 500);
-    border-color: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-slider.p-slider-animate.p-slider-horizontal .p-slider-handle {
@@ -2095,7 +2096,7 @@
 
   .p-togglebutton.p-button .p-button-icon-left,
   .p-togglebutton.p-button .p-button-icon-right {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -2111,8 +2112,8 @@
   }
 
   .p-togglebutton.p-button.p-highlight {
-    background: map-get($primary-color, 500);
-    border-color: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
     color: #ffffff;
   }
 
@@ -2144,14 +2145,14 @@
   }
 
   .p-treeselect:not(.p-disabled):hover {
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-treeselect:not(.p-disabled).p-focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem #BFDBFE;
-    border-color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
   }
 
   .p-treeselect .p-treeselect-label {
@@ -2160,7 +2161,7 @@
   }
 
   .p-treeselect .p-treeselect-label.p-placeholder {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -2174,7 +2175,7 @@
 
   .p-treeselect .p-treeselect-trigger {
     background: transparent;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     width: 3rem;
     border-top-right-radius: 6px;
@@ -2217,7 +2218,7 @@
 
   .p-treeselect-panel .p-treeselect-header .p-treeselect-filter-container .p-treeselect-filter-icon {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -2232,7 +2233,7 @@
   .p-treeselect-panel .p-treeselect-header .p-treeselect-close {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -2279,15 +2280,15 @@
   }
 
   p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     right: 3rem;
   }
 
   .p-button {
     color: #ffffff;
-    background: map-get($primary-color, 500);
-    border: 1px solid map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
+    border: 1px solid map-get(t.$primary-color, 500);
     padding: 0.75rem 1.25rem;
     font-size: 1rem;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
@@ -2301,80 +2302,80 @@
   }
 
   .p-button:not(:disabled):active {
-    background: map-get($primary-color, 600);;
+    background: map-get(t.$primary-color, 600);;
     color: #ffffff;
-    border-color: map-get($primary-color, 600);;
+    border-color: map-get(t.$primary-color, 600);;
   }
 
   .p-button.p-button-outlined {
     background-color: transparent;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border: 1px solid;
   }
 
   .p-button.p-button-outlined:not(:disabled):hover {
     background: rgba(59, 130, 246, 0.04);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border: 1px solid;
   }
 
   .p-button.p-button-outlined:not(:disabled):active {
     background: rgba(59, 130, 246, 0.16);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border: 1px solid;
   }
 
   .p-button.p-button-outlined.p-button-plain {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
-    border-color: map-get($primary-color, 400);
+    border-color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-button.p-button-outlined.p-button-plain:not(:disabled):hover {
     background: #f3f4f6;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-button.p-button-outlined.p-button-plain:not(:disabled):active {
     background: #e5e7eb;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-button.p-button-text {
     background-color: transparent;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border-color: transparent;
   }
 
   .p-button.p-button-text:not(:disabled):hover {
     background: rgba(59, 130, 246, 0.04);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border-color: transparent;
   }
 
   .p-button.p-button-text:not(:disabled):active {
     background: rgba(59, 130, 246, 0.16);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border-color: transparent;
   }
 
   .p-button.p-button-text.p-button-plain {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-button.p-button-text.p-button-plain:not(:disabled):hover {
     background: #f3f4f6;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-button.p-button-text.p-button-plain:not(:disabled):active {
     background: #e5e7eb;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -2409,7 +2410,7 @@
     min-width: 1rem;
     height: 1rem;
     line-height: 1rem;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     background-color: #ffffff;
   }
 
@@ -2947,14 +2948,14 @@
   }
 
   .p-button.p-button-link {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: transparent;
     border: transparent;
   }
 
   .p-button.p-button-link:not(:disabled):hover {
     background: transparent;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     border-color: transparent;
   }
 
@@ -2970,7 +2971,7 @@
 
   .p-button.p-button-link:not(:disabled):active {
     background: transparent;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     border-color: transparent;
   }
 
@@ -3067,71 +3068,71 @@
 
   .p-splitbutton.p-button-outlined>.p-button {
     background-color: transparent;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border: 1px solid;
   }
 
   .p-splitbutton.p-button-outlined>.p-button:not(:disabled):hover {
     background: rgba(59, 130, 246, 0.04);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-splitbutton.p-button-outlined>.p-button:not(:disabled):active {
     background: rgba(59, 130, 246, 0.16);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-splitbutton.p-button-outlined.p-button-plain>.p-button {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
-    border-color: map-get($primary-color, 400);
+    border-color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-splitbutton.p-button-outlined.p-button-plain>.p-button:not(:disabled):hover {
     background: #f3f4f6;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-splitbutton.p-button-outlined.p-button-plain>.p-button:not(:disabled):active {
     background: #e5e7eb;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-splitbutton.p-button-text>.p-button {
     background-color: transparent;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border-color: transparent;
   }
 
   .p-splitbutton.p-button-text>.p-button:not(:disabled):hover {
     background: rgba(59, 130, 246, 0.04);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border-color: transparent;
   }
 
   .p-splitbutton.p-button-text>.p-button:not(:disabled):active {
     background: rgba(59, 130, 246, 0.16);
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     border-color: transparent;
   }
 
   .p-splitbutton.p-button-text.p-button-plain>.p-button {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-splitbutton.p-button-text.p-button-plain>.p-button:not(:disabled):hover {
     background: #f3f4f6;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-splitbutton.p-button-text.p-button-plain>.p-button:not(:disabled):active {
     background: #e5e7eb;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -3373,7 +3374,7 @@
   .p-carousel .p-carousel-content .p-carousel-next {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -3419,7 +3420,7 @@
 
   .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable .p-paginator-top {
@@ -3481,7 +3482,7 @@
     height: 1.143rem;
     min-width: 1.143rem;
     line-height: 1.143rem;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
     margin-left: 0.5rem;
   }
@@ -3497,20 +3498,20 @@
 
   .p-datatable .p-sortable-column.p-highlight {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable .p-sortable-column.p-highlight:hover {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable .p-sortable-column.p-highlight:hover .p-sortable-column-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable .p-sortable-column:focus-visible {
@@ -3537,7 +3538,7 @@
   .p-datatable .p-datatable-tbody>tr>td .p-row-editor-cancel {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -3574,7 +3575,7 @@
 
   .p-datatable .p-datatable-tbody>tr.p-highlight {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable .p-datatable-tbody>tr.p-datatable-dragpoint-top>td {
@@ -3591,7 +3592,7 @@
   }
 
   .p-datatable .p-column-resizer-helper {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-datatable .p-datatable-scrollable-header,
@@ -3688,15 +3689,15 @@
 
   .p-datatable.p-datatable-striped .p-datatable-tbody>tr:nth-child(even).p-highlight {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable.p-datatable-striped .p-datatable-tbody>tr:nth-child(even).p-highlight .p-row-toggler {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable.p-datatable-striped .p-datatable-tbody>tr:nth-child(even).p-highlight .p-row-toggler:hover {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-datatable.p-datatable-sm .p-datatable-header {
@@ -3792,7 +3793,7 @@
   .p-column-filter-menu-button {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -3815,7 +3816,7 @@
   .p-column-filter-menu-button.p-column-filter-menu-button-active,
   .p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-column-filter-menu-button:focus-visible {
@@ -3827,7 +3828,7 @@
   .p-column-filter-clear-button {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -3871,7 +3872,7 @@
   }
 
   .p-column-filter-overlay .p-column-filter-row-items .p-column-filter-row-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -3961,7 +3962,7 @@
 
   .p-orderlist .p-orderlist-filter-container .p-orderlist-filter-icon {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -3995,7 +3996,7 @@
   }
 
   .p-orderlist .p-orderlist-list .p-orderlist-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -4037,7 +4038,7 @@
 
   .p-organizationchart .p-organizationchart-node-content.p-highlight {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-organizationchart .p-organizationchart-node-content.p-highlight .p-node-toggler i {
@@ -4079,7 +4080,7 @@
 
   .p-paginator {
     background: #ffffff;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: solid #f3f4f6;
     border-width: 0;
@@ -4093,7 +4094,7 @@
   .p-paginator .p-paginator-last {
     background-color: transparent;
     border: 0 none;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     min-width: 3rem;
     height: 3rem;
@@ -4143,7 +4144,7 @@
   .p-paginator .p-paginator-current {
     background-color: transparent;
     border: 0 none;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     min-width: 3rem;
     height: 3rem;
@@ -4154,7 +4155,7 @@
   .p-paginator .p-paginator-pages .p-paginator-page {
     background-color: transparent;
     border: 0 none;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     min-width: 3rem;
     height: 3rem;
@@ -4166,7 +4167,7 @@
   .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
     background: #EFF6FF;
     border-color: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
@@ -4210,7 +4211,7 @@
 
   .p-picklist .p-picklist-filter-container .p-picklist-filter-icon {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -4244,7 +4245,7 @@
   }
 
   .p-picklist .p-picklist-list .p-picklist-item.p-highlight {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
@@ -4280,7 +4281,7 @@
   }
 
   .p-timeline .p-timeline-event-marker {
-    border: 2px solid map-get($primary-color, 500);
+    border: 2px solid map-get(t.$primary-color, 500);
     border-radius: 50%;
     width: 1rem;
     height: 1rem;
@@ -4338,7 +4339,7 @@
     margin-right: 0.5rem;
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -4360,7 +4361,7 @@
 
   .p-tree .p-tree-container .p-treenode .p-treenode-content .p-treenode-icon {
     margin-right: 0.5rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -4374,17 +4375,17 @@
 
   .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-tree-toggler,
   .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-treenode-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-tree-toggler:hover,
   .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-treenode-icon:hover {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-tree .p-tree-container .p-treenode .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover {
@@ -4408,7 +4409,7 @@
 
   .p-tree .p-tree-filter-container .p-tree-filter-icon {
     right: 0.75rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -4440,11 +4441,11 @@
 
   .p-tree.p-tree-horizontal .p-treenode .p-treenode-content.p-highlight {
     background-color: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-tree.p-tree-horizontal .p-treenode .p-treenode-content.p-highlight .p-treenode-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-tree.p-tree-horizontal .p-treenode .p-treenode-content .p-tree-toggler {
@@ -4452,7 +4453,7 @@
   }
 
   .p-tree.p-tree-horizontal .p-treenode .p-treenode-content .p-treenode-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
@@ -4540,7 +4541,7 @@
     height: 1.143rem;
     min-width: 1.143rem;
     line-height: 1.143rem;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
     margin-left: 0.5rem;
   }
@@ -4556,11 +4557,11 @@
 
   .p-treetable .p-sortable-column.p-highlight {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-treetable .p-sortable-column.p-highlight .p-sortable-column-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-treetable .p-treetable-tbody>tr {
@@ -4579,7 +4580,7 @@
   .p-treetable .p-treetable-tbody>tr>td .p-treetable-toggler {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -4620,15 +4621,15 @@
 
   .p-treetable .p-treetable-tbody>tr.p-highlight {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-treetable .p-treetable-tbody>tr.p-highlight .p-treetable-toggler {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-treetable .p-treetable-tbody>tr.p-highlight .p-treetable-toggler:hover {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-treetable.p-treetable-hoverable-rows .p-treetable-tbody>tr:not(.p-highlight):hover {
@@ -4641,7 +4642,7 @@
   }
 
   .p-treetable .p-column-resizer-helper {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-treetable .p-treetable-scrollable-header,
@@ -4756,7 +4757,7 @@
   .p-accordion .p-accordion-header .p-accordion-header-link {
     padding: 1.25rem;
     border: 1px solid #e5e7eb;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     background: #f9fafb;
     font-weight: 700;
@@ -4830,7 +4831,7 @@
   .p-card .p-card-subtitle {
     font-weight: 400;
     margin-bottom: 0.5rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -4936,7 +4937,7 @@
   .p-panel .p-panel-header .p-panel-header-icon {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -5056,7 +5057,7 @@
     border-width: 0 0 2px 0;
     border-color: transparent transparent #e5e7eb transparent;
     background: #ffffff;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     padding: 1.25rem;
     font-weight: 700;
@@ -5075,14 +5076,14 @@
   .p-tabview .p-tabview-nav li:not(.p-highlight):not(.p-disabled):hover .p-tabview-nav-link {
     background: #ffffff;
     border-color: #9ca3af;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     background: #ffffff;
-    border-color: map-get($primary-color, 500);
-    color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-tabview .p-tabview-left-icon {
@@ -5099,7 +5100,7 @@
 
   .p-tabview .p-tabview-nav-btn.p-link {
     background: #ffffff;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     width: 3rem;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     border-radius: 0;
@@ -5214,7 +5215,7 @@
   .p-dialog .p-dialog-header .p-dialog-header-icon {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -5291,7 +5292,7 @@
   }
 
   .p-overlaypanel .p-overlaypanel-close {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
     color: #ffffff;
     width: 2rem;
     height: 2rem;
@@ -5342,7 +5343,7 @@
   .p-sidebar .p-sidebar-header .p-sidebar-icon {
     width: 2rem;
     height: 2rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     border: 0 none;
     background: transparent;
@@ -5430,7 +5431,7 @@
   }
 
   .p-fileupload .p-fileupload-content.p-fileupload-highlight {
-    border-color: 1px dashed map-get($primary-color, 500);
+    border-color: 1px dashed map-get(t.$primary-color, 500);
     border-style: dashed;
     background-color: #EFF6FF;
   }
@@ -5454,9 +5455,9 @@
   }
 
   .p-fileupload-choose:not(.p-disabled):active {
-    background: map-get($primary-color, 600);;
+    background: map-get(t.$primary-color, 600);;
     color: #ffffff;
-    border-color: map-get($primary-color, 600);;
+    border-color: map-get(t.$primary-color, 600);;
   }
 
   .p-breadcrumb {
@@ -5482,7 +5483,7 @@
   }
 
   .p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -5496,7 +5497,7 @@
   }
 
   .p-breadcrumb .p-breadcrumb-list li:last-child .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -5539,28 +5540,28 @@
   }
 
   .p-contextmenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-contextmenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-contextmenu .p-menuitem.p-highlight>.p-menuitem-content {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
   .p-contextmenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-contextmenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
   .p-contextmenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-contextmenu .p-menuitem.p-highlight.p-focus>.p-menuitem-content {
@@ -5592,7 +5593,7 @@
 
   .p-contextmenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-contextmenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -5734,28 +5735,28 @@
   }
 
   .p-megamenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-megamenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-megamenu .p-menuitem.p-highlight>.p-menuitem-content {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
   .p-megamenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-megamenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
   .p-megamenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-megamenu .p-menuitem.p-highlight.p-focus>.p-menuitem-content {
@@ -5787,7 +5788,7 @@
 
   .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -5839,13 +5840,13 @@
   }
 
   .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-left: 0.5rem;
   }
@@ -5861,7 +5862,7 @@
 
   .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -5891,28 +5892,28 @@
   }
 
   .p-menu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-menu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-menu .p-menuitem.p-highlight>.p-menuitem-content {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
   .p-menu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-menu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
   .p-menu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-menu .p-menuitem.p-highlight.p-focus>.p-menuitem-content {
@@ -5944,7 +5945,7 @@
 
   .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-menu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -5970,7 +5971,7 @@
   }
 
   .p-menu .p-menuitem-badge {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
@@ -6011,13 +6012,13 @@
   }
 
   .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-left: 0.5rem;
   }
@@ -6033,7 +6034,7 @@
 
   .p-menubar .p-menubar-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-menubar .p-menubar-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -6054,28 +6055,28 @@
   }
 
   .p-menubar .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-menubar .p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-menubar .p-menuitem.p-highlight>.p-menuitem-content {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
   .p-menubar .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-menubar .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
   .p-menubar .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-menubar .p-menuitem.p-highlight.p-focus>.p-menuitem-content {
@@ -6107,7 +6108,7 @@
 
   .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-menubar .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -6137,14 +6138,14 @@
       display: flex;
       width: 2rem;
       height: 2rem;
-      color: map-get($primary-color, 400);
+      color: map-get(t.$primary-color, 400);
       ;
       border-radius: 50%;
       transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
     }
 
     .p-menubar .p-menubar-button:hover {
-      color: map-get($primary-color, 400);
+      color: map-get(t.$primary-color, 400);
       ;
       background: #f3f4f6;
     }
@@ -6244,7 +6245,7 @@
 
   .p-panelmenu .p-panelmenu-header .p-panelmenu-header-content {
     border: 1px solid #e5e7eb;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     background: #f9fafb;
     border-radius: 6px;
@@ -6252,7 +6253,7 @@
   }
 
   .p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     padding: 1.25rem;
     font-weight: 700;
@@ -6326,28 +6327,28 @@
   }
 
   .p-panelmenu .p-panelmenu-content .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-panelmenu .p-panelmenu-content .p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-panelmenu .p-panelmenu-content .p-menuitem.p-highlight>.p-menuitem-content {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
   .p-panelmenu .p-panelmenu-content .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-panelmenu .p-panelmenu-content .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
   .p-panelmenu .p-panelmenu-content .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-panelmenu .p-panelmenu-content .p-menuitem.p-highlight.p-focus>.p-menuitem-content {
@@ -6379,7 +6380,7 @@
 
   .p-panelmenu .p-panelmenu-content .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-panelmenu .p-panelmenu-content .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -6434,28 +6435,28 @@
   }
 
   .p-slidemenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-slidemenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-slidemenu .p-menuitem.p-highlight>.p-menuitem-content {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
   .p-slidemenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-slidemenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
   .p-slidemenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-slidemenu .p-menuitem.p-highlight.p-focus>.p-menuitem-content {
@@ -6487,7 +6488,7 @@
 
   .p-slidemenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-slidemenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -6530,7 +6531,7 @@
   }
 
   .p-slidemenu .p-menuitem-badge {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
@@ -6564,7 +6565,7 @@
 
   .p-steps .p-steps-item .p-menuitem-link .p-steps-title {
     margin-top: 0.5rem;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -6576,7 +6577,7 @@
 
   .p-steps .p-steps-item.p-highlight .p-steps-number {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-steps .p-steps-item.p-highlight .p-steps-title {
@@ -6602,7 +6603,7 @@
   }
 
   .p-tabmenu .p-tabmenu-nav .p-menuitem-badge {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
@@ -6624,7 +6625,7 @@
     border-width: 0 0 2px 0;
     border-color: transparent transparent #e5e7eb transparent;
     background: #ffffff;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     padding: 1.25rem;
     font-weight: 700;
@@ -6647,14 +6648,14 @@
   .p-tabmenu .p-tabmenu-nav .p-tabmenuitem:not(.p-highlight):not(.p-disabled):hover .p-menuitem-link {
     background: #ffffff;
     border-color: #9ca3af;
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
     background: #ffffff;
-    border-color: map-get($primary-color, 500);
-    color: map-get($primary-color, 500);
+    border-color: map-get(t.$primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-tabmenu .p-tabmenu-left-icon {
@@ -6667,7 +6668,7 @@
 
   .p-tabmenu .p-tabmenu-nav-btn.p-link {
     background: #ffffff;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
     width: 3rem;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     border-radius: 0;
@@ -6722,28 +6723,28 @@
   }
 
   .p-tieredmenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
     margin-right: 0.5rem;
   }
 
   .p-tieredmenu .p-menuitem>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
   .p-tieredmenu .p-menuitem.p-highlight>.p-menuitem-content {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
     background: #EFF6FF;
   }
 
   .p-tieredmenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-tieredmenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-menuitem-icon,
   .p-tieredmenu .p-menuitem.p-highlight>.p-menuitem-content .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-tieredmenu .p-menuitem.p-highlight.p-focus>.p-menuitem-content {
@@ -6775,7 +6776,7 @@
 
   .p-tieredmenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon,
   .p-tieredmenu .p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-    color: map-get($primary-color, 400);
+    color: map-get(t.$primary-color, 400);
     ;
   }
 
@@ -6801,13 +6802,13 @@
 
   .p-inline-message.p-inline-message-info {
     background: rgba(219, 234, 254, 0.7);
-    border: solid map-get($primary-color, 500);
+    border: solid map-get(t.$primary-color, 500);
     border-width: 0px;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-inline-message.p-inline-message-info .p-inline-message-icon {
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-inline-message.p-inline-message-success {
@@ -6890,17 +6891,17 @@
 
   .p-message.p-message-info {
     background: rgba(219, 234, 254, 0.7);
-    border: solid map-get($primary-color, 500);
+    border: solid map-get(t.$primary-color, 500);
     border-width: 0 0 0 6px;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-message.p-message-info .p-message-icon {
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-message.p-message-info .p-message-close {
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-message.p-message-success {
@@ -7027,14 +7028,14 @@
 
   .p-toast .p-toast-message.p-toast-message-info {
     background: rgba(219, 234, 254, 0.7);
-    border: solid map-get($primary-color, 500);
+    border: solid map-get(t.$primary-color, 500);
     border-width: 0 0 0 6px;
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-toast .p-toast-message.p-toast-message-info .p-toast-message-icon,
   .p-toast .p-toast-message.p-toast-message-info .p-toast-icon-close {
-    color: map-get($primary-color, 500);
+    color: map-get(t.$primary-color, 500);
   }
 
   .p-toast .p-toast-message.p-toast-message-success {
@@ -7146,7 +7147,7 @@
 
   .p-galleria .p-galleria-indicators .p-galleria-indicator.p-highlight button {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-galleria.p-galleria-indicators-bottom .p-galleria-indicator,
@@ -7173,7 +7174,7 @@
 
   .p-galleria.p-galleria-indicator-onitem .p-galleria-indicators .p-galleria-indicator.p-highlight button {
     background: #EFF6FF;
-    color: map-get($primary-color, 600);;
+    color: map-get(t.$primary-color, 600);;
   }
 
   .p-galleria .p-galleria-thumbnail-container {
@@ -7284,7 +7285,7 @@
   }
 
   .p-badge {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
@@ -7402,7 +7403,7 @@
   .p-progressbar .p-progressbar-value {
     border: 0 none;
     margin: 0;
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
   }
 
   .p-progressbar .p-progressbar-label {
@@ -7446,7 +7447,7 @@
   }
 
   .p-tag {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
     color: #ffffff;
     font-size: 0.75rem;
     font-weight: 700;
@@ -7521,11 +7522,11 @@
   }
 
   .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
-    background-color: map-get($primary-color, 500);
+    background-color: map-get(t.$primary-color, 500);
   }
 
   .p-galleria .p-galleria-indicators .p-galleria-indicator.p-highlight button {
-    background-color: map-get($primary-color, 500);
+    background-color: map-get(t.$primary-color, 500);
   }
 
   .p-button:focus {
@@ -7557,11 +7558,11 @@
   }
 
   .p-datatable .p-datatable-tbody>tr.p-datatable-dragpoint-top>td {
-    box-shadow: inset 0 2px 0 0 map-get($primary-color, 500);
+    box-shadow: inset 0 2px 0 0 map-get(t.$primary-color, 500);
   }
 
   .p-datatable .p-datatable-tbody>tr.p-datatable-dragpoint-bottom>td {
-    box-shadow: inset 0 -2px 0 0 map-get($primary-color, 500);
+    box-shadow: inset 0 -2px 0 0 map-get(t.$primary-color, 500);
   }
 
   .p-speeddial-item.p-focus>.p-speeddial-action {
@@ -7582,7 +7583,7 @@
   }
 
   .p-steps .p-steps-item.p-highlight .p-steps-number {
-    background: map-get($primary-color, 500);
+    background: map-get(t.$primary-color, 500);
     color: #ffffff;
   }
 }

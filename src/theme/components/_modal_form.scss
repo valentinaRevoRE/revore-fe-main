@@ -1,5 +1,5 @@
-@use "mixins" as *;
-@use "theme" as *;
+@use "../mixins" as m;
+@use "../theme" as t;
 
 .modalform {
     box-sizing: border-box;
@@ -10,7 +10,7 @@
     padding: 20px;
 
     &__title {
-        color: map-get($primary-color, 500);
+        color: map-get(t.$primary-color, 500);
         display: block;
         font-family: "g-semi", sans-serif;
         font-size: 24px;
@@ -20,7 +20,7 @@
     }
 
     &__intro {
-        color: map-get($primary-color, 300);
+        color: map-get(t.$primary-color, 300);
         display: block;
         font-family: "g-medium", sans-serif;
         font-size: 14px;
@@ -68,7 +68,7 @@
 
 
     &__label {
-        color: map-get($primary-color, 500);
+        color: map-get(t.$primary-color, 500);
         display: block;
         font-family: "g-medium", sans-serif;
         font-size: 16px;
@@ -79,7 +79,7 @@
         text-align: left;
 
         &-warn {
-            color: map-get($secondary-color, 500);
+            color: map-get(t.$secondary-color, 500);
         }
     }
 
@@ -94,7 +94,7 @@
     }
 
     &__input {
-        @include basicInput();
+        @include m.basicInput();
         margin-bottom: 0;
 
         &-select {
@@ -103,7 +103,7 @@
     }
 
     &__error {
-        color: map-get($secondary-color, 500);
+        color: map-get(t.$secondary-color, 500);
         text-align: left;
         display: block;
         font-size: 12px;
@@ -112,9 +112,9 @@
     }
 
     &__button {
-        @include primaryButton(map-get($primary-color, 500),
-            map-get($text-color, 100),
-            map-get($primary-color, 600));
+        @include m.primaryButton(map-get(t.$primary-color, 500),
+            map-get(t.$text-color, 100),
+            map-get(t.$primary-color, 600));
         height: 48px;
     }
 }

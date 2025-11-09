@@ -1,4 +1,4 @@
-@import "mixins";
+@use "../mixins" as m;
 
 .buttonstoolbar {
     align-items: center;
@@ -16,7 +16,7 @@
     }
 
     &__button {
-        @include primaryButton();
+        @include m.primaryButton();
         font-family: "g-semi", sans-serif;
         font-size: 13px;
         font-weight: 400;
