@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 import { PATHS } from '../const/home-paths.conts';
 import { Observable, map } from 'rxjs';
 import { IProject } from '../interfaces/project.interface';

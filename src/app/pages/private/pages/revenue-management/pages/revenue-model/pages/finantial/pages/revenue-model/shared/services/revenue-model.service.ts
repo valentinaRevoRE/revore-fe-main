@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 import { revenueModelListDto } from '@private/pages/revenue-management/pages/revenue-model/shared/utils/revenue-model.dto';
 import { PATHS } from '@shared/constants/paths.const';
 import { map } from 'rxjs';

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 import { PATHS } from '@shared/constants/paths.const';
 import { BehaviorSubject, tap } from 'rxjs';
 import { IRevenueParams } from '../interfaces/revenue-params.interface';

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 import { PATHS } from '@shared/constants/paths.const';
 import { SaleModel } from '../models/sale.model';
 import { IDepaToSend } from '../interfaces/adjustmen-price-1.interface';

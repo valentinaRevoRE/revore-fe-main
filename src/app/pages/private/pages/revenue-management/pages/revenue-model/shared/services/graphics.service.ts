@@ -4,7 +4,7 @@ import { RevenueModelService } from '@private/pages/revenue-management/pages/rev
 
 import { Observable, map, mergeMap, of, zip } from 'rxjs';
 import { PATHS } from '@shared/constants/paths.const';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { IDashboardData } from '../interfaces/dashboard.interface';
 import { formatRevenueGraphicMt2Data, formatRevenueGraphicPriceEvlData } from '../../pages/finantial/pages/revenue-model/shared/utils/format-revenue-graphic-data.util';

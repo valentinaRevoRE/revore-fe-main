@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
-import { environment } from '@environments/environments.local';
+import { environment } from '@environments/environment';
 
 export interface PresignedUrlResponse {
   uploadUrl: string;
