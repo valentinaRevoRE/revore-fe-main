@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILogin } from '../interfaces/login.interface';
-import { INewAccount } from '../interfaces/new-account.interface';
 import { environment } from '@environments/environments.local';
 import { PATHS } from '@shared/constants/paths.const';
 
@@ -15,18 +14,23 @@ export class AuthService {
     return this.hhtp.post(url, data);
   }
 
-  createAccount( data: INewAccount ){
+  createAccount( data: { email: string; password: string; name: string } ){
     const url: string =  `${environment.apiUrl}${PATHS.CREATE_ACCOUNT}`;
     return this.hhtp.post(url, data);
   }
 
   recoveryPassMail(email: string){
-    const url: string =  `${environment.apiUrl}${PATHS.RECOVERY_PASS_MAIL}/${email}`;
-    return this.hhtp.get(url);
+    const url: string =  `${environment.apiUrl}${PATHS.RECOVERY_PASS_MAIL}`;
+    return this.hhtp.post(url, { email });
   }
 
-  setNewPassword(data: { email: string, newPassword: string, resetToken: string }){
+  setNewPassword(data: { password: string, token: string }){
     const url: string =  `${environment.apiUrl}${PATHS.RECOVERY_PASS_SET_NEW}`;
+    return this.hhtp.post(url, data);
+  }
+
+  changePassword(data: { currentPassword: string, newPassword: string }){
+    const url: string =  `${environment.apiUrl}${PATHS.CHANGE_PASSWORD}`;
     return this.hhtp.post(url, data);
   }
 

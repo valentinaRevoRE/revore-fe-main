@@ -49,5 +49,13 @@
     "link": "/dashboard/marketing",
     "active": true,
     "children": [{}, {}]
+  },
+  {
+    "name": "Administración",
+    "icon": "profile-2user.svg",
+    "link": "/dashboard/admin/users",
+    "active": true,
+    "roles": ["admin"],
+    "children": []
   }
 ]

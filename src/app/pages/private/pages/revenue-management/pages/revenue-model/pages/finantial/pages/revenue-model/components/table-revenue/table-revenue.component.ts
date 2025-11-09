@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { REVENUE_TABLE_HEADER } from '../../shared/conts/revenue-table-headers.const';
 import { MRevenueModel } from '@private/pages/revenue-management/pages/revenue-model/shared/models/revenue-model.model';
-import { CurrencyPipe, NgStyle } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
     selector: 'app-table-revenue',
-    imports: [CurrencyPipe, NgStyle],
+    imports: [CurrencyPipe],
     templateUrl: './table-revenue.component.html',
     styleUrl: './table-revenue.component.scss'
 })

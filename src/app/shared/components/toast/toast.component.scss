@@ -1,4 +1,5 @@
-@import "theme";
+@use "sass:map";
+@use "theme" as *;
 
 .toast {
     align-items: center;
@@ -23,7 +24,7 @@
     }
 
     &__text {
-        color: map-get($text-color, 100);
+        color: map.get($text-color, 100);
         font-family: 'g-medium', sans-serif;
         font-size: 16px;
     }
@@ -31,7 +32,7 @@
     &__button {
         background-color: rgba(#fff, .1);
         border-radius: 4px;
-        color: map-get($text-color, 100);
+        color: map.get($text-color, 100);
         cursor: pointer;
         font-family: 'g-bold', sans-serif;
         height: 30px;
@@ -43,15 +44,15 @@
 }
 
 .toast-success {
-    background-color: map-get($aux-color, success);
+    background-color: map.get($aux-color, success);
 }
 
 .toast-warning {
-    background-color: map-get($aux-color, warning);
+    background-color: map.get($aux-color, warning);
 }
 
 .toast-error {
-    background-color: map-get($aux-color, error);
+    background-color: map.get($aux-color, error);
 }
 
 .isOpenToast {

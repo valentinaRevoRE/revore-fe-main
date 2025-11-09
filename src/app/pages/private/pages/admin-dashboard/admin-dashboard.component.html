@@ -1,0 +1,193 @@
+<div class="admin-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>👥 Gestión de Usuarios</h1>
+    <p>Administra los usuarios y sus roles en el sistema</p>
+  </div>
+
+
+  <!-- Filtros -->
+  <div class="filters-container">
+    <div class="filter-group">
+      <label>🔍 Buscar:</label>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="applyFilters()"
+        placeholder="Email o nombre..."
+        class="filter-input"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>👔 Rol:</label>
+      <select [(ngModel)]="selectedRole" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="all">Todos</option>
+        <option *ngFor="let role of availableRoles" [value]="role.value">
+          {{ role.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>📊 Estado:</label>
+      <select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="all">Todos</option>
+        <option value="active">Activos</option>
+        <option value="inactive">Inactivos</option>
+      </select>
+    </div>
+
+    <button class="btn-refresh" (click)="loadUsers()">
+      🔄 Actualizar
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error-container">
+    <p>{{ error }}</p>
+    <button class="btn-retry" (click)="loadUsers()">Reintentar</button>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div *ngIf="!loading && !error" class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Nombre</th>
+          <th>Roles</th>
+          <th>Estado</th>
+          <th>Email Verificado</th>
+          <th>Fecha Creación</th>
+          <th>Último Login</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers" [class.inactive-row]="!user.isActive">
+          <td>
+            <div class="user-email">
+              <span class="avatar">{{ user.email.charAt(0).toUpperCase() }}</span>
+              {{ user.email }}
+            </div>
+          </td>
+          <td>{{ user.name || '-' }}</td>
+          <td>
+            <div class="roles-badges">
+              <span 
+                *ngFor="let role of user.roles" 
+                class="badge"
+                [ngClass]="getRoleBadgeClass(role)"
+              >
+                {{ getRoleLabel(role) }}
+              </span>
+            </div>
+          </td>
+          <td>
+            <span 
+              class="status-badge" 
+              [class.status-active]="user.isActive"
+              [class.status-inactive]="!user.isActive"
+            >
+              {{ user.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <span 
+              class="verified-badge"
+              [class.verified-yes]="user.emailVerified"
+              [class.verified-no]="!user.emailVerified"
+            >
+              {{ user.emailVerified ? '✅ Sí' : '❌ No' }}
+            </span>
+          </td>
+          <td>{{ formatDate(user.createdAt) }}</td>
+          <td>{{ formatDate(user.lastLoginAt) }}</td>
+          <td>
+            <div class="action-buttons">
+              <button 
+                class="btn-edit" 
+                (click)="openEditModal(user)"
+                title="Editar rol"
+              >
+                ✏️
+              </button>
+              <button 
+                class="btn-toggle" 
+                (click)="toggleUserStatus(user)"
+                [title]="user.isActive ? 'Desactivar' : 'Activar'"
+              >
+                {{ user.isActive ? '🔴' : '🟢' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Sin resultados -->
+    <div *ngIf="filteredUsers.length === 0" class="no-results">
+      <p>No se encontraron usuarios con los filtros aplicados</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de edición de rol -->
+<div *ngIf="showEditModal" class="modal-overlay" (click)="closeEditModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Editar Rol de Usuario</h2>
+      <button class="btn-close" (click)="closeEditModal()">✕</button>
+    </div>
+
+    <div class="modal-body" *ngIf="selectedUser">
+      <div class="user-info">
+        <p><strong>Usuario:</strong> {{ selectedUser.email }}</p>
+        <p><strong>Nombre:</strong> {{ selectedUser.name }}</p>
+        <p><strong>Roles actuales:</strong> 
+          <span *ngFor="let role of selectedUser.roles" class="badge" [ngClass]="getRoleBadgeClass(role)">
+            {{ getRoleLabel(role) }}
+          </span>
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label for="newRole">Nuevo Rol:</label>
+        <select id="newRole" [(ngModel)]="newRole" class="form-select">
+          <option *ngFor="let role of availableRoles" [value]="role.value">
+            {{ role.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeEditModal()" [disabled]="loading">Cancelar</button>
+        <button class="btn-save" (click)="updateRole()" [disabled]="!newRole || loading">
+          <span *ngIf="!loading">Guardar Cambios</span>
+          <span *ngIf="loading" class="loading-spinner">
+            <span class="spinner"></span>
+            Guardando...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container" *ngIf="showToast">
+  <div class="toast" [ngClass]="toastType === 'success' ? 'toast-success' : 'toast-error'">
+    <div class="toast-icon">
+      {{ toastType === 'success' ? '✅' : '❌' }}
+    </div>
+    <div class="toast-message">{{ toastMessage }}</div>
+    <button class="toast-close" (click)="showToast = false">×</button>
+  </div>
+</div>

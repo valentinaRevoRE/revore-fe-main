@@ -14,11 +14,10 @@ import { PriceListService } from '../../shared/services/price-list.service';
 import { ButtonComponent } from '@shared/atoms/button/button.component';
 import { IDepaToSelect } from '../../shared/interfaces/adjustmen-price-1.interface';
 import { NgxMaskDirective } from 'ngx-mask';
-import { JsonPipe } from '@angular/common';
 
 @Component({
     selector: 'app-new-sale',
-    imports: [ButtonComponent, ReactiveFormsModule, DialogModule, NgxMaskDirective, JsonPipe],
+    imports: [ButtonComponent, ReactiveFormsModule, DialogModule, NgxMaskDirective],
     templateUrl: './new-sale.component.html'
 })
 export class NewSaleComponent {

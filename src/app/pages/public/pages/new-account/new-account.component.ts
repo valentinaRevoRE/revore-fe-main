@@ -4,17 +4,16 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '@public/shared/services/auth.service';
-import { CommonService } from '@core/common/common.service';
 
 import { ToastComponent } from '@shared/components/toast/toast.component';
 
 import { EStates } from '@shared/enums/states.enum';
-import { ILogin } from '@public/shared/interfaces/login.interface';
-import { INewAccount } from '@public/shared/interfaces/new-account.interface';
 import { IToast } from '@shared/interfaces/toast.interface';
 
 @Component({
@@ -28,19 +27,57 @@ export class NewAccountComponent {
   isLoading: boolean = false;
   formAccount: FormGroup;
   toastData: IToast = { isOpen: false, type: EStates.success, message: '' };
+  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
-    private commonService: CommonService,
     private router: Router,
     private authS: AuthService
   ) {
-    this.formAccount = this.formBuilder.group({
+      this.formAccount = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email, this.revoreEmailValidator]],
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      image: ['Image'],
+      password: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
     });
+
+    this.formAccount.valueChanges.subscribe(() => {
+      if (this.errorMessage) {
+        this.errorMessage = '';
+      }
+    });
+  }
+
+  
+  revoreEmailValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    
+    const email = control.value.toLowerCase();
+    const isRevoreEmail = email.endsWith('@revore.mx');
+    
+    return isRevoreEmail ? null : { revoreEmail: true };
+  }
+
+
+  strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    
+    const password = control.value;
+    
+    const hasNumber = /\d/.test(password);
+    
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+    
+    const errors: ValidationErrors = {};
+    
+    if (!hasNumber) {
+      errors['noNumber'] = true;
+    }
+    
+    if (!hasSpecialChar) {
+      errors['noSpecialChar'] = true;
+    }
+    
+    return Object.keys(errors).length > 0 ? errors : null;
   }
   submitForm() {
     if (this.formAccount.invalid || this.isLoading) {
@@ -49,35 +86,44 @@ export class NewAccountComponent {
       return;
     }
     this.isLoading = true;
-    const formValue: INewAccount = {
-      ...this.formAccount.value,
-      role: '68dae4279225f804cc4ec1af', // ID del rol "Usuario" que creamos
-      state: 1 // Estado activo
+    const formValue = {
+      email: this.formAccount.get('email')?.value,
+      password: this.formAccount.get('password')?.value,
+      name: this.formAccount.get('name')?.value,
     };
     this.authS.createAccount(formValue).subscribe({
       next: () => this.nextStep(),
       error: (error) => {
         const { message } = error.error ?? error;
-        this.toastData = {
-          type: EStates.error,
-          message: Array.isArray(message) ? message.join(', ') : message,
-          isOpen: true,
-        };
+        const errorMsg = Array.isArray(message) ? message.join(', ') : message;
+        
+        if (errorMsg && errorMsg.includes('ya está registrado')) {
+          this.errorMessage = errorMsg;
+        } else {
+          this.errorMessage = '';
+          this.toastData = {
+            type: EStates.error,
+            message: errorMsg || 'Error al crear cuenta',
+            isOpen: true,
+          };
+        }
+        
         this.isLoading = false;
       },
     });
   }
 
   private nextStep(){
-    const formData = this.formAccount.value;
-    const loginData: ILogin = { email: formData.email, password: formData.password };
-    this.authS.login(loginData).subscribe({
-      next: (resp: any) => {
-        this.commonService.localToken = resp.access_token;
-        this.commonService.saveLimitDate(false);
-        this.router.navigate(['dashboard', 'home']);
-      }
-    });
+    this.isLoading = false;
+    this.toastData = {
+      type: EStates.success,
+      message: '¡Cuenta creada exitosamente! Redirigiendo al login...',
+      isOpen: true,
+    };
+    
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 2500);
   }
 
   seePassword(isHidden: boolean, input: HTMLInputElement) {

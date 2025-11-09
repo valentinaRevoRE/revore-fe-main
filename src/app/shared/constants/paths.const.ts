@@ -3,7 +3,7 @@ export const PATHS = {
     APPRECIATION_COLUMNS_SAVE: '/api/operations/calculation-appreciations',
     APPRECIATION_DOWNLOAD: '/api/spreadsheets/appre-model',
     APPRECIATION_MODEL: '/api/appreciations-process/all',
-    CREATE_ACCOUNT: '/api/users',
+    CREATE_ACCOUNT: '/api/auth/register',
     DASHBOARD_GET: '/api/dashboard/all',
     LOGIN: '/api/auth/login',
     PARAMS_EDIT: '/api/parameters',
@@ -18,6 +18,7 @@ export const PATHS = {
     PRICE_LIST_UPLOAD: '/api/uploads',
     PRICE_LIST: '/api/departments',
     RECOVERY_PASS_MAIL: '/api/auth/forgot-password',
-    RECOVERY_PASS_SET_NEW: '/api/auth/change-password',
+    RECOVERY_PASS_SET_NEW: '/api/auth/reset-password',
+    CHANGE_PASSWORD: '/api/auth/change-password',
     REVENUE_MODEL_GET: '/api/revenue-model/all',
 }

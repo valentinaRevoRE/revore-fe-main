@@ -28,6 +28,47 @@ export class RecoveryPassComponent {
     private router: Router,
     private activeR: ActivatedRoute
   ) {
+    // Inicializar formulario primero
+    this.formRecovery = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+    });
+
+    // Detectar errores de Supabase en el hash
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const error = hashParams.get('error');
+    const errorDescription = hashParams.get('error_description');
+
+    if (error) {
+      // Link expirado u otro error
+      let message = 'El enlace de recuperación no es válido o ha expirado.';
+      
+      if (error === 'otp_expired' || errorDescription?.includes('expired')) {
+        message = 'El enlace de recuperación ha expirado. Por favor, solicita uno nuevo.';
+      }
+      
+      this.toastData = {
+        type: EStates.error,
+        message: message,
+        isOpen: true,
+      };
+      
+      // Limpiar el hash
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+
+    // Capturar token del hash (#access_token=...) que Supabase envía
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
+
+    if (accessToken && type === 'recovery') {
+      // Guardar token para usar en el cambio de contraseña
+      localStorage.setItem('tmpT', accessToken);
+      this.router.navigate(['login', 'recuperar-contrasena', 'actualizar']);
+      return;
+    }
+
+    // Capturar token del query parameter (?token=...)
     this.activeR.queryParamMap.subscribe( ({params}: any) => {
       const { token } = params;
       if(token){
@@ -35,9 +76,6 @@ export class RecoveryPassComponent {
         this.router.navigate(['login', 'recuperar-contrasena', 'actualizar']);
       }
     })
-    this.formRecovery = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
   }
 
   onSubmit() {
@@ -49,7 +87,7 @@ export class RecoveryPassComponent {
       next: () => {
         this.toastData = {
           type: EStates.success,
-          message: 'Mensaje enviado.',
+          message: 'Mensaje enviado. Revisa tu email para el enlace de recuperación.',
           isOpen: true,
         };
         this.formRecovery.reset();

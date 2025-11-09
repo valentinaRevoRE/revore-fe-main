@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrencyPipe, JsonPipe, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 
 import { AdjustPrice1Component } from '../../components/adjust-price1/adjust-price1.component';
 import { AdjustPrice2Component } from '../../components/adjust-price2/adjust-price2.component';
@@ -26,8 +26,7 @@ import { ModalConfirmComponent } from '@private/shared/components/modal-confirm/
         AdjustPrice1Component,
         AdjustPrice2Component,
         ButtonComponent,
-        CurrencyPipe,
-        JsonPipe,
+        
         ModalConfirmComponent,
         NewAppreciationCalcComponent,
         NewDepreciationComponent,

@@ -49,6 +49,17 @@
     </ul>
   </nav>
   <footer class="menu__footer">
+    <!-- Perfil de Usuario -->
+    <div class="menu__user-profile">
+      <div class="user-profile__avatar">
+        {{ userInitials }}
+      </div>
+      <div class="user-profile__info">
+        <p class="user-profile__name">{{ userName }}</p>
+        <span class="user-profile__role">{{ userRole }}</span>
+      </div>
+    </div>
+    
     <button class="menu__close" (click)="closeSession()">
       <img src="/assets/icons/logout.svg" alt="Cerrar Sesión" />
       Cerrar Sesión

@@ -1,4 +1,5 @@
-@import "theme";
+@use "sass:map";
+@use "theme" as theme;
 .projects {
     box-sizing: border-box;
     display: inline-flex;
@@ -21,7 +22,7 @@
         width: 150px;
         &:hover{
             cursor: pointer;
-            border: 2px solid map-get($secondary-color, 500);
+            border: 2px solid map.get(theme.$secondary-color, 500);
         }
     }
     &__img {

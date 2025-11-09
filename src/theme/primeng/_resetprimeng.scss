@@ -1,5 +1,5 @@
-@import "mixins";
-@import "theme";
+@use "sass:map";
+@use "theme" as *;
 
 :root {
   font-family: "g-medium", sans-serif;

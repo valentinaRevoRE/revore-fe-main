@@ -1,4 +1,4 @@
-@import "theme";
+@use "theme" as *;
 
 .table {
     max-width: calc(100vw - 240px - 40px);

@@ -1,7 +1,7 @@
-@import "theme";
-@import "resets";
-@import "fonts";
-@import "mixins";
-@import "components";
-@import "tools";
-@import "prime_resets";
+@use "theme" as *;
+@use "resets" as *;
+@use "fonts" as *;
+@use "mixins" as *;
+@use "components" as *;
+@use "tools" as *;
+@use "prime_resets" as *;

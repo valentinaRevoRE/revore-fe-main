@@ -61,7 +61,17 @@ export class LoginComponent {
   }
 
   private nextStep(resp: any){
-    this.commonService.localToken = resp.access_token;
+    // Guardar token de acceso
+    this.commonService.localToken = resp.accessToken || resp.access_token;
+    
+    // Guardar información del usuario y roles en localStorage
+    if (resp.user) {
+      localStorage.setItem('accessToken', resp.accessToken || resp.access_token);
+      localStorage.setItem('refreshToken', resp.refreshToken || resp.refresh_token);
+      localStorage.setItem('user', JSON.stringify(resp.user));
+      localStorage.setItem('userRoles', JSON.stringify(resp.user.roles || []));
+    }
+    
     const {remember} = this.formLogin.value;
     this.commonService.saveLimitDate(remember);
     this.router.navigate(['dashboard', 'home']);

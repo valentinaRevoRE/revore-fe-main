@@ -35,9 +35,8 @@ export class NewPasswordComponent {
       this.router.navigate(['login']);
     }
     this.formNewPassword = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      newPassword: ['', [Validators.required]],
-      resetToken: [this.token, [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]]
     });
   }
 
@@ -45,26 +44,58 @@ export class NewPasswordComponent {
     if (this.formNewPassword.invalid) {
       return;
     }
+
+    const password = this.formNewPassword.get('password')?.value;
+    const confirmPassword = this.formNewPassword.get('confirmPassword')?.value;
+
+    // Validar que las contraseñas coincidan
+    if (password !== confirmPassword) {
+      this.toastData = {
+        type: EStates.error,
+        message: 'Las contraseñas no coinciden',
+        isOpen: true,
+      };
+      return;
+    }
+
     this.isLoading = true;
-    this.authS.setNewPassword(this.formNewPassword.value).subscribe({
+    
+    // Enviar password y token (el que viene del email de recuperación)
+    this.authS.setNewPassword({ 
+      password: password, 
+      token: this.token! 
+    }).subscribe({
       next: () => {
         this.toastData = {
           type: EStates.success,
-          message:
-            'Se restableció tu contraseña. Ve al login e inicia sesión normalmente.',
+          message: 'Se restableció tu contraseña. Ve al login e inicia sesión normalmente.',
           isOpen: true,
         };
+        this.isLoading = false;
+        
+        // Limpiar formulario y token
+        this.formNewPassword.reset();
         localStorage.removeItem('tmpT');
+        
+        // Redirigir al login después de 3 segundos
         setTimeout(() => {
           this.router.navigate(['login']);
-        }, 5000);
+        }, 3000);
       },
       error: (err: any) => {
+        this.isLoading = false;
+        
+        // Mostrar mensaje específico del backend
+        const errorMessage = err?.error?.message || 'Error al restablecer tu contraseña. Intenta nuevamente.';
+        
         this.toastData = {
           type: EStates.error,
-          message: 'Error al restablecer tu contraseña. Contacta con el proveedor.',
+          message: errorMessage,
           isOpen: true,
         };
+        
+        // NO limpiar el formulario ni el token para que el usuario pueda intentar de nuevo
+        // NO redirigir, mantener en la misma pantalla
       },
     });
   }

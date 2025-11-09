@@ -25,6 +25,9 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "crypto-js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -59,6 +62,29 @@
               }],
               "outputHashing": "all"
             },
+            "staging": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [{
+                "replace": "src/environments/environments.local.ts",
+                "with": "src/environments/environments.staging.ts"
+              }],
+              "outputHashing": "all",
+              "optimization": true,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": false
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -72,6 +98,9 @@
           "configurations": {
             "production": {
               "buildTarget": "revore:build:production"
+            },
+            "staging": {
+              "buildTarget": "revore:build:staging"
             },
             "development": {
               "buildTarget": "revore:build:development"

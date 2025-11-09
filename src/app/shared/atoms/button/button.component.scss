@@ -1,12 +1,14 @@
-@import "mixins";
+@use "mixins" as *;
 .buttonatom {
     @include primaryButton();
-    font-family: "g-semi", sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 14px;
-    padding: 10px 14px;
-    width: fit-content;
+    & {
+        font-family: "g-semi", sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 14px;
+        padding: 10px 14px;
+        width: fit-content;
+    }
 
     & img {
         height: 17px;

@@ -21,7 +21,6 @@ import { AppreciationColModel } from '../../shared/models/appreciation-col.model
 import { processappreciationColSelectedUtil } from '../../shared/util/appreciation-col.util';
 import { firstValueFrom } from 'rxjs';
 import { ButtonComponent } from '@shared/atoms/button/button.component';
-import { ToastComponent } from '@shared/components/toast/toast.component';
 import { IRevenueParams } from '@private/pages/revenue-management/pages/revenue-model/shared/interfaces/revenue-params.interface';
 import { RevenueParamsService } from '@private/pages/revenue-management/pages/revenue-model/shared/services/revenue-params.service';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -34,7 +33,7 @@ import { NgxMaskDirective } from 'ngx-mask';
         NgxMaskDirective,
         MultiSelectModule,
         ReactiveFormsModule,
-        ToastComponent,
+        
     ],
     templateUrl: './new-appreciation-calc.component.html',
     styleUrl: './new-appreciation-calc.component.scss'

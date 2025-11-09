@@ -1,5 +1,6 @@
-@import "mixins";
-@import "theme";
+@use "sass:map";
+@use "theme" as theme;
+@use "mixins" as *;
 .login {
     box-sizing: border-box;
     text-align: left;
@@ -19,7 +20,7 @@
         width: 160px;
     }
     &__intro {
-        color: map-get($primary-color, 500);
+        color: map.get(theme.$primary-color, 500);
         display: block;
         font-family: "g-medium", sans-serif;
         font-size: 16px;
@@ -29,7 +30,7 @@
     }
 
     &__title {
-        color: map-get($primary-color, 500);
+        color: map.get(theme.$primary-color, 500);
         font-family: "g-semi", sans-serif;
         font-size: 32px;
         font-style: normal;
@@ -37,7 +38,7 @@
         line-height: normal;
     }
     &__welcome {
-        color: map-get($primary-color, 500);
+        color: map.get(theme.$primary-color, 500);
         font-family: "g-bold", sans-serif;
         font-size: 24px;
         font-style: normal;
@@ -55,7 +56,7 @@
             margin-bottom: 15px;
         }
         &__label {
-            color: map-get($primary-color, 500);
+            color: map.get(theme.$primary-color, 500);
             display: block;
             font-family: "g-medium", sans-serif;
             font-size: 16px;
@@ -71,7 +72,7 @@
         }
         .options {
             &__label {
-                color: map-get($primary-color, 400);
+                color: map.get(theme.$primary-color, 400);
                 display: inline-block;
                 font-family: "g-medium", sans-serif;
                 font-size: 12px;
@@ -81,7 +82,7 @@
                 line-height: 20px;
             }
             &__link {
-                color: map-get($primary-color, 400);
+                color: map.get(theme.$primary-color, 400);
                 font-family: "g-medium", sans-serif;
                 font-size: 12px;
                 font-style: normal;
@@ -99,13 +100,13 @@
         }
         &__submit {
             @include primaryButton(
-                map-get($primary-color, 500),
-                map-get($text-color, 100),
-                map-get($primary-color, 600)
+                map.get(theme.$primary-color, 500),
+                map.get(theme.$text-color, 100),
+                map.get(theme.$primary-color, 600)
             );
         }
         &__back {
-            @include primaryButton(#fff, map-get($primary-color, 500), #fff);
+            @include primaryButton(#fff, map.get(theme.$primary-color, 500), #fff);
         }
         .btn-oninput {
             @include btnOnInput();
@@ -113,7 +114,7 @@
     }
 
     &__outro {
-        color: map-get($primary-color, 400);
+        color: map.get(theme.$primary-color, 400);
         font-family: "g-medium", sans-serif;
         font-size: 16px;
         font-style: normal;
@@ -124,9 +125,9 @@
     }
     .outro {
         &__link {
-            color: map-get($primary-color, 400);
+            color: map.get(theme.$primary-color, 400);
             &:hover {
-                color: map-get($primary-color, 500);
+                color: map.get(theme.$primary-color, 500);
             }
         }
     }
@@ -141,12 +142,12 @@
         &__line {
             width: 100%;
             height: 1px;
-            background-color: map-get($primary-color, 200);
+            background-color: map.get(theme.$primary-color, 200);
             position: absolute;
         }
         &__text {
             background-color: #fff;
-            color: map-get($primary-color, 200);
+            color: map.get(theme.$primary-color, 200);
             display: block;
             font-family: "g-medium", sans-serif;
             font-size: 16px;
@@ -161,7 +162,7 @@
         @include googleButton();
     }
     .error-label {
-        color: map-get($secondary-color, 500);
+        color: map.get(theme.$secondary-color, 500);
         display: block;
         height: 30px;
         font-family: "g-medium", sans-serif;

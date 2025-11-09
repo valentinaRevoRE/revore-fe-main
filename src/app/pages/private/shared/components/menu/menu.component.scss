@@ -1,8 +1,9 @@
-@import "theme";
-@import "mixins";
+@use "sass:map";
+@use "theme" as theme;
+@use "mixins" as *;
 
 .menu {
-    background-color: map-get($primary-color, 500);
+    background-color: map.get(theme.$primary-color, 500);
     border-radius: 0 32px 32px 0;
     box-sizing: border-box;
     display: grid;
@@ -36,7 +37,7 @@
     }
     &__item {
         align-items: center;
-        color: map-get($text-color, 100);
+        color: map.get(theme.$text-color, 100);
         display: inline-flex;
         font-family: "g-medium", sans-serif;
         font-size: 14px;
@@ -64,7 +65,7 @@
         padding: 0;
     }
     &__item-active {
-        color: map-get($secondary-color, 500);
+        color: map.get(theme.$secondary-color, 500);
         .icon,
         .arrow {
             filter: invert(70%) sepia(29%) saturate(6579%) hue-rotate(332deg) brightness(92%) contrast(87%);
@@ -74,7 +75,7 @@
         }
     }
     &__item-disable {
-        color: map-get($primary-color, 300);
+        color: map.get(theme.$primary-color, 300);
         &:hover {
             text-decoration: none;
             cursor: not-allowed;
@@ -95,11 +96,30 @@
 
     &__footer {
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
+
+    &__user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    }
+    
     &__close {
         align-items: center;
         box-sizing: border-box;
-        color: map-get($text-color, 100);
+        color: map.get(theme.$text-color, 100);
         cursor: pointer;
         display: inline-flex;
         font-family: "g-medium", sans-serif;
@@ -107,7 +127,7 @@
         font-weight: 400;
         gap: 12px;
         justify-content: flex-start;
-        margin-bottom: 32px;
+        margin-bottom: 16px;
         padding: 16px 0;
         width: 100%;
         &:hover {
@@ -118,5 +138,56 @@
         display: block;
         margin: 0 auto;
         width: 161px;
+    }
+}
+
+// Estilos para el perfil de usuario
+.user-profile {
+    &__avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "g-bold", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        overflow: hidden;
+        flex: 1;
+    }
+
+    &__name {
+        color: white;
+        font-family: "g-semibold", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__role {
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "g-regular", sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        display: inline-block;
+        padding: 2px 8px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        white-space: nowrap;
+        width: fit-content;
     }
 }

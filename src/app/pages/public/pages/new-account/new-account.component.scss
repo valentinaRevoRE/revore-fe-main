@@ -23,6 +23,13 @@
         &__submit {
             margin-bottom: 30px;
         }
+        
+        .error-message {
+            display: block;
+            text-align: center;
+            margin-top: -20px;
+            margin-bottom: 16px;
+        }
     }
     &__outro {
         margin-bottom: 34px;

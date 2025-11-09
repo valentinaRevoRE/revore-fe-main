@@ -6,7 +6,6 @@ import { IToast } from '@shared/interfaces/toast.interface';
 import { ToastComponent } from '@shared/components/toast/toast.component';
 import { BottomBarsComponent } from '@private/shared/graphics/bottom-bars/bottom-bars.component';
 import { downloadBlobUtil } from '@private/shared/utils/save-local-file.util';
-import { FloatBarsComponent } from '@private/shared/graphics/float-bars/float-bars.component';
 import { IBottomBars } from '@private/shared/graphics/bottom-bars/interface/bottom-bars.interface';
 import { IHeaderTable } from '@private/pages/revenue-management/pages/revenue-model/shared/interfaces/headers-table.interface';
 import { IRevenueParams } from '@private/pages/revenue-management/pages/revenue-model/shared/interfaces/revenue-params.interface';
@@ -21,7 +20,7 @@ import { NewAppreciationCalcComponent } from '../../components/new-appreciation-
     imports: [
         BottomBarsComponent,
         ButtonComponent,
-        FloatBarsComponent,
+        
         NewAppreciationCalcComponent,
         NgStyle,
         ToastComponent,

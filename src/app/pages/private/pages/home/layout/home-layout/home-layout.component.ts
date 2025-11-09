@@ -37,7 +37,7 @@ export class HomeLayoutComponent implements OnInit {
   toastData: IToast = { isOpen: false, type: EStates.success, message: '' };
   viewCreatedProjectModal: boolean = false;
   viewSelectProjectModal: boolean = false;
-  currentProject: IProject = <any>{};
+  currentProject: IProject | null = null;
 
   constructor(private _cmS: CommonService, private _PrjS: ProjectsService) {}
 

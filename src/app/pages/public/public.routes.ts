@@ -24,6 +24,10 @@ export const routes: Routes = [
                 component: RecoveryPassComponent
             },
             {
+                path: 'reset-password',
+                component: RecoveryPassComponent
+            },
+            {
                 path: 'recuperar-contrasena/otp',
                 component: OtpComponent
             },
