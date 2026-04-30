@@ -1,0 +1,116 @@
+<section class="ss-dashboard">
+
+  <header class="ss-dashboard__header">
+    <div>
+      <h1 class="ss-dashboard__title">Sales Tools</h1>
+      <p class="ss-dashboard__subtitle">Genera y gestiona reportes de forma automática</p>
+    </div>
+  </header>
+
+  <!-- Módulos de servicio -->
+  <div class="ss-dashboard__section-title">¿Para qué servicio necesitas un reporte?</div>
+  <div class="ss-modules">
+    <a class="module-card" routerLink="/dashboard/self-service/generar">
+      <span class="module-card__label">Ventas</span>
+    </a>
+    <a class="module-card" routerLink="/dashboard/self-service/generar">
+      <span class="module-card__label">Marketing</span>
+    </a>
+    <a class="module-card" routerLink="/dashboard/self-service/generar">
+      <span class="module-card__label">Estrategia</span>
+    </a>
+    <a class="module-card" routerLink="/dashboard/self-service/generar">
+      <span class="module-card__label">Revenue Management</span>
+    </a>
+  </div>
+
+  <!-- KPIs -->
+  <div class="ss-dashboard__kpis">
+    <div class="kpi-card">
+      <span class="kpi-card__value">{{ isLoading ? '—' : stats.total }}</span>
+      <span class="kpi-card__label">Total ejecuciones</span>
+    </div>
+    <div class="kpi-card kpi-card--success">
+      <span class="kpi-card__value">{{ isLoading ? '—' : stats.completed }}</span>
+      <span class="kpi-card__label">Completadas</span>
+    </div>
+    <div class="kpi-card kpi-card--progress">
+      <span class="kpi-card__value">{{ isLoading ? '—' : stats.inProgress }}</span>
+      <span class="kpi-card__label">En proceso</span>
+    </div>
+    <div class="kpi-card kpi-card--error">
+      <span class="kpi-card__value">{{ isLoading ? '—' : stats.failed }}</span>
+      <span class="kpi-card__label">Fallidas</span>
+    </div>
+  </div>
+
+  <div class="ss-dashboard__body">
+
+    <!-- Actividad reciente -->
+    <div class="ss-card">
+      <div class="ss-card__header">
+        <h2 class="ss-card__title">Actividad reciente</h2>
+        <a class="ss-link" routerLink="/dashboard/self-service/historial">Ver todo →</a>
+      </div>
+
+      @if (isLoading) {
+        <div class="ss-loading">Cargando…</div>
+      } @else if (recentExecutions.length === 0) {
+        <div class="ss-empty">
+          <p>Sin ejecuciones aún.</p>
+          <a class="ss-btn ss-btn--outline" routerLink="/dashboard/self-service/generar">Generar el primero</a>
+        </div>
+      } @else {
+        <table class="ss-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Desarrollador</th>
+              <th>Tipo</th>
+              <th>Tipo envío</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (ex of recentExecutions; track ex.id) {
+              <tr>
+                <td>{{ ex.created_at | date:'dd/MM/yy HH:mm' }}</td>
+                <td>{{ ex.developers?.name ?? '—' }}</td>
+                <td>{{ ex.report_types?.name ?? '—' }}</td>
+                <td>{{ ex.triggered_by === 'manual' ? 'Por demanda' : 'Recurrente' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="statusClass(ex.status)">
+                    {{ STATUS_LABELS[ex.status] }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+
+    <!-- Acceso rápido -->
+    <div class="ss-quick">
+      <h2 class="ss-card__title">Acceso rápido</h2>
+      <div class="ss-quick__grid">
+        <a class="quick-card" routerLink="/dashboard/self-service/generar">
+          <span class="quick-card__icon">📄</span>
+          <span class="quick-card__label">Generar reporte</span>
+          <span class="quick-card__desc">Puntual o programado</span>
+        </a>
+        <a class="quick-card" routerLink="/dashboard/self-service/programaciones">
+          <span class="quick-card__icon">🔁</span>
+          <span class="quick-card__label">Programaciones</span>
+          <span class="quick-card__desc">Envíos automáticos activos</span>
+        </a>
+        <a class="quick-card" routerLink="/dashboard/self-service/historial">
+          <span class="quick-card__icon">📋</span>
+          <span class="quick-card__label">Historial</span>
+          <span class="quick-card__desc">Estado de todas las ejecuciones</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,12 @@
+<div class="callback">
+  @if (hasError) {
+    <div class="callback__error">
+      <p>Ocurrió un error al autenticar. Redirigiendo al login…</p>
+    </div>
+  } @else {
+    <div class="callback__loading">
+      <img src="/assets/icons/loading.svg" alt="Cargando" class="callback__spinner" />
+      <p>Verificando acceso…</p>
+    </div>
+  }
+</div>

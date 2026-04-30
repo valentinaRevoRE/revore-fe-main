@@ -15,5 +15,18 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./pages/private/private.routes').then( r => r.routes ),
         canActivate: [GuardianGuard]
+    },
+    // ── RevoRE Self-Service: rutas públicas (sin GuardianGuard) ──────────────
+    // El callback y access-denied no pueden vivir dentro de /dashboard porque
+    // no requieren JWT — son parte del flujo Supabase OAuth independiente.
+    {
+        path: 'revore/auth/callback',
+        loadComponent: () => import('./pages/revore-self-service/auth/callback/auth-callback.component')
+            .then(c => c.AuthCallbackComponent)
+    },
+    {
+        path: 'revore/access-denied',
+        loadComponent: () => import('./pages/revore-self-service/auth/access-denied/access-denied.component')
+            .then(c => c.AccessDeniedComponent)
     }
 ];

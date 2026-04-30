@@ -23,6 +23,8 @@
     }
     &__nav {
         overflow-y: auto;
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
     }
     &__ul {
         list-style: none;

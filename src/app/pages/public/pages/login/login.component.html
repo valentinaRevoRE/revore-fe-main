@@ -45,14 +45,17 @@
     ¿No tienes acceso a tu cuenta?
     <a class="outro__link" routerLink="/login/crear-cuenta">Crear una cuenta ahora</a>
   </p>
-  <!-- 
   <div class="login__separator">
     <div class="separator__line"></div>
-    <span class="separator__text">O continuar con</span>
+    <span class="separator__text">O</span>
   </div>
-  <button class="login__google">
-    <img src="/assets/icons/google.svg" alt="Icono Login">
-    Ingresa con Google
-  </button> -->
+  <button class="login__google" type="button" (click)="signInWithGoogle()" [disabled]="isGoogleLoading">
+    @if (isGoogleLoading) {
+      <img class="loading-icon" src="/assets/icons/loading.svg" alt="Cargando">
+    } @else {
+      <img src="/assets/icons/google.svg" alt="Google">
+    }
+    Continuar con Google
+  </button>
 </div>
 <app-toast [data]="toastData"></app-toast>

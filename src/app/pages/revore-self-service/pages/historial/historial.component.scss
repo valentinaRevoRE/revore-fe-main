@@ -1,0 +1,195 @@
+@use "sass:map";
+@use "theme" as t;
+
+.ss-historial {
+    padding: 32px 40px;
+    max-width: 1200px;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+    }
+
+    &__title {
+        font-family: "g-bold", sans-serif;
+        font-size: 28px;
+        color: map.get(t.$primary-color, 500);
+        margin: 0 0 4px;
+    }
+
+    &__subtitle {
+        font-family: "g-medium", sans-serif;
+        font-size: 14px;
+        color: map.get(t.$primary-color, 300);
+        margin: 0;
+    }
+}
+
+.ss-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.ss-form__select {
+    padding: 10px 12px;
+    border: 1.5px solid map.get(t.$primary-color, 100);
+    border-radius: 8px;
+    font-family: "g-medium", sans-serif;
+    font-size: 14px;
+    color: map.get(t.$primary-color, 500);
+    background: white;
+    outline: none;
+    min-width: 200px;
+
+    &:focus { border-color: map.get(t.$secondary-color, 500); }
+}
+
+.ss-table-wrap {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.ss-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "g-medium", sans-serif;
+    font-size: 13px;
+
+    th {
+        text-align: left;
+        padding: 12px 16px;
+        font-family: "g-bold", sans-serif;
+        font-size: 12px;
+        color: map.get(t.$primary-color, 300);
+        border-bottom: 1.5px solid map.get(t.$primary-color, 100);
+        white-space: nowrap;
+        background: #fafafa;
+    }
+
+    td {
+        padding: 14px 16px;
+        color: map.get(t.$primary-color, 500);
+        border-bottom: 1px solid map.get(t.$primary-color, 100);
+        vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(0,0,0,0.015); }
+}
+
+.recipients-cell {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    color: map.get(t.$primary-color, 300) !important;
+}
+
+.ss-sub {
+    display: block;
+    font-size: 11px;
+    color: map.get(t.$primary-color, 300);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: "g-medium", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &--queued   { background: map.get(t.$primary-color, 100); color: map.get(t.$primary-color, 400); }
+    &--progress { background: #dbeafe; color: #1d4ed8; }
+    &--success  { background: #d1fae5; color: #065f46; }
+    &--error    { background: #fee2e2; color: #991b1b; }
+}
+
+.pulse {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse-anim 1.2s infinite;
+}
+
+@keyframes pulse-anim {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.trigger-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: map.get(t.$primary-color, 100);
+    color: map.get(t.$primary-color, 400);
+
+    &--manual {
+        background: map.get(t.$secondary-color, 100);
+        color: map.get(t.$secondary-color, 700);
+    }
+}
+
+.ss-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: "g-medium", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &--primary {
+        background: map.get(t.$secondary-color, 500);
+        color: white;
+        &:hover { background: map.get(t.$secondary-color, 600); }
+    }
+
+    &--outline {
+        background: transparent;
+        color: map.get(t.$primary-color, 500);
+        border: 1.5px solid map.get(t.$primary-color, 200);
+        &:hover { border-color: map.get(t.$primary-color, 500); }
+    }
+
+    &--sm { padding: 6px 12px; font-size: 12px; }
+}
+
+.ss-muted {
+    font-size: 12px;
+    color: map.get(t.$primary-color, 200);
+}
+
+.ss-loading {
+    padding: 40px;
+    text-align: center;
+    color: map.get(t.$primary-color, 300);
+    font-family: "g-medium", sans-serif;
+    font-size: 14px;
+}
+
+.ss-empty {
+    padding: 60px 40px;
+    text-align: center;
+    color: map.get(t.$primary-color, 300);
+    font-family: "g-medium", sans-serif;
+    font-size: 14px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    p { margin: 0; }
+}

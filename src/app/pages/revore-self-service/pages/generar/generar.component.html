@@ -1,0 +1,242 @@
+<section class="ss-generar">
+
+  <header class="ss-generar__header">
+    <h1 class="ss-generar__title">Generar reporte</h1>
+    <p class="ss-generar__subtitle">Completa los pasos para enviar o programar un reporte</p>
+  </header>
+
+  <!-- Step indicator -->
+  <div class="ss-steps">
+    @for (s of [1,2,3,4]; track s) {
+      <div class="ss-steps__item"
+        [class.ss-steps__item--active]="step === s"
+        [class.ss-steps__item--done]="step > s">
+        <div class="ss-steps__circle">{{ step > s ? '✓' : s }}</div>
+        <span class="ss-steps__label">
+          {{ s === 1 ? 'Servicio' : s === 2 ? 'Tipo' : s === 3 ? 'Modalidad' : 'Condiciones' }}
+        </span>
+      </div>
+      @if (s < 4) {
+        <div class="ss-steps__line" [class.ss-steps__line--done]="step > s"></div>
+      }
+    }
+  </div>
+
+  <!-- Success -->
+  @if (submitSuccess) {
+    <div class="ss-success">
+      <span class="ss-success__icon">✅</span>
+      <p>{{ selectedModalidad === 'on_demand' ? '¡Reporte en cola! Sigue el estado en Historial.' : '¡Programación creada exitosamente!' }}</p>
+    </div>
+  }
+
+  @if (!submitSuccess) {
+    <div class="ss-generar__content">
+
+      <!-- ─── STEP 1: Servicio ─────────────────────────────────────────── -->
+      @if (step === 1) {
+        <h2 class="ss-generar__step-title">¿Para qué servicio?</h2>
+        <div class="service-grid">
+          @for (svc of ALL_SERVICES; track svc) {
+            <button
+              class="service-card"
+              [class.service-card--active]="selectedService === svc"
+              (click)="selectService(svc)"
+            >
+              <span class="service-card__name">{{ SERVICE_LABELS[svc] }}</span>
+            </button>
+          }
+        </div>
+      }
+
+      <!-- ─── STEP 2: Tipo ──────────────────────────────────────────────── -->
+      @if (step === 2) {
+        <h2 class="ss-generar__step-title">¿Qué tipo de informe?</h2>
+        @if (loadingTypes) {
+          <div class="ss-loading">Cargando…</div>
+        } @else {
+          <div class="report-grid">
+            @for (rt of reportTypes; track rt.id) {
+              <button
+                class="report-card"
+                [class.report-card--active]="selectedReportType?.id === rt.id"
+                (click)="selectReportType(rt)"
+              >
+                <span class="report-card__name">{{ rt.name }}</span>
+                @if (rt.description) {
+                  <span class="report-card__desc">{{ rt.description }}</span>
+                }
+              </button>
+            }
+          </div>
+        }
+      }
+
+      <!-- ─── STEP 3: Modalidad ────────────────────────────────────────── -->
+      @if (step === 3) {
+        <h2 class="ss-generar__step-title">¿Consulta puntual o programación?</h2>
+        <div class="modalidad-grid">
+          <button
+            class="modalidad-card"
+            [class.modalidad-card--active]="selectedModalidad === 'on_demand'"
+            (click)="selectModalidad('on_demand')"
+          >
+            <span class="modalidad-card__icon">⚡</span>
+            <span class="modalidad-card__title">Por demanda</span>
+            <span class="modalidad-card__desc">Genera y envía el reporte una sola vez</span>
+          </button>
+          <button
+            class="modalidad-card"
+            [class.modalidad-card--active]="selectedModalidad === 'recurring'"
+            (click)="selectModalidad('recurring')"
+          >
+            <span class="modalidad-card__icon">🔁</span>
+            <span class="modalidad-card__title">Recurrente</span>
+            <span class="modalidad-card__desc">Programa envíos automáticos periódicos</span>
+          </button>
+        </div>
+      }
+
+      <!-- ─── STEP 4: Condiciones ──────────────────────────────────────── -->
+      @if (step === 4) {
+        <h2 class="ss-generar__step-title">Condiciones</h2>
+        <form [formGroup]="form" class="ss-form">
+
+          <!-- Developer -->
+          <div class="ss-form__group">
+            <label class="ss-form__label">Desarrollador *</label>
+            <select class="ss-form__select" formControlName="developer_id">
+              <option value="">Selecciona un desarrollador</option>
+              @for (dev of developers; track dev.id) {
+                <option [value]="dev.id">{{ dev.name }}</option>
+              }
+            </select>
+          </div>
+
+          @if (loadingRelated) {
+            <p class="ss-loading-sm">Cargando datos…</p>
+          }
+
+          @if (!loadingRelated && developerGroups.length > 0) {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Grupo / Proyecto</label>
+              <select class="ss-form__select" formControlName="developer_group_id">
+                <option [value]="null">Sin grupo específico</option>
+                @for (g of developerGroups; track g.id) {
+                  <option [value]="g.id">{{ g.name }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          @if (!loadingRelated && subProjects.length > 0) {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Sub-proyecto</label>
+              <select class="ss-form__select" formControlName="sub_project_id">
+                <option [value]="null">Sin sub-proyecto</option>
+                @for (sp of subProjects; track sp.id) {
+                  <option [value]="sp.id">{{ sp.name }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          <div class="ss-form__divider"></div>
+
+          <!-- ── Por demanda ── -->
+          @if (selectedModalidad === 'on_demand') {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Fecha del reporte</label>
+              <div class="date-shortcuts">
+                <button type="button" class="shortcut-btn" (click)="setDateShortcut('today')">Hoy</button>
+                <button type="button" class="shortcut-btn" (click)="setDateShortcut('month_start')">Inicio de mes</button>
+                <button type="button" class="shortcut-btn" (click)="setDateShortcut('minus_90')">−90 días</button>
+              </div>
+              <input class="ss-form__input" type="date" formControlName="fecha" />
+            </div>
+          }
+
+          <!-- ── Recurrente ── -->
+          @if (selectedModalidad === 'recurring') {
+            <div class="ss-form__row">
+              <div class="ss-form__group">
+                <label class="ss-form__label">Cada</label>
+                <select class="ss-form__select" formControlName="cada_dia">
+                  @for (d of DAYS_OPTIONS; track d.value) {
+                    <option [value]="d.value">{{ d.label }}</option>
+                  }
+                </select>
+              </div>
+              <div class="ss-form__group">
+                <label class="ss-form__label">A las</label>
+                <input class="ss-form__input" type="time" formControlName="a_las" />
+              </div>
+            </div>
+
+            <div class="ss-form__row">
+              <div class="ss-form__group">
+                <label class="ss-form__label">Fecha inicio *</label>
+                <input class="ss-form__input" type="date" formControlName="start_date" />
+              </div>
+              <div class="ss-form__group">
+                <label class="ss-form__label">Fecha fin <span class="ss-form__hint">(opcional)</span></label>
+                <input class="ss-form__input" type="date" formControlName="end_date" />
+              </div>
+            </div>
+
+            <div class="ss-form__group">
+              <label class="ss-form__label">Zona horaria</label>
+              <select class="ss-form__select" formControlName="timezone">
+                <option value="America/Mexico_City">Ciudad de México (CST)</option>
+                <option value="America/Monterrey">Monterrey (CST)</option>
+                <option value="America/Bogota">Bogotá (COT)</option>
+                <option value="America/Lima">Lima (PET)</option>
+                <option value="UTC">UTC</option>
+              </select>
+            </div>
+          }
+
+          <!-- Correos — siempre visible -->
+          <div class="ss-form__group">
+            <label class="ss-form__label">
+              Correos *
+              <span class="ss-form__hint">separados por coma o línea</span>
+            </label>
+            <textarea
+              class="ss-form__textarea"
+              formControlName="recipients"
+              rows="3"
+              placeholder="correo@ejemplo.com, otro@ejemplo.com"
+            ></textarea>
+          </div>
+
+          @if (submitError) {
+            <div class="ss-error">{{ submitError }}</div>
+          }
+
+        </form>
+      }
+
+    </div>
+
+    <!-- Nav -->
+    <div class="ss-generar__nav">
+      @if (step > 1) {
+        <button class="ss-btn ss-btn--outline" (click)="back()">← Atrás</button>
+      } @else {
+        <span></span>
+      }
+
+      @if (step < totalSteps) {
+        <button class="ss-btn ss-btn--primary" (click)="next()" [disabled]="!canGoNext()">
+          Continuar →
+        </button>
+      } @else {
+        <button class="ss-btn ss-btn--primary" (click)="submit()" [disabled]="!canGoNext() || isSubmitting">
+          {{ isSubmitting ? 'Enviando…' : (selectedModalidad === 'on_demand' ? 'Generar reporte' : 'Crear programación') }}
+        </button>
+      }
+    </div>
+  }
+
+</section>

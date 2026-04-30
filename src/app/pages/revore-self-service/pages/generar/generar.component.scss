@@ -1,0 +1,420 @@
+@use "sass:map";
+@use "theme" as t;
+
+.ss-generar {
+    padding: 32px 40px;
+    max-width: 760px;
+
+    &__header {
+        margin-bottom: 32px;
+    }
+
+    &__title {
+        font-family: "g-bold", sans-serif;
+        font-size: 28px;
+        color: map.get(t.$primary-color, 500);
+        margin: 0 0 4px;
+    }
+
+    &__subtitle {
+        font-family: "g-medium", sans-serif;
+        font-size: 14px;
+        color: map.get(t.$primary-color, 300);
+        margin: 0;
+    }
+
+    &__step-title {
+        font-family: "g-bold", sans-serif;
+        font-size: 18px;
+        color: map.get(t.$primary-color, 500);
+        margin: 0 0 24px;
+    }
+
+    &__content {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        margin-bottom: 24px;
+        min-height: 220px;
+    }
+
+    &__nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+// Step indicator
+.ss-steps {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        min-width: 80px;
+    }
+
+    &__circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: map.get(t.$primary-color, 100);
+        color: map.get(t.$primary-color, 400);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "g-bold", sans-serif;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+
+    &__label {
+        font-family: "g-medium", sans-serif;
+        font-size: 11px;
+        color: map.get(t.$primary-color, 300);
+        white-space: nowrap;
+    }
+
+    &__line {
+        flex: 1;
+        height: 2px;
+        background: map.get(t.$primary-color, 100);
+        margin-top: -16px;
+        transition: background 0.2s ease;
+
+        &--done { background: map.get(t.$secondary-color, 500); }
+    }
+
+    &__item--active {
+        .ss-steps__circle {
+            background: map.get(t.$secondary-color, 500);
+            color: white;
+        }
+        .ss-steps__label { color: map.get(t.$secondary-color, 500); font-family: "g-bold", sans-serif; }
+    }
+
+    &__item--done {
+        .ss-steps__circle {
+            background: map.get(t.$secondary-color, 200);
+            color: map.get(t.$secondary-color, 700);
+        }
+    }
+}
+
+// Service cards
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.service-card {
+    padding: 20px 16px;
+    border-radius: 10px;
+    border: 2px solid map.get(t.$primary-color, 100);
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+
+    &__name {
+        font-family: "g-bold", sans-serif;
+        font-size: 14px;
+        color: map.get(t.$primary-color, 500);
+    }
+
+    &__badge {
+        font-family: "g-medium", sans-serif;
+        font-size: 10px;
+        color: map.get(t.$primary-color, 300);
+        background: map.get(t.$primary-color, 100);
+        padding: 2px 8px;
+        border-radius: 10px;
+    }
+
+    &:hover:not(&--disabled) {
+        border-color: map.get(t.$secondary-color, 400);
+    }
+
+    &--active {
+        border-color: map.get(t.$secondary-color, 500);
+        background: map.get(t.$secondary-color, 100);
+        .service-card__name { color: map.get(t.$secondary-color, 700); }
+    }
+
+    &--disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+}
+
+// Report type cards
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.report-card {
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid map.get(t.$primary-color, 100);
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    transition: all 0.2s ease;
+
+    &__name {
+        font-family: "g-bold", sans-serif;
+        font-size: 14px;
+        color: map.get(t.$primary-color, 500);
+    }
+
+    &__desc {
+        font-family: "g-medium", sans-serif;
+        font-size: 12px;
+        color: map.get(t.$primary-color, 300);
+    }
+
+    &:hover { border-color: map.get(t.$secondary-color, 400); }
+
+    &--active {
+        border-color: map.get(t.$secondary-color, 500);
+        background: map.get(t.$secondary-color, 100);
+        .report-card__name { color: map.get(t.$secondary-color, 700); }
+    }
+}
+
+// Modalidad cards
+.modalidad-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.modalidad-card {
+    padding: 32px 24px;
+    border-radius: 12px;
+    border: 2px solid map.get(t.$primary-color, 100);
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+
+    &__icon { font-size: 32px; }
+
+    &__title {
+        font-family: "g-bold", sans-serif;
+        font-size: 18px;
+        color: map.get(t.$primary-color, 500);
+    }
+
+    &__desc {
+        font-family: "g-medium", sans-serif;
+        font-size: 13px;
+        color: map.get(t.$primary-color, 300);
+        text-align: center;
+    }
+
+    &:hover { border-color: map.get(t.$secondary-color, 400); }
+
+    &--active {
+        border-color: map.get(t.$secondary-color, 500);
+        background: map.get(t.$secondary-color, 100);
+        .modalidad-card__title { color: map.get(t.$secondary-color, 700); }
+    }
+}
+
+// Forms
+.ss-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &__group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    &__label {
+        font-family: "g-bold", sans-serif;
+        font-size: 13px;
+        color: map.get(t.$primary-color, 500);
+    }
+
+    &__hint {
+        font-family: "g-medium", sans-serif;
+        font-size: 11px;
+        color: map.get(t.$primary-color, 300);
+        font-weight: 400;
+    }
+
+    &__select, &__input {
+        padding: 10px 12px;
+        border: 1.5px solid map.get(t.$primary-color, 100);
+        border-radius: 8px;
+        font-family: "g-medium", sans-serif;
+        font-size: 14px;
+        color: map.get(t.$primary-color, 500);
+        background: white;
+        outline: none;
+        transition: border 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+
+        &:focus { border-color: map.get(t.$secondary-color, 500); }
+    }
+
+    &__textarea {
+        padding: 10px 12px;
+        border: 1.5px solid map.get(t.$primary-color, 100);
+        border-radius: 8px;
+        font-family: "g-medium", sans-serif;
+        font-size: 14px;
+        color: map.get(t.$primary-color, 500);
+        background: white;
+        outline: none;
+        resize: vertical;
+        width: 100%;
+        box-sizing: border-box;
+
+        &:focus { border-color: map.get(t.$secondary-color, 500); }
+    }
+}
+
+// Success
+.ss-success {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #d1fae5;
+    border: 1.5px solid #10b981;
+    border-radius: 12px;
+    padding: 24px 32px;
+    font-family: "g-medium", sans-serif;
+    font-size: 16px;
+    color: #065f46;
+
+    &__icon { font-size: 24px; }
+
+    p { margin: 0; }
+}
+
+// Date shortcuts
+.date-shortcuts {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.shortcut-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid map.get(t.$primary-color, 200);
+    background: white;
+    font-family: "g-medium", sans-serif;
+    font-size: 12px;
+    color: map.get(t.$primary-color, 400);
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+        border-color: map.get(t.$secondary-color, 500);
+        color: map.get(t.$secondary-color, 600);
+        background: map.get(t.$secondary-color, 100);
+    }
+}
+
+// Divider
+.ss-form__divider {
+    height: 1px;
+    background: map.get(t.$primary-color, 100);
+    margin: 4px 0;
+}
+
+// Error
+.ss-error {
+    padding: 12px 16px;
+    background: #fee2e2;
+    border: 1.5px solid map.get(t.$aux-color, error);
+    border-radius: 8px;
+    font-family: "g-medium", sans-serif;
+    font-size: 13px;
+    color: #991b1b;
+}
+
+// Buttons
+.ss-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: "g-medium", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &--primary {
+        background: map.get(t.$secondary-color, 500);
+        color: white;
+        &:hover:not(:disabled) { background: map.get(t.$secondary-color, 600); }
+        &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+
+    &--outline {
+        background: transparent;
+        color: map.get(t.$primary-color, 500);
+        border: 1.5px solid map.get(t.$primary-color, 200);
+        &:hover { border-color: map.get(t.$primary-color, 500); }
+    }
+}
+
+.ss-loading {
+    padding: 24px;
+    text-align: center;
+    color: map.get(t.$primary-color, 300);
+    font-family: "g-medium", sans-serif;
+    font-size: 14px;
+}
+
+.ss-loading-sm {
+    font-family: "g-medium", sans-serif;
+    font-size: 12px;
+    color: map.get(t.$primary-color, 300);
+    font-style: italic;
+}
+
+.ss-empty {
+    padding: 40px 24px;
+    text-align: center;
+    color: map.get(t.$primary-color, 300);
+    font-family: "g-medium", sans-serif;
+    font-size: 14px;
+    p { margin: 0 0 4px; }
+}

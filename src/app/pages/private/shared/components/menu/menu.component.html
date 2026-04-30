@@ -38,8 +38,33 @@
                 'menu__item-active': routeActive.includes(subItem.link)
               }"
               [routerLink]="subItem.link"
-              >{{ subItem.name }}</a
             >
+              <span>{{ subItem.name }}</span>
+              @if (subItem?.children?.length > 0) {
+              <img
+                class="arrow"
+                src="/assets/icons/arrow-right.svg"
+                alt="Flecha Ir"
+              />
+              }
+            </a>
+            @if (subItem?.children?.length > 0) {
+            <ul [ngClass]="{'menu__subsubmenu': true, 'menu__subsubmenu-active': routeActive.includes(subItem.link)}">
+              @for (grandItem of subItem.children; track grandItem.name) {
+              <li>
+                <a
+                  [ngClass]="{
+                    menu__item: true,
+                    'menu__item-subitem': true,
+                    'menu__item-disable': !grandItem.active,
+                    'menu__item-active': routeActive.includes(grandItem.link)
+                  }"
+                  [routerLink]="grandItem.link"
+                >{{ grandItem.name }}</a>
+              </li>
+              }
+            </ul>
+            }
           </li>
           }
         </ul>
@@ -49,7 +74,6 @@
     </ul>
   </nav>
   <footer class="menu__footer">
-    <!-- Perfil de Usuario -->
     <div class="menu__user-profile">
       <div class="user-profile__avatar">
         {{ userInitials }}
@@ -59,7 +83,7 @@
         <span class="user-profile__role">{{ userRole }}</span>
       </div>
     </div>
-    
+
     <button class="menu__close" (click)="closeSession()">
       <img src="/assets/icons/logout.svg" alt="Cerrar Sesión" />
       Cerrar Sesión

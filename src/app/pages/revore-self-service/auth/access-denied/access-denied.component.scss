@@ -1,0 +1,76 @@
+@use "sass:map";
+@use "theme" as t;
+
+.access-denied {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f5f5f7;
+    padding: 24px;
+    box-sizing: border-box;
+
+    &__card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 40px;
+        max-width: 440px;
+        width: 100%;
+        text-align: center;
+    }
+
+    &__icon {
+        color: map.get(t.$secondary-color, 500);
+        margin-bottom: 24px;
+
+        svg {
+            width: 56px;
+            height: 56px;
+        }
+    }
+
+    &__title {
+        color: map.get(t.$primary-color, 500);
+        font-family: "g-semi", sans-serif;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: normal;
+        margin: 0 0 16px;
+    }
+
+    &__body {
+        color: map.get(t.$primary-color, 400);
+        font-family: "g-medium", sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.6;
+        margin: 0 0 32px;
+    }
+
+    &__btn {
+        align-items: center;
+        background-color: map.get(t.$primary-color, 500);
+        border-radius: 16px;
+        border: 2px solid map.get(t.$primary-color, 500);
+        box-sizing: border-box;
+        color: map.get(t.$text-color, 100);
+        display: flex;
+        font-family: "g-medium", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        gap: 10px;
+        justify-content: center;
+        line-height: normal;
+        padding: 12px 32px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: map.get(t.$primary-color, 600);
+            border-color: map.get(t.$primary-color, 600);
+        }
+    }
+}

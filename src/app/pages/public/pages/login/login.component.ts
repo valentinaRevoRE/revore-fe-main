@@ -12,6 +12,7 @@ import { ToastComponent } from '@shared/components/toast/toast.component';
 import { EStates } from '@shared/enums/states.enum';
 import { ILogin } from '@public/shared/interfaces/login.interface';
 import { IToast } from '@shared/interfaces/toast.interface';
+import { SupabaseService } from '@revore/services/supabase.service';
 
 @Component({
     selector: 'app-login',
@@ -23,13 +24,15 @@ export class LoginComponent {
   passHidden: boolean = true;
   formLogin: FormGroup;
   isLoading: boolean = false;
+  isGoogleLoading: boolean = false;
   toastData: IToast = { isOpen: false, type: EStates.success, message: '' };
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authS: AuthService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private supabaseS: SupabaseService
   ) {
     this.formLogin = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -80,5 +83,15 @@ export class LoginComponent {
   seePassword(isHidden: boolean, input: HTMLInputElement) {
     !this.passHidden ? (input.type = 'password') : (input.type = 'text');
     this.passHidden = isHidden;
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    if (this.isGoogleLoading) return;
+    this.isGoogleLoading = true;
+    await this.supabaseS.db.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/revore/auth/callback` },
+    });
+    // El redirect lo maneja Supabase — isGoogleLoading se resetea al volver
   }
 }
