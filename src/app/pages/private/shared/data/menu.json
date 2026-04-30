@@ -32,9 +32,30 @@
   {
     "name": "Sales Tools",
     "icon": "moneys.svg",
-    "link": "/dashboard/sales-tools",
+    "link": "/dashboard/self-service/dashboard",
     "active": true,
-    "children": []
+    "children": [
+      {
+        "name": "Dashboard",
+        "link": "/dashboard/self-service/dashboard",
+        "active": true
+      },
+      {
+        "name": "Generar reporte",
+        "link": "/dashboard/self-service/generar",
+        "active": true
+      },
+      {
+        "name": "Programaciones",
+        "link": "/dashboard/self-service/programaciones",
+        "active": true
+      },
+      {
+        "name": "Historial",
+        "link": "/dashboard/self-service/historial",
+        "active": true
+      }
+    ]
   },
   {
     "name": "Product Definition",

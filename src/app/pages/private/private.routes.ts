@@ -7,6 +7,7 @@ import { SalesToolsComponent } from './pages/sales-tools/sales-tools.component';
 import { ProductDefinitionComponent } from './pages/product-definition/product-definition.component';
 import { MarketingComponent } from './pages/marketing/marketing.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
+import { revoreAuthGuard } from '@revore/guards/revore-auth.guard';
 
 export const routes: Routes = [
     {
@@ -27,7 +28,7 @@ export const routes: Routes = [
                 component: SalesToolsComponent
             },
             {
-                path: 'product-definition', 
+                path: 'product-definition',
                 component: ProductDefinitionComponent
             },
             {
@@ -38,6 +39,12 @@ export const routes: Routes = [
                 path: 'admin/users',
                 component: AdminDashboardComponent,
                 canActivate: [adminGuard]
+            },
+            {
+                // RevoRE Self-Service — requiere sesión Supabase + dominio @revore.mx
+                path: 'self-service',
+                loadChildren: () => import('@revore/revore-self-service.routes').then( r => r.revoreRoutes ),
+                canActivate: [revoreAuthGuard]
             },
             {
                 path: '**',

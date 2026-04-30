@@ -1,0 +1,209 @@
+<section class="ss-programaciones">
+
+  <header class="ss-programaciones__header">
+    <div>
+      <h1 class="ss-programaciones__title">Programaciones</h1>
+      <p class="ss-programaciones__subtitle">Gestiona los envíos automáticos de reportes</p>
+    </div>
+    <button class="ss-btn ss-btn--primary" (click)="openCreate()">+ Nueva programación</button>
+  </header>
+
+  @if (isLoading) {
+    <div class="ss-loading">Cargando programaciones…</div>
+  } @else if (schedules.length === 0) {
+    <div class="ss-empty">
+      <p>No hay programaciones activas aún.</p>
+      <button class="ss-btn ss-btn--outline" (click)="openCreate()">Crear la primera</button>
+    </div>
+  } @else {
+    <div class="ss-table-wrap">
+      <table class="ss-table">
+        <thead>
+          <tr>
+            <th>Desarrollador</th>
+            <th>Tipo de reporte</th>
+            <th>Frecuencia</th>
+            <th>Próximo envío</th>
+            <th>Destinatarios</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of schedules; track s.id) {
+            <tr [class.ss-table__row--inactive]="!s.active">
+              <td>
+                {{ s.developers?.name ?? '—' }}
+                @if (s.developer_groups?.name) {
+                  <span class="ss-sub">{{ s.developer_groups?.name }}</span>
+                }
+              </td>
+              <td>{{ s.report_types?.name ?? '—' }}</td>
+              <td>{{ freqLabel(s) }}</td>
+              <td>{{ s.next_run ? (s.next_run | date:'dd/MM/yy HH:mm') : '—' }}</td>
+              <td class="recipients-cell">{{ s.recipients.join(', ') }}</td>
+              <td>
+                <button
+                  class="ss-toggle"
+                  [class.ss-toggle--on]="s.active"
+                  (click)="toggleActive(s)"
+                  [title]="s.active ? 'Desactivar' : 'Activar'"
+                >
+                  <span class="ss-toggle__knob"></span>
+                </button>
+              </td>
+              <td class="ss-actions">
+                <button class="ss-btn ss-btn--sm ss-btn--danger" (click)="requestDelete(s.id)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Confirm delete -->
+  @if (confirmDeleteId) {
+    <div class="ss-overlay">
+      <div class="ss-dialog">
+        <h3>¿Eliminar programación?</h3>
+        <p>Esta acción no se puede deshacer. La programación será eliminada permanentemente.</p>
+        <div class="ss-dialog__actions">
+          <button class="ss-btn ss-btn--outline" (click)="cancelDelete()">Cancelar</button>
+          <button class="ss-btn ss-btn--danger" (click)="confirmDelete()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Create/Edit modal -->
+  @if (showModal) {
+    <div class="ss-overlay" (click)="closeModal()">
+      <div class="ss-modal" (click)="$event.stopPropagation()">
+        <div class="ss-modal__header">
+          <h2>{{ isEditing ? 'Editar programación' : 'Nueva programación' }}</h2>
+          <button class="ss-modal__close" (click)="closeModal()">✕</button>
+        </div>
+
+        <form [formGroup]="form" class="ss-form ss-modal__body">
+
+          <div class="ss-form__group">
+            <label class="ss-form__label">Desarrollador *</label>
+            <select class="ss-form__select" formControlName="developer_id">
+              <option value="">Selecciona un desarrollador</option>
+              @for (dev of developers; track dev.id) {
+                <option [value]="dev.id">{{ dev.name }}</option>
+              }
+            </select>
+          </div>
+
+          @if (developerGroups.length > 0) {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Grupo</label>
+              <select class="ss-form__select" formControlName="developer_group_id">
+                <option [value]="null">Sin grupo específico</option>
+                @for (g of developerGroups; track g.id) {
+                  <option [value]="g.id">{{ g.name }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          @if (subProjects.length > 0) {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Sub-proyecto</label>
+              <select class="ss-form__select" formControlName="sub_project_id">
+                <option [value]="null">Sin sub-proyecto</option>
+                @for (sp of subProjects; track sp.id) {
+                  <option [value]="sp.id">{{ sp.name }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          <div class="ss-form__group">
+            <label class="ss-form__label">Tipo de reporte *</label>
+            <select class="ss-form__select" formControlName="report_type_id">
+              <option value="">Selecciona un tipo</option>
+              @for (rt of reportTypes; track rt.id) {
+                <option [value]="rt.id">{{ rt.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="ss-form__row">
+            <div class="ss-form__group">
+              <label class="ss-form__label">Frecuencia *</label>
+              <select class="ss-form__select" formControlName="frequency">
+                <option value="weekly">Semanal</option>
+                <option value="monthly">Mensual</option>
+              </select>
+            </div>
+            <div class="ss-form__group">
+              <label class="ss-form__label">Hora (0–23)</label>
+              <input class="ss-form__input" type="number" min="0" max="23" formControlName="hour" />
+            </div>
+          </div>
+
+          @if (form.get('frequency')?.value === 'weekly') {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Día de la semana</label>
+              <select class="ss-form__select" formControlName="day_of_week">
+                @for (d of DAYS; track d.value) {
+                  <option [value]="d.value">{{ d.label }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          @if (form.get('frequency')?.value === 'monthly') {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Día del mes (1–28)</label>
+              <input class="ss-form__input" type="number" min="1" max="28" formControlName="day_of_month" />
+            </div>
+          }
+
+          <div class="ss-form__row">
+            <div class="ss-form__group">
+              <label class="ss-form__label">Fecha inicio *</label>
+              <input class="ss-form__input" type="date" formControlName="start_date" />
+            </div>
+            <div class="ss-form__group">
+              <label class="ss-form__label">Fecha fin</label>
+              <input class="ss-form__input" type="date" formControlName="end_date" />
+            </div>
+          </div>
+
+          <div class="ss-form__group">
+            <label class="ss-form__label">Zona horaria</label>
+            <select class="ss-form__select" formControlName="timezone">
+              <option value="America/Mexico_City">Ciudad de México (CST)</option>
+              <option value="America/Monterrey">Monterrey (CST)</option>
+              <option value="America/Bogota">Bogotá (COT)</option>
+              <option value="America/Lima">Lima (PET)</option>
+              <option value="UTC">UTC</option>
+            </select>
+          </div>
+
+          <div class="ss-form__group">
+            <label class="ss-form__label">Destinatarios * <span class="ss-form__hint">(separados por coma o línea)</span></label>
+            <textarea class="ss-form__textarea" formControlName="recipients" rows="3" placeholder="correo@ejemplo.com"></textarea>
+          </div>
+
+          @if (saveError) {
+            <div class="ss-error">{{ saveError }}</div>
+          }
+
+        </form>
+
+        <div class="ss-modal__footer">
+          <button class="ss-btn ss-btn--outline" (click)="closeModal()">Cancelar</button>
+          <button class="ss-btn ss-btn--primary" (click)="save()" [disabled]="form.invalid || isSaving">
+            {{ isSaving ? 'Guardando…' : (isEditing ? 'Guardar cambios' : 'Crear programación') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</section>

@@ -1,0 +1,88 @@
+<section class="ss-historial">
+
+  <header class="ss-historial__header">
+    <div>
+      <h1 class="ss-historial__title">Historial de ejecuciones</h1>
+      <p class="ss-historial__subtitle">Sigue el estado de todos los reportes generados</p>
+    </div>
+    <a class="ss-btn ss-btn--primary" routerLink="/dashboard/self-service/generar">+ Generar reporte</a>
+  </header>
+
+  <!-- Filters -->
+  <div class="ss-filters">
+    <select class="ss-form__select" [(ngModel)]="filterStatus" (change)="applyFilters()">
+      @for (s of STATUSES; track s.value) {
+        <option [value]="s.value">{{ s.label }}</option>
+      }
+    </select>
+
+    <select class="ss-form__select" [(ngModel)]="filterDeveloper" (change)="applyFilters()">
+      <option value="">Todos los desarrolladores</option>
+      @for (dev of developers; track dev.id) {
+        <option [value]="dev.id">{{ dev.name }}</option>
+      }
+    </select>
+  </div>
+
+  @if (isLoading) {
+    <div class="ss-loading">Cargando historial…</div>
+  } @else if (filtered.length === 0) {
+    <div class="ss-empty">
+      <p>Sin ejecuciones que coincidan con los filtros.</p>
+    </div>
+  } @else {
+    <div class="ss-table-wrap">
+      <table class="ss-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Desarrollador</th>
+            <th>Tipo de reporte</th>
+            <th>Disparado por</th>
+            <th>Destinatarios</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ex of filtered; track ex.id) {
+            <tr>
+              <td>{{ ex.created_at | date:'dd/MM/yy HH:mm' }}</td>
+              <td>
+                {{ ex.developers?.name ?? '—' }}
+                @if (ex.developer_groups?.name) {
+                  <span class="ss-sub">{{ ex.developer_groups?.name }}</span>
+                }
+              </td>
+              <td>{{ ex.report_types?.name ?? '—' }}</td>
+              <td>
+                <span class="trigger-badge" [class.trigger-badge--manual]="ex.triggered_by === 'manual'">
+                  {{ ex.triggered_by === 'manual' ? 'Manual' : 'Programado' }}
+                </span>
+              </td>
+              <td class="recipients-cell">{{ ex.recipients.join(', ') }}</td>
+              <td>
+                <span class="badge" [ngClass]="statusClass(ex.status)">
+                  {{ STATUS_LABELS[ex.status] }}
+                  @if (isInProgress(ex.status)) {
+                    <span class="pulse"></span>
+                  }
+                </span>
+              </td>
+              <td>
+                @if (ex.file_url) {
+                  <a class="ss-btn ss-btn--sm ss-btn--outline" [href]="ex.file_url" target="_blank">Descargar</a>
+                } @else if (isInProgress(ex.status)) {
+                  <span class="ss-muted">Procesando…</span>
+                } @else {
+                  <span class="ss-muted">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</section>

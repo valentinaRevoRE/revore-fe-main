@@ -25,7 +25,8 @@
       "@shared/*": ["./src/app/shared/*"],
       "@private/*": ["./src/app/pages/private/*"],
       "@public/*": ["./src/app/pages/public/*"],
-      "@core/*": ["./src/app/core/*"]
+      "@core/*": ["./src/app/core/*"],
+      "@revore/*": ["./src/app/pages/revore-self-service/*"]
     },
     "lib": [
       "ES2022",
