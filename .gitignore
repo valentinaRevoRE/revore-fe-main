@@ -3,6 +3,7 @@ node_modules/
 dist/
 coverage/
 *.local.*
+!src/environments/environments.local.ts
 .env
 .env.*
 # Angular/CLI caches
