@@ -16,6 +16,6 @@ export const environment = {
     revore: {
         allowedDomain: 'revore.mx',
         // TODO BACKEND: reemplazar con URL de Fly.io cuando esté desplegado
-        backendUrl: 'https://api-revore-reports.fly.dev',
+        backendUrl: 'https://revo-report-hub.fly.dev',
     },
 };

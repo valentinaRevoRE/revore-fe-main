@@ -3,8 +3,8 @@ import { CanActivateFn, Router } from '@angular/router';
 import { CommonService } from '@core/common/common.service';
 
 export const GuardianGuard: CanActivateFn = (route, state) => {
-  // Self-Service usa Supabase OAuth — su propio guard (revoreAuthGuard) se encarga
-  if (state.url.startsWith('/dashboard/self-service')) return true;
+  // Sales Tools usa Supabase OAuth — su propio guard (revoreAuthGuard) se encarga
+  if (state.url.startsWith('/dashboard/sales-tools')) return true;
 
   const commonService = inject(CommonService);
   const router = inject(Router);

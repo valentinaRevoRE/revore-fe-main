@@ -4,14 +4,15 @@
 
 .menu {
     background-color: map.get(theme.$primary-color, 500);
-    border-radius: 0 32px 32px 0;
+    border-radius: 0 42px 42px 0;
+    overflow: hidden;
     box-sizing: border-box;
     display: grid;
-    gap: 32px;
+    gap: 24px;
     grid-template-columns: 100%;
-    grid-template-rows: 29px calc(100% - 218px) 105px;
-    height: 100vh;
-    padding: 42px 11px 42px 16px;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    padding: 42px 11px 28px 16px;
     position: sticky;
     top: 0;
     width: 100%;
@@ -100,46 +101,74 @@
         width: 100%;
         display: flex;
         flex-direction: column;
+        justify-content: flex-end;
         gap: 16px;
+        padding-bottom: 10px;
     }
 
-    &__user-profile {
+    &__user-row {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        margin-bottom: 8px;
-        transition: all 0.3s ease;
+        gap: 10px;
+        padding: 3px 4px;
+        margin-bottom: 10px;
+    }
+
+    &__user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, map.get(theme.$secondary-color, 400) 0%, map.get(theme.$secondary-color, 500) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "g-bold", sans-serif;
+        font-size: 14px;
+        color: white;
+        flex-shrink: 0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    &__user-email {
+        color: rgba(255, 255, 255, 0.9);
+        font-family: "g-medium", sans-serif;
+        font-size: 13px;
+        line-height: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+        flex: 1;
+    }
+
+    &__logout {
+        border: none;
+        background: transparent;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        img {
+            width: 18px;
+            height: 18px;
+            filter: brightness(0) invert(1);
+        }
 
         &:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
         }
     }
-    
-    &__close {
-        align-items: center;
-        box-sizing: border-box;
-        color: map.get(theme.$text-color, 100);
-        cursor: pointer;
-        display: inline-flex;
-        font-family: "g-medium", sans-serif;
-        font-size: 14px;
-        font-weight: 400;
-        gap: 12px;
-        justify-content: flex-start;
-        margin-bottom: 16px;
-        padding: 16px 0;
-        width: 100%;
-        &:hover {
-            text-decoration: underline;
-        }
-    }
+
     &__powerby {
         display: block;
         margin: 0 auto;
-        width: 161px;
+        width: 142px;
+        opacity: 0.92;
     }
 }
 
@@ -164,7 +193,7 @@
     &__info {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 2px;
         overflow: hidden;
         flex: 1;
     }
@@ -172,7 +201,7 @@
     &__name {
         color: white;
         font-family: "g-semibold", sans-serif;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 600;
         margin: 0;
         white-space: nowrap;
@@ -180,15 +209,25 @@
         text-overflow: ellipsis;
     }
 
-    &__role {
-        color: rgba(255, 255, 255, 0.8);
+    &__email {
+        color: rgba(255, 255, 255, 0.85);
         font-family: "g-regular", sans-serif;
         font-size: 12px;
-        font-weight: 400;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__role {
+        color: rgba(255, 255, 255, 0.85);
+        font-family: "g-medium", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
         display: inline-block;
-        padding: 2px 8px;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
+        padding: 4px 10px;
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
         white-space: nowrap;
         width: fit-content;
     }

@@ -10,16 +10,16 @@
   <!-- Módulos de servicio -->
   <div class="ss-dashboard__section-title">¿Para qué servicio necesitas un reporte?</div>
   <div class="ss-modules">
-    <a class="module-card" routerLink="/dashboard/self-service/generar">
+    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
       <span class="module-card__label">Ventas</span>
     </a>
-    <a class="module-card" routerLink="/dashboard/self-service/generar">
+    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
       <span class="module-card__label">Marketing</span>
     </a>
-    <a class="module-card" routerLink="/dashboard/self-service/generar">
+    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
       <span class="module-card__label">Estrategia</span>
     </a>
-    <a class="module-card" routerLink="/dashboard/self-service/generar">
+    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
       <span class="module-card__label">Revenue Management</span>
     </a>
   </div>
@@ -50,7 +50,7 @@
     <div class="ss-card">
       <div class="ss-card__header">
         <h2 class="ss-card__title">Actividad reciente</h2>
-        <a class="ss-link" routerLink="/dashboard/self-service/historial">Ver todo →</a>
+        <a class="ss-link" routerLink="/dashboard/sales-tools/historial">Ver todo →</a>
       </div>
 
       @if (isLoading) {
@@ -58,7 +58,7 @@
       } @else if (recentExecutions.length === 0) {
         <div class="ss-empty">
           <p>Sin ejecuciones aún.</p>
-          <a class="ss-btn ss-btn--outline" routerLink="/dashboard/self-service/generar">Generar el primero</a>
+          <a class="ss-btn ss-btn--outline" routerLink="/dashboard/sales-tools/generar">Generar el primero</a>
         </div>
       } @else {
         <table class="ss-table">
@@ -94,17 +94,17 @@
     <div class="ss-quick">
       <h2 class="ss-card__title">Acceso rápido</h2>
       <div class="ss-quick__grid">
-        <a class="quick-card" routerLink="/dashboard/self-service/generar">
+        <a class="quick-card" routerLink="/dashboard/sales-tools/generar">
           <span class="quick-card__icon">📄</span>
           <span class="quick-card__label">Generar reporte</span>
           <span class="quick-card__desc">Puntual o programado</span>
         </a>
-        <a class="quick-card" routerLink="/dashboard/self-service/programaciones">
+        <a class="quick-card" routerLink="/dashboard/sales-tools/programaciones">
           <span class="quick-card__icon">🔁</span>
           <span class="quick-card__label">Programaciones</span>
           <span class="quick-card__desc">Envíos automáticos activos</span>
         </a>
-        <a class="quick-card" routerLink="/dashboard/self-service/historial">
+        <a class="quick-card" routerLink="/dashboard/sales-tools/historial">
           <span class="quick-card__icon">📋</span>
           <span class="quick-card__label">Historial</span>
           <span class="quick-card__desc">Estado de todas las ejecuciones</span>

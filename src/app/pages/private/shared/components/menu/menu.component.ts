@@ -16,6 +16,7 @@ export class MenuComponent implements OnInit{
   menuList: any[] = [];
   routeActive: string = '';
   userName: string = '';
+  userEmail: string = '';
   userRole: string = '';
   userInitials: string = '';
 
@@ -46,18 +47,22 @@ export class MenuComponent implements OnInit{
     
     if (userStr) {
       const user = JSON.parse(userStr);
-      this.userName = user.name || user.email || 'Usuario';
+      this.userEmail = user.email || '';
+      this.userName = user.name || 'Usuario';
       
-      // Generar iniciales
-      this.userInitials = this.getInitials(this.userName);
+      // Generar iniciales usando nombre o correo
+      this.userInitials = this.getInitials(user.name || user.email || 'Usuario');
     }
     
     if (userRolesStr) {
       const userRoles: string[] = JSON.parse(userRolesStr);
-      // Obtener el primer rol y traducirlo al español
       if (userRoles.length > 0) {
         this.userRole = this.translateRole(userRoles[0]);
+      } else {
+        this.userRole = 'Usuario';
       }
+    } else {
+      this.userRole = 'Usuario';
     }
   }
 

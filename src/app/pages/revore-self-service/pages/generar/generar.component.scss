@@ -2,8 +2,10 @@
 @use "theme" as t;
 
 .ss-generar {
+    margin: 0 auto;
     padding: 32px 40px;
-    max-width: 760px;
+    max-width: 860px;
+    width: min(100%, 860px);
 
     &__header {
         margin-bottom: 32px;

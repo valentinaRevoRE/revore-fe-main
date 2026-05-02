@@ -3,7 +3,6 @@ import { DashboardLayoutComponent } from './shared/layout/dashboard-layout/dashb
 import { HomeLayoutComponent } from './pages/home/layout/home-layout/home-layout.component';
 import { GuardianByProject } from '@core/guards/guardian.guard';
 import { adminGuard } from '@core/guards/admin.guard';
-import { SalesToolsComponent } from './pages/sales-tools/sales-tools.component';
 import { ProductDefinitionComponent } from './pages/product-definition/product-definition.component';
 import { MarketingComponent } from './pages/marketing/marketing.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
@@ -25,7 +24,8 @@ export const routes: Routes = [
             },
             {
                 path: 'sales-tools',
-                component: SalesToolsComponent
+                loadChildren: () => import('@revore/revore-self-service.routes').then( r => r.revoreRoutes ),
+                canActivate: [revoreAuthGuard]
             },
             {
                 path: 'product-definition',
@@ -39,12 +39,6 @@ export const routes: Routes = [
                 path: 'admin/users',
                 component: AdminDashboardComponent,
                 canActivate: [adminGuard]
-            },
-            {
-                // RevoRE Self-Service — requiere sesión Supabase + dominio @revore.mx
-                path: 'self-service',
-                loadChildren: () => import('@revore/revore-self-service.routes').then( r => r.revoreRoutes ),
-                canActivate: [revoreAuthGuard]
             },
             {
                 path: '**',

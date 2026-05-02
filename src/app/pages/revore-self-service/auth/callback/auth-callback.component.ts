@@ -43,7 +43,8 @@ export class AuthCallbackComponent implements OnInit {
             }
 
             await this.upsertUserProfile(session.user);
-            this.router.navigateByUrl('/dashboard/self-service/dashboard');
+            this.saveLocalUser(session.user);
+            this.router.navigateByUrl('/dashboard/sales-tools/dashboard');
 
         } catch {
             this.hasError = true;
@@ -63,5 +64,17 @@ export class AuthCallbackComponent implements OnInit {
             },
             { onConflict: 'id' }
         );
+    }
+
+    private saveLocalUser(user: User): void {
+        const meta = user.user_metadata;
+        const name = meta['full_name'] ?? meta['name'] ?? user.email ?? 'Usuario';
+        localStorage.setItem('user', JSON.stringify({
+            id: user.id,
+            email: user.email,
+            name,
+            avatar_url: meta['avatar_url'] ?? meta['picture'] ?? null,
+        }));
+        localStorage.setItem('userRoles', JSON.stringify([]));
     }
 }

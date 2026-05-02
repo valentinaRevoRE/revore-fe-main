@@ -74,24 +74,17 @@
     </ul>
   </nav>
   <footer class="menu__footer">
-    <div class="menu__user-profile">
-      <div class="user-profile__avatar">
-        {{ userInitials }}
-      </div>
-      <div class="user-profile__info">
-        <p class="user-profile__name">{{ userName }}</p>
-        <span class="user-profile__role">{{ userRole }}</span>
-      </div>
+    <div class="menu__user-row">
+      <div class="menu__user-avatar">{{ userInitials }}</div>
+      <span class="menu__user-email">{{ userEmail || userName }}</span>
+      <button class="menu__logout" (click)="closeSession()" title="Cerrar sesión">
+        <img src="/assets/icons/logout.svg" alt="Cerrar Sesión" />
+      </button>
     </div>
-
-    <button class="menu__close" (click)="closeSession()">
-      <img src="/assets/icons/logout.svg" alt="Cerrar Sesión" />
-      Cerrar Sesión
-    </button>
     <img
       class="menu__powerby"
       src="/assets/powered_by.svg"
-      alt="Power By Revore"
+      alt="Powered by RevoRE"
     />
   </footer>
 </div>

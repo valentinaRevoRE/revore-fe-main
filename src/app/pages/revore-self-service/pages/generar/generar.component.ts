@@ -209,8 +209,8 @@ export class GenerarComponent implements OnInit {
         this.isSubmitting = false;
         setTimeout(() => {
             const dest = this.selectedModalidad === 'on_demand'
-                ? '/dashboard/self-service/historial'
-                : '/dashboard/self-service/programaciones';
+                ? '/dashboard/sales-tools/historial'
+                : '/dashboard/sales-tools/programaciones';
             this.router.navigateByUrl(dest);
         }, 1500);
     }

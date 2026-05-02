@@ -11,48 +11,32 @@
     "icon": "diagram.svg",
     "link": "/dashboard/revenue-management",
     "active": true,
-    "children": [
-      {
-        "name": "Mi dashboard",
-        "link": "/dashboard/revenue-management/dashboard",
-        "active": true
-      },
-      {
-        "name": "Reportes",
-        "link": "/dashboard/revenue-management/reportes",
-        "active": true
-      },
-      {
-        "name": "Modelo Revenue",
-        "link": "/dashboard/revenue-management/revenue-model/finantial",
-        "active": true
-      }
-    ]
+    "children": []
   },
   {
     "name": "Sales Tools",
     "icon": "moneys.svg",
-    "link": "/dashboard/self-service/dashboard",
+    "link": "/dashboard/sales-tools",
     "active": true,
     "children": [
       {
         "name": "Dashboard",
-        "link": "/dashboard/self-service/dashboard",
+        "link": "/dashboard/sales-tools/dashboard",
         "active": true
       },
       {
         "name": "Generar reporte",
-        "link": "/dashboard/self-service/generar",
+        "link": "/dashboard/sales-tools/generar",
         "active": true
       },
       {
         "name": "Programaciones",
-        "link": "/dashboard/self-service/programaciones",
+        "link": "/dashboard/sales-tools/programaciones",
         "active": true
       },
       {
         "name": "Historial",
-        "link": "/dashboard/self-service/historial",
+        "link": "/dashboard/sales-tools/historial",
         "active": true
       }
     ]
@@ -69,7 +53,7 @@
     "icon": "monitor-mobbile.svg",
     "link": "/dashboard/marketing",
     "active": true,
-    "children": [{}, {}]
+    "children": []
   },
   {
     "name": "Administración",
