@@ -7,6 +7,15 @@ import {
     DbSubProject, DbReportType,
 } from '@revore/models/database.types';
 
+function formatHourRange(h: number): string {
+    const fmt = (hour: number): string => {
+        const suffix = hour < 12 ? 'a.m.' : 'p.m.';
+        const h12 = hour % 12 === 0 ? 12 : hour % 12;
+        return `${h12}:00 ${suffix}`;
+    };
+    return `Desde las ${fmt(h)} hasta las ${fmt((h + 1) % 24)}`;
+}
+
 @Component({
     selector: 'app-revore-programaciones',
     standalone: true,
@@ -31,20 +40,29 @@ export class ProgramacionesComponent implements OnInit {
 
     form!: FormGroup;
 
-    readonly FREQ_LABELS: Record<string, string> = {
-        weekly: 'Semanal',
-        monthly: 'Mensual',
-    };
-
     readonly DAYS = [
-        { value: 0, label: 'Domingo' },
-        { value: 1, label: 'Lunes' },
-        { value: 2, label: 'Martes' },
-        { value: 3, label: 'Miércoles' },
-        { value: 4, label: 'Jueves' },
-        { value: 5, label: 'Viernes' },
-        { value: 6, label: 'Sábado' },
+        { value: 0, label: 'Todos los domingos' },
+        { value: 1, label: 'Todos los lunes' },
+        { value: 2, label: 'Todos los martes' },
+        { value: 3, label: 'Todos los miércoles' },
+        { value: 4, label: 'Todos los jueves' },
+        { value: 5, label: 'Todos los viernes' },
+        { value: 6, label: 'Todos los sábados' },
     ];
+
+    readonly HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => ({
+        value: i,
+        label: formatHourRange(i),
+    }));
+
+    readonly mexicoTzLabel = (() => {
+        try {
+            return new Intl.DateTimeFormat('en', {
+                timeZone: 'America/Mexico_City',
+                timeZoneName: 'shortOffset',
+            }).formatToParts(new Date()).find(p => p.type === 'timeZoneName')?.value ?? 'GMT-6';
+        } catch { return 'GMT-6'; }
+    })();
 
     constructor(private svc: SelfServiceService, private fb: FormBuilder) {}
 
@@ -67,13 +85,8 @@ export class ProgramacionesComponent implements OnInit {
             developer_group_id: [null],
             sub_project_id:     [null],
             report_type_id:     ['', Validators.required],
-            frequency:          ['weekly', Validators.required],
             day_of_week:        [1],
-            day_of_month:       [1],
-            hour:               [9, [Validators.min(0), Validators.max(23)]],
-            timezone:           ['America/Mexico_City', Validators.required],
-            start_date:         ['', Validators.required],
-            end_date:           [null],
+            hour:               [9],
             recipients:         ['', Validators.required],
             active:             [true],
         });
@@ -95,12 +108,35 @@ export class ProgramacionesComponent implements OnInit {
         this.subProjects = subProjects;
     }
 
+    private get selectedDeveloperName(): string {
+        const developerId = this.form?.get('developer_id')?.value;
+        return this.developers.find(d => d.id === developerId)?.name ?? '';
+    }
+
+    get subProjectLabel(): string {
+        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Proyecto' : 'Sub-proyecto';
+    }
+
+    get subProjectEmptyLabel(): string {
+        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Sin proyecto' : 'Sin sub-proyecto';
+    }
+
+    formatDeveloperDropdownName(name: string): string {
+        return name.toLowerCase() === 'procsa-data' ? 'PROCSA' : name;
+    }
+
+    private isProjectDeveloper(name: string): boolean {
+        const normalized = name.toLowerCase();
+        return ['grupo san carlos', 'grupoveq', 'veq', 'gran ciudad', 'nova habita', 'otacc', 'procsa', 'procs', 'tare']
+            .some(term => normalized.includes(term));
+    }
+
     openCreate(): void {
         this.isEditing = false;
         this.editingId = null;
         this.developerGroups = [];
         this.subProjects = [];
-        this.form.reset({ frequency: 'weekly', day_of_week: 1, day_of_month: 1, hour: 9, timezone: 'America/Mexico_City', active: true });
+        this.form.reset({ day_of_week: 1, hour: 9, active: true });
         this.showModal = true;
     }
 
@@ -118,18 +154,19 @@ export class ProgramacionesComponent implements OnInit {
         this.isSaving = true;
         this.saveError = '';
         const v = this.form.value;
+        const today = new Date().toISOString().split('T')[0];
         const payload = {
             developer_id:       v.developer_id,
             sub_project_id:     v.sub_project_id || null,
             developer_group_id: v.developer_group_id || null,
             report_type_id:     v.report_type_id,
-            frequency:          v.frequency,
-            day_of_week:        v.frequency === 'weekly' ? v.day_of_week : null,
-            day_of_month:       v.frequency === 'monthly' ? v.day_of_month : null,
+            frequency:          'weekly' as const,
+            day_of_week:        v.day_of_week,
+            day_of_month:       null,
             hour:               v.hour,
-            timezone:           v.timezone,
-            start_date:         v.start_date,
-            end_date:           v.end_date || null,
+            timezone:           'America/Mexico_City',
+            start_date:         today,
+            end_date:           null,
             recipients:         this.parseRecipients(v.recipients),
             active:             v.active,
             created_by:         null,
@@ -171,10 +208,7 @@ export class ProgramacionesComponent implements OnInit {
     }
 
     freqLabel(s: ScheduleWithRelations): string {
-        if (s.frequency === 'weekly') {
-            const day = this.DAYS.find(d => d.value === s.day_of_week)?.label ?? '';
-            return `${this.FREQ_LABELS[s.frequency]} — ${day} ${s.hour}:00`;
-        }
-        return `${this.FREQ_LABELS[s.frequency]} — Día ${s.day_of_month}, ${s.hour}:00`;
+        const day = this.DAYS.find(d => d.value === s.day_of_week)?.label ?? '';
+        return `${day} · ${formatHourRange(s.hour)}`;
     }
 }

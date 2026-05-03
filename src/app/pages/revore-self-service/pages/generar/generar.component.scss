@@ -273,6 +273,13 @@
         font-weight: 400;
     }
 
+    &__tz-hint {
+        font-family: "g-medium", sans-serif;
+        font-size: 11px;
+        color: map.get(t.$primary-color, 300);
+        text-align: right;
+    }
+
     &__select, &__input {
         padding: 10px 12px;
         border: 1.5px solid map.get(t.$primary-color, 100);
@@ -342,11 +349,30 @@
     cursor: pointer;
     transition: all 0.15s ease;
 
-    &:hover {
+    &--active {
         border-color: map.get(t.$secondary-color, 500);
-        color: map.get(t.$secondary-color, 600);
-        background: map.get(t.$secondary-color, 100);
+        background: map.get(t.$secondary-color, 500);
+        color: white;
     }
+}
+
+.date-range-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.ss-form__label--small {
+    font-size: 11px;
+    margin-bottom: 4px;
+    color: map.get(t.$primary-color, 300);
+}
+
+.ss-form__hint {
+    font-size: 12px;
+    color: map.get(t.$secondary-color, 600);
+    margin: 0 0 8px;
+    font-family: "g-medium", sans-serif;
 }
 
 // Divider

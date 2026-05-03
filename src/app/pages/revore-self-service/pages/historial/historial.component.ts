@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SelfServiceService } from '@revore/services/self-service.service';
 import {
     ExecutionWithRelations, ExecutionStatus,
@@ -12,7 +13,7 @@ const IN_PROGRESS: ExecutionStatus[] = ['queued', 'generating', 'enriching', 'se
 @Component({
     selector: 'app-revore-historial',
     standalone: true,
-    imports: [CommonModule, FormsModule, DatePipe],
+    imports: [CommonModule, FormsModule, DatePipe, RouterLink],
     templateUrl: './historial.component.html',
     styleUrl: './historial.component.scss',
 })

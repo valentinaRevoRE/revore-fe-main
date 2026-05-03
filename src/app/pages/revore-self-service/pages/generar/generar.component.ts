@@ -8,6 +8,15 @@ import {
     ServiceType, SERVICE_LABELS,
 } from '@revore/models/database.types';
 
+function formatHourRange(h: number): string {
+    const fmt = (hour: number): string => {
+        const suffix = hour < 12 ? 'a.m.' : 'p.m.';
+        const h12 = hour % 12 === 0 ? 12 : hour % 12;
+        return `${h12}:00 ${suffix}`;
+    };
+    return `Desde las ${fmt(h)} hasta las ${fmt((h + 1) % 24)}`;
+}
+
 const FALLBACK_TYPES: DbReportType[] = [
     { id: 'fallback-diario',  service: 'marketing', name: 'Diario',  description: null, created_at: '' },
     { id: 'fallback-semanal', service: 'marketing', name: 'Semanal', description: null, created_at: '' },
@@ -39,23 +48,69 @@ export class GenerarComponent implements OnInit {
 
     // Step 3
     selectedModalidad: 'on_demand' | 'recurring' | null = null;
+    selectedShortcut: 'today' | 'month_start' | 'minus_90' = 'today';
 
     // Step 4
     developers: DbDeveloper[] = [];
     developerGroups: DbDeveloperGroup[] = [];
     subProjects: DbSubProject[] = [];
     loadingRelated = false;
+
+    get groupLabel(): string {
+        const type = this.developerGroups[0]?.group_type;
+        if (type === 'líder') return 'Líder';
+        if (type === 'proyecto') return 'Proyecto';
+        return 'Grupo / Proyecto';
+    }
+
+    private get selectedDeveloperName(): string {
+        const developerId = this.form?.get('developer_id')?.value;
+        return this.developers.find(d => d.id === developerId)?.name ?? '';
+    }
+
+    get subProjectLabel(): string {
+        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Proyecto' : 'Sub-proyecto';
+    }
+
+    get subProjectEmptyLabel(): string {
+        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Sin proyecto' : 'Sin sub-proyecto';
+    }
+
+    formatDeveloperDropdownName(name: string): string {
+        return name.toLowerCase() === 'procsa-data' ? 'PROCSA' : name;
+    }
+
+    private isProjectDeveloper(name: string): boolean {
+        const normalized = name.toLowerCase();
+        return ['grupo san carlos', 'grupoveq', 'veq', 'gran ciudad', 'nova habita', 'otacc', 'procsa', 'procs', 'tare']
+            .some(term => normalized.includes(term));
+    }
+
     form!: FormGroup;
 
     readonly DAYS_OPTIONS = [
-        { value: 1, label: 'Lunes' },
-        { value: 2, label: 'Martes' },
-        { value: 3, label: 'Miércoles' },
-        { value: 4, label: 'Jueves' },
-        { value: 5, label: 'Viernes' },
-        { value: 6, label: 'Sábado' },
-        { value: 0, label: 'Domingo' },
+        { value: 1, label: 'Todos los lunes' },
+        { value: 2, label: 'Todos los martes' },
+        { value: 3, label: 'Todos los miércoles' },
+        { value: 4, label: 'Todos los jueves' },
+        { value: 5, label: 'Todos los viernes' },
+        { value: 6, label: 'Todos los sábados' },
+        { value: 0, label: 'Todos los domingos' },
     ];
+
+    readonly HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => ({
+        value: i,
+        label: formatHourRange(i),
+    }));
+
+    readonly mexicoTzLabel = (() => {
+        try {
+            return new Intl.DateTimeFormat('en', {
+                timeZone: 'America/Mexico_City',
+                timeZoneName: 'shortOffset',
+            }).formatToParts(new Date()).find(p => p.type === 'timeZoneName')?.value ?? 'GMT-6';
+        } catch { return 'GMT-6'; }
+    })();
 
     constructor(
         private svc: SelfServiceService,
@@ -74,14 +129,12 @@ export class GenerarComponent implements OnInit {
             developer_group_id: [null],
             sub_project_id:     [null],
             recipients:         ['', Validators.required],
-            // on_demand
+            // on_demand — fecha_inicio es el inicio del rango, fecha es el fin
+            fecha_inicio:       [this.todayIso()],
             fecha:              [this.todayIso()],
             // recurring
             cada_dia:           [1],
-            a_las:              ['09:00'],
-            timezone:           ['America/Mexico_City'],
-            start_date:         [this.todayIso()],
-            end_date:           [null],
+            a_las:              [9],
         });
 
         this.form.get('developer_id')!.valueChanges.subscribe(id => {
@@ -131,10 +184,32 @@ export class GenerarComponent implements OnInit {
     }
 
     setDateShortcut(type: 'today' | 'month_start' | 'minus_90'): void {
-        const d = new Date();
-        if (type === 'month_start') d.setDate(1);
-        if (type === 'minus_90') d.setDate(d.getDate() - 90);
-        this.form.patchValue({ fecha: d.toISOString().split('T')[0] });
+        this.selectedShortcut = type;
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+
+        if (type === 'today') {
+            this.form.patchValue({ fecha_inicio: todayStr, fecha: todayStr });
+        } else if (type === 'month_start') {
+            const inicio = new Date(today.getFullYear(), today.getMonth(), 1);
+            this.form.patchValue({ fecha_inicio: inicio.toISOString().split('T')[0], fecha: todayStr });
+        } else if (type === 'minus_90') {
+            const inicio = new Date(today);
+            inicio.setDate(today.getDate() - 90);
+            this.form.patchValue({ fecha_inicio: inicio.toISOString().split('T')[0], fecha: todayStr });
+        }
+    }
+
+    get rangoFechaLabel(): string {
+        const inicio = this.form?.get('fecha_inicio')?.value;
+        const fin = this.form?.get('fecha')?.value;
+        if (!inicio || !fin || inicio === fin) return '';
+        const fmt = (s: string) => {
+            const [y, m, d] = s.split('-');
+            const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+            return `${parseInt(d)} ${meses[parseInt(m) - 1]} ${y}`;
+        };
+        return `${fmt(inicio)} → ${fmt(fin)}`;
     }
 
     canGoNext(): boolean {
@@ -145,7 +220,7 @@ export class GenerarComponent implements OnInit {
             const devOk = !!this.form.get('developer_id')!.value;
             const recipOk = !!this.form.get('recipients')!.value?.trim();
             if (this.selectedModalidad === 'on_demand') return devOk && recipOk && !!this.form.get('fecha')!.value;
-            return devOk && recipOk && !!this.form.get('a_las')!.value;
+            return devOk && recipOk && this.form.get('a_las')!.value != null;
         }
         return false;
     }
@@ -180,12 +255,11 @@ export class GenerarComponent implements OnInit {
                 triggered_by_user:  null,
                 recipients,
                 status:             'queued',
-                date_range_start:   v.fecha || null,
+                date_range_start:   v.fecha_inicio || v.fecha || null,
                 date_range_end:     v.fecha || null,
             });
             if (error) { this.submitError = error.message; this.isSubmitting = false; return; }
         } else {
-            const [hourStr] = (v.a_las as string).split(':');
             const { error } = await this.svc.createSchedule({
                 developer_id:       v.developer_id,
                 sub_project_id:     v.sub_project_id || null,
@@ -194,10 +268,10 @@ export class GenerarComponent implements OnInit {
                 frequency:          'weekly',
                 day_of_week:        v.cada_dia,
                 day_of_month:       null,
-                hour:               parseInt(hourStr, 10),
-                timezone:           v.timezone,
-                start_date:         v.start_date,
-                end_date:           v.end_date || null,
+                hour:               v.a_las,
+                timezone:           'America/Mexico_City',
+                start_date:         this.todayIso(),
+                end_date:           null,
                 recipients,
                 active:             true,
                 created_by:         null,

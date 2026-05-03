@@ -92,7 +92,7 @@
             <select class="ss-form__select" formControlName="developer_id">
               <option value="">Selecciona un desarrollador</option>
               @for (dev of developers; track dev.id) {
-                <option [value]="dev.id">{{ dev.name }}</option>
+                <option [value]="dev.id">{{ formatDeveloperDropdownName(dev.name) }}</option>
               }
             </select>
           </div>
@@ -111,9 +111,9 @@
 
           @if (subProjects.length > 0) {
             <div class="ss-form__group">
-              <label class="ss-form__label">Sub-proyecto</label>
+              <label class="ss-form__label">{{ subProjectLabel }}</label>
               <select class="ss-form__select" formControlName="sub_project_id">
-                <option [value]="null">Sin sub-proyecto</option>
+                <option [value]="null">{{ subProjectEmptyLabel }}</option>
                 @for (sp of subProjects; track sp.id) {
                   <option [value]="sp.id">{{ sp.name }}</option>
                 }
@@ -131,58 +131,23 @@
             </select>
           </div>
 
-          <div class="ss-form__row">
-            <div class="ss-form__group">
-              <label class="ss-form__label">Frecuencia *</label>
-              <select class="ss-form__select" formControlName="frequency">
-                <option value="weekly">Semanal</option>
-                <option value="monthly">Mensual</option>
-              </select>
-            </div>
-            <div class="ss-form__group">
-              <label class="ss-form__label">Hora (0–23)</label>
-              <input class="ss-form__input" type="number" min="0" max="23" formControlName="hour" />
-            </div>
-          </div>
-
-          @if (form.get('frequency')?.value === 'weekly') {
-            <div class="ss-form__group">
-              <label class="ss-form__label">Día de la semana</label>
-              <select class="ss-form__select" formControlName="day_of_week">
-                @for (d of DAYS; track d.value) {
-                  <option [value]="d.value">{{ d.label }}</option>
-                }
-              </select>
-            </div>
-          }
-
-          @if (form.get('frequency')?.value === 'monthly') {
-            <div class="ss-form__group">
-              <label class="ss-form__label">Día del mes (1–28)</label>
-              <input class="ss-form__input" type="number" min="1" max="28" formControlName="day_of_month" />
-            </div>
-          }
-
-          <div class="ss-form__row">
-            <div class="ss-form__group">
-              <label class="ss-form__label">Fecha inicio *</label>
-              <input class="ss-form__input" type="date" formControlName="start_date" />
-            </div>
-            <div class="ss-form__group">
-              <label class="ss-form__label">Fecha fin</label>
-              <input class="ss-form__input" type="date" formControlName="end_date" />
-            </div>
+          <div class="ss-form__group">
+            <label class="ss-form__label">Día de la semana</label>
+            <select class="ss-form__select" formControlName="day_of_week">
+              @for (d of DAYS; track d.value) {
+                <option [value]="d.value">{{ d.label }}</option>
+              }
+            </select>
           </div>
 
           <div class="ss-form__group">
-            <label class="ss-form__label">Zona horaria</label>
-            <select class="ss-form__select" formControlName="timezone">
-              <option value="America/Mexico_City">Ciudad de México (CST)</option>
-              <option value="America/Monterrey">Monterrey (CST)</option>
-              <option value="America/Bogota">Bogotá (COT)</option>
-              <option value="America/Lima">Lima (PET)</option>
-              <option value="UTC">UTC</option>
+            <label class="ss-form__label">Hora del día</label>
+            <select class="ss-form__select" formControlName="hour">
+              @for (h of HOUR_OPTIONS; track h.value) {
+                <option [value]="h.value">{{ h.label }}</option>
+              }
             </select>
+            <span class="ss-form__tz-hint">({{ mexicoTzLabel }})</span>
           </div>
 
           <div class="ss-form__group">

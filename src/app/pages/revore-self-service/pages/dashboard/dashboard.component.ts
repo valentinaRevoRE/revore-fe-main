@@ -41,4 +41,5 @@ export class DashboardComponent implements OnInit {
         };
         return map[status] ?? '';
     }
+
 }

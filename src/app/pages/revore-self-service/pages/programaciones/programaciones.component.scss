@@ -269,6 +269,13 @@
         font-weight: 400;
     }
 
+    &__tz-hint {
+        font-family: "g-medium", sans-serif;
+        font-size: 11px;
+        color: map.get(t.$primary-color, 300);
+        text-align: right;
+    }
+
     &__select, &__input {
         padding: 10px 12px;
         border: 1.5px solid map.get(t.$primary-color, 100);

@@ -108,7 +108,7 @@
             <select class="ss-form__select" formControlName="developer_id">
               <option value="">Selecciona un desarrollador</option>
               @for (dev of developers; track dev.id) {
-                <option [value]="dev.id">{{ dev.name }}</option>
+                <option [value]="dev.id">{{ formatDeveloperDropdownName(dev.name) }}</option>
               }
             </select>
           </div>
@@ -119,7 +119,7 @@
 
           @if (!loadingRelated && developerGroups.length > 0) {
             <div class="ss-form__group">
-              <label class="ss-form__label">Grupo / Proyecto</label>
+              <label class="ss-form__label">{{ groupLabel }}</label>
               <select class="ss-form__select" formControlName="developer_group_id">
                 <option [value]="null">Sin grupo específico</option>
                 @for (g of developerGroups; track g.id) {
@@ -131,9 +131,9 @@
 
           @if (!loadingRelated && subProjects.length > 0) {
             <div class="ss-form__group">
-              <label class="ss-form__label">Sub-proyecto</label>
+              <label class="ss-form__label">{{ subProjectLabel }}</label>
               <select class="ss-form__select" formControlName="sub_project_id">
-                <option [value]="null">Sin sub-proyecto</option>
+                <option [value]="null">{{ subProjectEmptyLabel }}</option>
                 @for (sp of subProjects; track sp.id) {
                   <option [value]="sp.id">{{ sp.name }}</option>
                 }
@@ -146,53 +146,43 @@
           <!-- ── Por demanda ── -->
           @if (selectedModalidad === 'on_demand') {
             <div class="ss-form__group">
-              <label class="ss-form__label">Fecha del reporte</label>
+              <label class="ss-form__label">Rango del reporte</label>
               <div class="date-shortcuts">
-                <button type="button" class="shortcut-btn" (click)="setDateShortcut('today')">Hoy</button>
-                <button type="button" class="shortcut-btn" (click)="setDateShortcut('month_start')">Inicio de mes</button>
-                <button type="button" class="shortcut-btn" (click)="setDateShortcut('minus_90')">−90 días</button>
+                <button type="button" class="shortcut-btn"
+                  [class.shortcut-btn--active]="selectedShortcut === 'today'"
+                  (click)="setDateShortcut('today')">Hoy</button>
+                <button type="button" class="shortcut-btn"
+                  [class.shortcut-btn--active]="selectedShortcut === 'month_start'"
+                  (click)="setDateShortcut('month_start')">Inicio de mes</button>
+                <button type="button" class="shortcut-btn"
+                  [class.shortcut-btn--active]="selectedShortcut === 'minus_90'"
+                  (click)="setDateShortcut('minus_90')">−90 días</button>
               </div>
-              <input class="ss-form__input" type="date" formControlName="fecha" />
+              @if (rangoFechaLabel) {
+                <p class="ss-form__hint">{{ rangoFechaLabel }}</p>
+              }
             </div>
           }
 
           <!-- ── Recurrente ── -->
           @if (selectedModalidad === 'recurring') {
-            <div class="ss-form__row">
-              <div class="ss-form__group">
-                <label class="ss-form__label">Cada</label>
-                <select class="ss-form__select" formControlName="cada_dia">
-                  @for (d of DAYS_OPTIONS; track d.value) {
-                    <option [value]="d.value">{{ d.label }}</option>
-                  }
-                </select>
-              </div>
-              <div class="ss-form__group">
-                <label class="ss-form__label">A las</label>
-                <input class="ss-form__input" type="time" formControlName="a_las" />
-              </div>
-            </div>
-
-            <div class="ss-form__row">
-              <div class="ss-form__group">
-                <label class="ss-form__label">Fecha inicio *</label>
-                <input class="ss-form__input" type="date" formControlName="start_date" />
-              </div>
-              <div class="ss-form__group">
-                <label class="ss-form__label">Fecha fin <span class="ss-form__hint">(opcional)</span></label>
-                <input class="ss-form__input" type="date" formControlName="end_date" />
-              </div>
+            <div class="ss-form__group">
+              <label class="ss-form__label">Día de la semana</label>
+              <select class="ss-form__select" formControlName="cada_dia">
+                @for (d of DAYS_OPTIONS; track d.value) {
+                  <option [value]="d.value">{{ d.label }}</option>
+                }
+              </select>
             </div>
 
             <div class="ss-form__group">
-              <label class="ss-form__label">Zona horaria</label>
-              <select class="ss-form__select" formControlName="timezone">
-                <option value="America/Mexico_City">Ciudad de México (CST)</option>
-                <option value="America/Monterrey">Monterrey (CST)</option>
-                <option value="America/Bogota">Bogotá (COT)</option>
-                <option value="America/Lima">Lima (PET)</option>
-                <option value="UTC">UTC</option>
+              <label class="ss-form__label">Hora del día</label>
+              <select class="ss-form__select" formControlName="a_las">
+                @for (h of HOUR_OPTIONS; track h.value) {
+                  <option [value]="h.value">{{ h.label }}</option>
+                }
               </select>
+              <span class="ss-form__tz-hint">({{ mexicoTzLabel }})</span>
             </div>
           }
 
