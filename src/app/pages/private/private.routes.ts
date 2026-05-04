@@ -19,8 +19,7 @@ export const routes: Routes = [
             },
             {
                 path: 'revenue-management',
-                loadChildren: () => import('./pages/revenue-management/revenue.routes').then( r => r.routes ),
-                canActivate: [GuardianByProject]
+                loadChildren: () => import('./pages/revenue-management/revenue.routes').then( r => r.routes )
             },
             {
                 path: 'sales-tools',

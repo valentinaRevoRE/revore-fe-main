@@ -60,11 +60,16 @@
               <button
                 class="report-card"
                 [class.report-card--active]="selectedReportType?.id === rt.id"
+                [class.report-card--disabled]="isSyntheticType(rt)"
+                [disabled]="isSyntheticType(rt)"
                 (click)="selectReportType(rt)"
               >
                 <span class="report-card__name">{{ rt.name }}</span>
                 @if (rt.description) {
                   <span class="report-card__desc">{{ rt.description }}</span>
+                }
+                @if (isSyntheticType(rt)) {
+                  <span class="report-card__badge">Próximamente</span>
                 }
               </button>
             }
@@ -123,13 +128,13 @@
               <select class="ss-form__select" formControlName="developer_group_id">
                 <option [value]="null">Sin grupo específico</option>
                 @for (g of developerGroups; track g.id) {
-                  <option [value]="g.id">{{ g.name }}</option>
+                  <option [value]="g.id">{{ formatGroupName(g.name) }}</option>
                 }
               </select>
             </div>
           }
 
-          @if (!loadingRelated && subProjects.length > 0) {
+          @if (!loadingRelated && subProjects.length > 0 && developerGroups[0]?.group_type !== 'líder') {
             <div class="ss-form__group">
               <label class="ss-form__label">{{ subProjectLabel }}</label>
               <select class="ss-form__select" formControlName="sub_project_id">
@@ -148,15 +153,21 @@
             <div class="ss-form__group">
               <label class="ss-form__label">Rango del reporte</label>
               <div class="date-shortcuts">
-                <button type="button" class="shortcut-btn"
-                  [class.shortcut-btn--active]="selectedShortcut === 'today'"
-                  (click)="setDateShortcut('today')">Hoy</button>
-                <button type="button" class="shortcut-btn"
-                  [class.shortcut-btn--active]="selectedShortcut === 'month_start'"
-                  (click)="setDateShortcut('month_start')">Inicio de mes</button>
-                <button type="button" class="shortcut-btn"
-                  [class.shortcut-btn--active]="selectedShortcut === 'minus_90'"
-                  (click)="setDateShortcut('minus_90')">−90 días</button>
+                @if (isReportDiario) {
+                  <button type="button" class="shortcut-btn"
+                    [class.shortcut-btn--active]="selectedShortcut === 'today'"
+                    (click)="setDateShortcut('today')">Hoy</button>
+                } @else {
+                  <button type="button" class="shortcut-btn"
+                    [class.shortcut-btn--active]="selectedShortcut === 'week'"
+                    (click)="setDateShortcut('week')">Últimos 7 días</button>
+                  <button type="button" class="shortcut-btn"
+                    [class.shortcut-btn--active]="selectedShortcut === 'month_start'"
+                    (click)="setDateShortcut('month_start')">Inicio de mes</button>
+                  <button type="button" class="shortcut-btn"
+                    [class.shortcut-btn--active]="selectedShortcut === 'minus_90'"
+                    (click)="setDateShortcut('minus_90')">−90 días</button>
+                }
               </div>
               @if (rangoFechaLabel) {
                 <p class="ss-form__hint">{{ rangoFechaLabel }}</p>

@@ -22,13 +22,17 @@ export class SelfServiceService {
         return (data ?? []) as DbDeveloper[];
     }
 
-    async getDeveloperGroups(developerId: string): Promise<DbDeveloperGroup[]> {
+    async getDeveloperGroups(developerId: string, service?: string): Promise<DbDeveloperGroup[]> {
         const { data } = await this.supabaseS.db
             .from('developer_groups')
             .select('*')
             .eq('developer_id', developerId)
             .order('display_order');
-        return (data ?? []) as DbDeveloperGroup[];
+        const all = (data ?? []) as DbDeveloperGroup[];
+        if (!service) return all;
+        return all.filter(g =>
+            !g.available_for_services || g.available_for_services.includes(service)
+        );
     }
 
     async getSubProjects(developerId: string): Promise<DbSubProject[]> {

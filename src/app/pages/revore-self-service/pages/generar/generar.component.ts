@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SelfServiceService } from '@revore/services/self-service.service';
 import {
     DbDeveloper, DbDeveloperGroup, DbSubProject, DbReportType,
@@ -45,10 +45,11 @@ export class GenerarComponent implements OnInit {
     reportTypes: DbReportType[] = [];
     selectedReportType: DbReportType | null = null;
     loadingTypes = false;
+    private syntheticTypeIds = new Set<string>();
 
     // Step 3
     selectedModalidad: 'on_demand' | 'recurring' | null = null;
-    selectedShortcut: 'today' | 'month_start' | 'minus_90' = 'today';
+    selectedShortcut: 'today' | 'week' | 'month_start' | 'minus_90' = 'today';
 
     // Step 4
     developers: DbDeveloper[] = [];
@@ -78,6 +79,23 @@ export class GenerarComponent implements OnInit {
 
     formatDeveloperDropdownName(name: string): string {
         return name.toLowerCase() === 'procsa-data' ? 'PROCSA' : name;
+    }
+
+    private readonly LEADER_NAMES: Record<string, string> = {
+        'lider 1': 'ALVARO ROMERO MONTIEL',
+        'líder 1': 'ALVARO ROMERO MONTIEL',
+        'lider 2': 'MARTHA SANDOVAL GONZALEZ',
+        'líder 2': 'MARTHA SANDOVAL GONZALEZ',
+        'lider 3': 'ARTURO LOPEZ OROZCO',
+        'líder 3': 'ARTURO LOPEZ OROZCO',
+    };
+
+    formatGroupName(name: string): string {
+        return this.LEADER_NAMES[name.toLowerCase()] ?? name;
+    }
+
+    get isReportDiario(): boolean {
+        return this.selectedReportType?.name.toLowerCase().includes('diario') ?? false;
     }
 
     private isProjectDeveloper(name: string): boolean {
@@ -116,11 +134,18 @@ export class GenerarComponent implements OnInit {
         private svc: SelfServiceService,
         private fb: FormBuilder,
         private router: Router,
+        private route: ActivatedRoute,
     ) {}
 
     async ngOnInit(): Promise<void> {
         this.developers = await this.svc.getDevelopers();
         this.buildForm();
+
+        const service = this.route.snapshot.queryParamMap.get('service') as ServiceType | null;
+        if (service && this.ALL_SERVICES.includes(service)) {
+            this.selectService(service);
+            this.step = 2;
+        }
     }
 
     private buildForm(): void {
@@ -152,7 +177,7 @@ export class GenerarComponent implements OnInit {
         this.form.patchValue({ developer_group_id: null, sub_project_id: null });
         this.loadingRelated = true;
         const [groups, subProjects] = await Promise.all([
-            this.svc.getDeveloperGroups(developerId),
+            this.svc.getDeveloperGroups(developerId, this.selectedService ?? undefined),
             this.svc.getSubProjects(developerId),
         ]);
         this.developerGroups = groups;
@@ -170,26 +195,54 @@ export class GenerarComponent implements OnInit {
     async loadReportTypes(): Promise<void> {
         if (!this.selectedService) return;
         this.loadingTypes = true;
+        this.syntheticTypeIds.clear();
         const types = await this.svc.getReportTypes(this.selectedService);
-        this.reportTypes = types.length > 0 ? types : FALLBACK_TYPES;
+        const base = types.length > 0 ? types : FALLBACK_TYPES;
+        const hasDiario = base.some(t => t.name.toLowerCase().includes('diario'));
+        if (!hasDiario && this.selectedService !== 'marketing') {
+            const label = SERVICE_LABELS[this.selectedService];
+            const syntheticId = `diario-${this.selectedService}`;
+            const diario: DbReportType = {
+                id: syntheticId,
+                service: this.selectedService,
+                name: `Reporte Diario ${label}`,
+                description: `Análisis diario del funnel de ${label.toLowerCase()}`,
+                created_at: '',
+            };
+            this.syntheticTypeIds.add(syntheticId);
+            this.reportTypes = [diario, ...base];
+        } else {
+            this.reportTypes = base;
+        }
         this.loadingTypes = false;
     }
 
+    isSyntheticType(rt: DbReportType): boolean {
+        return this.syntheticTypeIds.has(rt.id);
+    }
+
     selectReportType(rt: DbReportType): void {
+        if (this.isSyntheticType(rt)) return;
         this.selectedReportType = rt;
+        this.selectedShortcut = rt.name.toLowerCase().includes('diario') ? 'today' : 'week';
+        this.setDateShortcut(this.selectedShortcut);
     }
 
     selectModalidad(mode: 'on_demand' | 'recurring'): void {
         this.selectedModalidad = mode;
     }
 
-    setDateShortcut(type: 'today' | 'month_start' | 'minus_90'): void {
+    setDateShortcut(type: 'today' | 'week' | 'month_start' | 'minus_90'): void {
         this.selectedShortcut = type;
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0];
 
         if (type === 'today') {
             this.form.patchValue({ fecha_inicio: todayStr, fecha: todayStr });
+        } else if (type === 'week') {
+            const inicio = new Date(today);
+            inicio.setDate(today.getDate() - 7);
+            this.form.patchValue({ fecha_inicio: inicio.toISOString().split('T')[0], fecha: todayStr });
         } else if (type === 'month_start') {
             const inicio = new Date(today.getFullYear(), today.getMonth(), 1);
             this.form.patchValue({ fecha_inicio: inicio.toISOString().split('T')[0], fecha: todayStr });

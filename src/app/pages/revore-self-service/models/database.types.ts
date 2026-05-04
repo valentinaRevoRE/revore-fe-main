@@ -51,6 +51,7 @@ export interface DbDeveloperGroup {
     group_type: GroupType;
     display_order: number;
     created_at: string;
+    available_for_services: string[] | null;
 }
 
 export interface DbSubProject {

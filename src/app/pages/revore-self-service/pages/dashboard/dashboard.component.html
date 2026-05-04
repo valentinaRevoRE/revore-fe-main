@@ -10,16 +10,16 @@
   <!-- Módulos de servicio -->
   <div class="ss-dashboard__section-title">¿Para qué servicio necesitas un reporte?</div>
   <div class="ss-modules">
-    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
+    <a class="module-card" [routerLink]="['/dashboard/sales-tools/generar']" [queryParams]="{service: 'sales'}">
       <span class="module-card__label">Ventas</span>
     </a>
-    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
+    <a class="module-card" [routerLink]="['/dashboard/sales-tools/generar']" [queryParams]="{service: 'marketing'}">
       <span class="module-card__label">Marketing</span>
     </a>
-    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
+    <a class="module-card" [routerLink]="['/dashboard/sales-tools/generar']" [queryParams]="{service: 'estrategia'}">
       <span class="module-card__label">Estrategia</span>
     </a>
-    <a class="module-card" routerLink="/dashboard/sales-tools/generar">
+    <a class="module-card" [routerLink]="['/dashboard/sales-tools/generar']" [queryParams]="{service: 'revenue_management'}">
       <span class="module-card__label">Revenue Management</span>
     </a>
   </div>
