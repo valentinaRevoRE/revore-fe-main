@@ -128,7 +128,7 @@
               <select class="ss-form__select" formControlName="developer_group_id">
                 <option [value]="null">Sin grupo específico</option>
                 @for (g of developerGroups; track g.id) {
-                  <option [value]="g.id">{{ formatGroupName(g.name) }}</option>
+                  <option [value]="g.id">{{ formatGroupName(g) }}</option>
                 }
               </select>
             </div>
@@ -147,33 +147,6 @@
           }
 
           <div class="ss-form__divider"></div>
-
-          <!-- ── Por demanda ── -->
-          @if (selectedModalidad === 'on_demand') {
-            <div class="ss-form__group">
-              <label class="ss-form__label">Rango del reporte</label>
-              <div class="date-shortcuts">
-                @if (isReportDiario) {
-                  <button type="button" class="shortcut-btn"
-                    [class.shortcut-btn--active]="selectedShortcut === 'today'"
-                    (click)="setDateShortcut('today')">Hoy</button>
-                } @else {
-                  <button type="button" class="shortcut-btn"
-                    [class.shortcut-btn--active]="selectedShortcut === 'week'"
-                    (click)="setDateShortcut('week')">Últimos 7 días</button>
-                  <button type="button" class="shortcut-btn"
-                    [class.shortcut-btn--active]="selectedShortcut === 'month_start'"
-                    (click)="setDateShortcut('month_start')">Inicio de mes</button>
-                  <button type="button" class="shortcut-btn"
-                    [class.shortcut-btn--active]="selectedShortcut === 'minus_90'"
-                    (click)="setDateShortcut('minus_90')">−90 días</button>
-                }
-              </div>
-              @if (rangoFechaLabel) {
-                <p class="ss-form__hint">{{ rangoFechaLabel }}</p>
-              }
-            </div>
-          }
 
           <!-- ── Recurrente ── -->
           @if (selectedModalidad === 'recurring') {

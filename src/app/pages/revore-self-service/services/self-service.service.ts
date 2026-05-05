@@ -30,9 +30,13 @@ export class SelfServiceService {
             .order('display_order');
         const all = (data ?? []) as DbDeveloperGroup[];
         if (!service) return all;
-        return all.filter(g =>
-            !g.available_for_services || g.available_for_services.includes(service)
-        );
+        return all.filter(g => {
+            if (!g.available_for_services) return true;
+            const arr = Array.isArray(g.available_for_services)
+                ? g.available_for_services
+                : String(g.available_for_services).replace(/[{}]/g, '').split(',');
+            return arr.includes(service);
+        });
     }
 
     async getSubProjects(developerId: string): Promise<DbSubProject[]> {

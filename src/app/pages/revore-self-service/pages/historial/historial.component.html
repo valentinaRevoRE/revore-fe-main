@@ -62,7 +62,8 @@
               </td>
               <td class="recipients-cell">{{ ex.recipients.join(', ') }}</td>
               <td>
-                <span class="badge" [ngClass]="statusClass(ex.status)">
+                <span class="badge" [ngClass]="statusClass(ex.status)"
+                  [title]="ex.status === 'failed' && ex.error_message ? ex.error_message : ''">
                   {{ STATUS_LABELS[ex.status] }}
                   @if (isInProgress(ex.status)) {
                     <span class="pulse"></span>

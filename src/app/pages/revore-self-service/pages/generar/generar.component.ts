@@ -49,7 +49,6 @@ export class GenerarComponent implements OnInit {
 
     // Step 3
     selectedModalidad: 'on_demand' | 'recurring' | null = null;
-    selectedShortcut: 'today' | 'week' | 'month_start' | 'minus_90' = 'today';
 
     // Step 4
     developers: DbDeveloper[] = [];
@@ -59,6 +58,7 @@ export class GenerarComponent implements OnInit {
 
     get groupLabel(): string {
         const type = this.developerGroups[0]?.group_type;
+        if (type === 'líder' && this.selectedService === 'marketing') return 'Agencia';
         if (type === 'líder') return 'Líder';
         if (type === 'proyecto') return 'Proyecto';
         return 'Grupo / Proyecto';
@@ -90,12 +90,11 @@ export class GenerarComponent implements OnInit {
         'líder 3': 'ARTURO LOPEZ OROZCO',
     };
 
-    formatGroupName(name: string): string {
-        return this.LEADER_NAMES[name.toLowerCase()] ?? name;
-    }
-
-    get isReportDiario(): boolean {
-        return this.selectedReportType?.name.toLowerCase().includes('diario') ?? false;
+    formatGroupName(g: DbDeveloperGroup): string {
+        if (this.selectedService === 'marketing' && g.group_type === 'líder') {
+            return g.name;
+        }
+        return this.LEADER_NAMES[g.name.toLowerCase()] ?? g.name;
     }
 
     private isProjectDeveloper(name: string): boolean {
@@ -154,9 +153,6 @@ export class GenerarComponent implements OnInit {
             developer_group_id: [null],
             sub_project_id:     [null],
             recipients:         ['', Validators.required],
-            // on_demand — fecha_inicio es el inicio del rango, fecha es el fin
-            fecha_inicio:       [this.todayIso()],
-            fecha:              [this.todayIso()],
             // recurring
             cada_dia:           [1],
             a_las:              [9],
@@ -224,45 +220,10 @@ export class GenerarComponent implements OnInit {
     selectReportType(rt: DbReportType): void {
         if (this.isSyntheticType(rt)) return;
         this.selectedReportType = rt;
-        this.selectedShortcut = rt.name.toLowerCase().includes('diario') ? 'today' : 'week';
-        this.setDateShortcut(this.selectedShortcut);
     }
 
     selectModalidad(mode: 'on_demand' | 'recurring'): void {
         this.selectedModalidad = mode;
-    }
-
-    setDateShortcut(type: 'today' | 'week' | 'month_start' | 'minus_90'): void {
-        this.selectedShortcut = type;
-        const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
-
-        if (type === 'today') {
-            this.form.patchValue({ fecha_inicio: todayStr, fecha: todayStr });
-        } else if (type === 'week') {
-            const inicio = new Date(today);
-            inicio.setDate(today.getDate() - 7);
-            this.form.patchValue({ fecha_inicio: inicio.toISOString().split('T')[0], fecha: todayStr });
-        } else if (type === 'month_start') {
-            const inicio = new Date(today.getFullYear(), today.getMonth(), 1);
-            this.form.patchValue({ fecha_inicio: inicio.toISOString().split('T')[0], fecha: todayStr });
-        } else if (type === 'minus_90') {
-            const inicio = new Date(today);
-            inicio.setDate(today.getDate() - 90);
-            this.form.patchValue({ fecha_inicio: inicio.toISOString().split('T')[0], fecha: todayStr });
-        }
-    }
-
-    get rangoFechaLabel(): string {
-        const inicio = this.form?.get('fecha_inicio')?.value;
-        const fin = this.form?.get('fecha')?.value;
-        if (!inicio || !fin || inicio === fin) return '';
-        const fmt = (s: string) => {
-            const [y, m, d] = s.split('-');
-            const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-            return `${parseInt(d)} ${meses[parseInt(m) - 1]} ${y}`;
-        };
-        return `${fmt(inicio)} → ${fmt(fin)}`;
     }
 
     canGoNext(): boolean {
@@ -272,7 +233,7 @@ export class GenerarComponent implements OnInit {
         if (this.step === 4) {
             const devOk = !!this.form.get('developer_id')!.value;
             const recipOk = !!this.form.get('recipients')!.value?.trim();
-            if (this.selectedModalidad === 'on_demand') return devOk && recipOk && !!this.form.get('fecha')!.value;
+            if (this.selectedModalidad === 'on_demand') return devOk && recipOk;
             return devOk && recipOk && this.form.get('a_las')!.value != null;
         }
         return false;
@@ -308,8 +269,8 @@ export class GenerarComponent implements OnInit {
                 triggered_by_user:  null,
                 recipients,
                 status:             'queued',
-                date_range_start:   v.fecha_inicio || v.fecha || null,
-                date_range_end:     v.fecha || null,
+                date_range_start:   null,
+                date_range_end:     null,
             });
             if (error) { this.submitError = error.message; this.isSubmitting = false; return; }
         } else {
