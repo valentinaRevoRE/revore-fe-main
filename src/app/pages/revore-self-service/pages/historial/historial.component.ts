@@ -94,4 +94,18 @@ export class HistorialComponent implements OnInit, OnDestroy {
     isInProgress(status: ExecutionStatus): boolean {
         return IN_PROGRESS.includes(status);
     }
+
+    private readonly MKT_AGENCY_NAMES: Record<string, string> = {
+        'GRUPO SAN CARLOS 1': 'Madake (P & C)',
+        'GRUPO SAN CARLOS 2': 'Madake (PV & SI)',
+    };
+
+    formatGroupName(ex: ExecutionWithRelations): string {
+        const g = ex.developer_groups as any;
+        if (!g?.name) return '';
+        if (ex.report_types?.service === 'marketing' && g.group_type === 'líder') {
+            return this.MKT_AGENCY_NAMES[g.script_arg] ?? g.name;
+        }
+        return g.name;
+    }
 }
