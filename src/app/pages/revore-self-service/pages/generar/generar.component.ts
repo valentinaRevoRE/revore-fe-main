@@ -90,9 +90,14 @@ export class GenerarComponent implements OnInit {
         'líder 3': 'ARTURO LOPEZ OROZCO',
     };
 
+    private readonly MKT_AGENCY_NAMES: Record<string, string> = {
+        'GRUPO SAN CARLOS 1': 'Madake (P & C)',
+        'GRUPO SAN CARLOS 2': 'Madake (PV & SI)',
+    };
+
     formatGroupName(g: DbDeveloperGroup): string {
         if (this.selectedService === 'marketing' && g.group_type === 'líder') {
-            return g.name;
+            return this.MKT_AGENCY_NAMES[g.script_arg] ?? g.name;
         }
         return this.LEADER_NAMES[g.name.toLowerCase()] ?? g.name;
     }
