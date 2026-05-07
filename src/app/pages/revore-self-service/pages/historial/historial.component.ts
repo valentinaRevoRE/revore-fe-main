@@ -95,6 +95,11 @@ export class HistorialComponent implements OnInit, OnDestroy {
         return IN_PROGRESS.includes(status);
     }
 
+    errorLabel(msg: string): string {
+        // Show only the first line (friendly message), detail goes in tooltip
+        return msg.split('\n')[0];
+    }
+
     private readonly MKT_AGENCY_NAMES: Record<string, string> = {
         'GRUPO SAN CARLOS 1': 'Madake (P & C)',
         'GRUPO SAN CARLOS 2': 'Madake (PV & SI)',

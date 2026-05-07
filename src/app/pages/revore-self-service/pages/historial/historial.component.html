@@ -76,7 +76,7 @@
                 } @else if (isInProgress(ex.status)) {
                   <span class="ss-muted">Procesando…</span>
                 } @else if (ex.status === 'failed' && ex.error_message) {
-                  <span class="ss-error-msg" [title]="ex.error_message">{{ ex.error_message }}</span>
+                  <span class="ss-error-msg" [title]="ex.error_message">{{ errorLabel(ex.error_message) }}</span>
                 } @else {
                   <span class="ss-muted">—</span>
                 }
