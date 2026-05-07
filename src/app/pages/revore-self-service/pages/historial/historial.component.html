@@ -75,6 +75,8 @@
                   <a class="ss-btn ss-btn--sm ss-btn--outline" [href]="ex.file_url" target="_blank">Descargar</a>
                 } @else if (isInProgress(ex.status)) {
                   <span class="ss-muted">Procesando…</span>
+                } @else if (ex.status === 'failed' && ex.error_message) {
+                  <span class="ss-error-msg" [title]="ex.error_message">{{ ex.error_message }}</span>
                 } @else {
                   <span class="ss-muted">—</span>
                 }
