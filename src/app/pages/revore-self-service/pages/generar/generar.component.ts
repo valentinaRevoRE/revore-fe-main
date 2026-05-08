@@ -171,7 +171,7 @@ export class GenerarComponent implements OnInit {
         });
     }
 
-    private todayIso(): string {
+    todayIso(): string {
         return new Date().toISOString().split('T')[0];
     }
 
