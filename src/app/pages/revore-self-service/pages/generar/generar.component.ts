@@ -111,13 +111,14 @@ export class GenerarComponent implements OnInit {
     form!: FormGroup;
 
     readonly DAYS_OPTIONS = [
-        { value: 1, label: 'Todos los lunes' },
-        { value: 2, label: 'Todos los martes' },
-        { value: 3, label: 'Todos los miércoles' },
-        { value: 4, label: 'Todos los jueves' },
-        { value: 5, label: 'Todos los viernes' },
-        { value: 6, label: 'Todos los sábados' },
-        { value: 0, label: 'Todos los domingos' },
+        { value: -1, label: 'Todos los días (lunes a viernes)' },
+        { value: 1,  label: 'Todos los lunes' },
+        { value: 2,  label: 'Todos los martes' },
+        { value: 3,  label: 'Todos los miércoles' },
+        { value: 4,  label: 'Todos los jueves' },
+        { value: 5,  label: 'Todos los viernes' },
+        { value: 6,  label: 'Todos los sábados' },
+        { value: 0,  label: 'Todos los domingos' },
     ];
 
     readonly HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => ({
@@ -158,6 +159,8 @@ export class GenerarComponent implements OnInit {
             developer_group_id: [null],
             sub_project_id:     [null],
             recipients:         ['', Validators.required],
+            // on_demand
+            fecha_corte:        [null],
             // recurring
             cada_dia:           [1],
             a_las:              [9],
@@ -274,8 +277,8 @@ export class GenerarComponent implements OnInit {
                 triggered_by_user:  null,
                 recipients,
                 status:             'queued',
-                date_range_start:   null,
-                date_range_end:     null,
+                date_range_start:   v.fecha_corte || null,
+                date_range_end:     v.fecha_corte || null,
             });
             if (error) { this.submitError = error.message; this.isSubmitting = false; return; }
         } else {

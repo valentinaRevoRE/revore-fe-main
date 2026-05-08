@@ -148,6 +148,22 @@
 
           <div class="ss-form__divider"></div>
 
+          <!-- ── Fecha de corte (on_demand) ── -->
+          @if (selectedModalidad === 'on_demand') {
+            <div class="ss-form__group">
+              <label class="ss-form__label">
+                Fecha de corte
+                <span class="ss-form__hint">opcional — si no se indica, usa ayer</span>
+              </label>
+              <input
+                type="date"
+                class="ss-form__input"
+                formControlName="fecha_corte"
+                [max]="todayIso()"
+              />
+            </div>
+          }
+
           <!-- ── Recurrente ── -->
           @if (selectedModalidad === 'recurring') {
             <div class="ss-form__group">
