@@ -111,7 +111,7 @@ export class GenerarComponent implements OnInit {
     form!: FormGroup;
 
     readonly DAYS_OPTIONS = [
-        { value: -1, label: 'Todos los días (lunes a viernes)' },
+        { value: -1, label: 'Todos los días' },
         { value: 1,  label: 'Todos los lunes' },
         { value: 2,  label: 'Todos los martes' },
         { value: 3,  label: 'Todos los miércoles' },

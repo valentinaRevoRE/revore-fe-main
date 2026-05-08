@@ -41,7 +41,7 @@ export class ProgramacionesComponent implements OnInit {
     form!: FormGroup;
 
     readonly DAYS = [
-        { value: -1, label: 'Todos los días (lunes a viernes)' },
+        { value: -1, label: 'Todos los días' },
         { value: 0,  label: 'Todos los domingos' },
         { value: 1,  label: 'Todos los lunes' },
         { value: 2,  label: 'Todos los martes' },
