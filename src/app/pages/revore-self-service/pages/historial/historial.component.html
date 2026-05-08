@@ -53,6 +53,9 @@
                 @if (ex.developer_groups?.name) {
                   <span class="ss-sub">{{ formatGroupName(ex) }}</span>
                 }
+                @if (ex.sub_projects?.name) {
+                  <span class="ss-sub">{{ ex.sub_projects?.name }}</span>
+                }
               </td>
               <td>{{ ex.report_types?.name ?? '—' }}</td>
               <td>
