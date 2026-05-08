@@ -158,7 +158,7 @@ export class GenerarComponent implements OnInit {
             developer_id:       ['', Validators.required],
             developer_group_id: [null],
             sub_project_id:     [null],
-            recipients:         ['', Validators.required],
+            recipients:         [''],
             // on_demand
             fecha_corte:        [null],
             // recurring
@@ -240,9 +240,8 @@ export class GenerarComponent implements OnInit {
         if (this.step === 3) return this.selectedModalidad !== null;
         if (this.step === 4) {
             const devOk = !!this.form.get('developer_id')!.value;
-            const recipOk = !!this.form.get('recipients')!.value?.trim();
-            if (this.selectedModalidad === 'on_demand') return devOk && recipOk;
-            return devOk && recipOk && this.form.get('a_las')!.value != null;
+            if (this.selectedModalidad === 'on_demand') return devOk;
+            return devOk && this.form.get('a_las')!.value != null;
         }
         return false;
     }
