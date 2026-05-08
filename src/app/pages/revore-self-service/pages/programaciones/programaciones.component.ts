@@ -41,13 +41,14 @@ export class ProgramacionesComponent implements OnInit {
     form!: FormGroup;
 
     readonly DAYS = [
-        { value: 0, label: 'Todos los domingos' },
-        { value: 1, label: 'Todos los lunes' },
-        { value: 2, label: 'Todos los martes' },
-        { value: 3, label: 'Todos los miércoles' },
-        { value: 4, label: 'Todos los jueves' },
-        { value: 5, label: 'Todos los viernes' },
-        { value: 6, label: 'Todos los sábados' },
+        { value: -1, label: 'Todos los días (lunes a viernes)' },
+        { value: 0,  label: 'Todos los domingos' },
+        { value: 1,  label: 'Todos los lunes' },
+        { value: 2,  label: 'Todos los martes' },
+        { value: 3,  label: 'Todos los miércoles' },
+        { value: 4,  label: 'Todos los jueves' },
+        { value: 5,  label: 'Todos los viernes' },
+        { value: 6,  label: 'Todos los sábados' },
     ];
 
     readonly HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => ({
@@ -138,6 +139,25 @@ export class ProgramacionesComponent implements OnInit {
         this.subProjects = [];
         this.form.reset({ day_of_week: 1, hour: 9, active: true });
         this.showModal = true;
+    }
+
+    async openEdit(s: ScheduleWithRelations): Promise<void> {
+        this.isEditing = true;
+        this.editingId = s.id;
+        this.developerGroups = [];
+        this.subProjects = [];
+        this.showModal = true;
+        this.form.patchValue({
+            developer_id:       s.developer_id,
+            developer_group_id: s.developer_group_id ?? null,
+            sub_project_id:     s.sub_project_id ?? null,
+            report_type_id:     s.report_type_id,
+            day_of_week:        s.day_of_week,
+            hour:               s.hour,
+            recipients:         s.recipients.join(', '),
+            active:             s.active,
+        });
+        if (s.developer_id) await this.onDeveloperChange(s.developer_id);
     }
 
     closeModal(): void {
