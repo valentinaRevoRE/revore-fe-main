@@ -2,7 +2,7 @@
   <img class="login__logo" src="/assets/logo.png" alt="Logo Revore" />
   <p class="login__welcome">¡Bienvenido!</p>
   <h1 class="login__title">Iniciar Sesión</h1>
-  <span class="login__intro">Inicia tu sección con estos datos</span>
+  <span class="login__intro">Inicia tu sesión con estos datos</span>
   <form class="form" [formGroup]="formLogin" (submit)="onSubmit()">
     <label class="form__label" for="email">Correo electrónico</label>
     <div class="form__inputcont">
@@ -41,10 +41,6 @@
       }
     </button>
   </form>
-  <p class="login__outro">
-    ¿No tienes acceso a tu cuenta?
-    <a class="outro__link" routerLink="/login/crear-cuenta">Crear una cuenta ahora</a>
-  </p>
   <div class="login__separator">
     <div class="separator__line"></div>
     <span class="separator__text">O</span>

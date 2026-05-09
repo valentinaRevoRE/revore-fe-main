@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './shared/layout/main-layout/main-layout.component';
-import { NewAccountComponent } from './pages/new-account/new-account.component';
 import { RecoveryPassComponent } from './pages/recovery-pass/recovery-pass.component';
 import { OtpComponent } from './pages/otp/otp.component';
 import { NewPasswordComponent } from './pages/new-password/new-password.component';
@@ -17,7 +16,8 @@ export const routes: Routes = [
             },
             {
                 path: 'crear-cuenta',
-                component: NewAccountComponent
+                redirectTo: '',
+                pathMatch: 'full',
             },
             {
                 path: 'recuperar-contrasena',
