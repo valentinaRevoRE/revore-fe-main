@@ -1,38 +1,38 @@
 .login {
+    width: 100%;
+    max-width: 420px;
+
     &__logo {
-        margin-bottom: 36px;
-    }
-    &__intro {
-        margin-bottom: 48px;
-    }
-    &__title {
-        margin-bottom: 13px;
+        margin-bottom: 20px;
     }
     &__welcome {
-        margin-bottom: 52px;
-        margin-top: 72px;
+        margin-top: 20px;
+        margin-bottom: 8px;
     }
-    .form {
-        &__input-last {
-            margin-bottom: 15px;
-        }
-        &__label {
-            margin-bottom: 14px;
-        }
-        &__options {
-            margin-bottom: 36px;
-        }
-        &__submit {
-            margin-bottom: 30px;
-        }
+    &__title {
+        margin-bottom: 6px;
     }
-    &__outro {
-        margin-bottom: 34px;
-    }
-    &__separator {
+    &__intro {
         margin-bottom: 24px;
     }
+    .form {
+        &__label {
+            margin-bottom: 10px;
+        }
+        &__input-last {
+            margin-bottom: 10px;
+        }
+        &__options {
+            margin-bottom: 24px;
+        }
+        &__submit {
+            margin-bottom: 20px;
+        }
+    }
+    &__separator {
+        margin-bottom: 16px;
+    }
     &__google {
-        margin-bottom: 40px;
+        margin-bottom: 24px;
     }
 }
