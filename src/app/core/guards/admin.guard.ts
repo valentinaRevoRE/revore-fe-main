@@ -25,8 +25,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
     const hasAdminRole = roles.includes('admin');
     
     if (!hasAdminRole) {
-      alert('No tienes permisos para acceder a esta sección. Se requiere rol de administrador.');
-      router.navigate(['/']);
+      router.navigate(['/dashboard/home']);
       return false;
     }
 

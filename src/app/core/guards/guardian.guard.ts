@@ -1,10 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { CommonService } from '@core/common/common.service';
+import { SupabaseService } from '@revore/services/supabase.service';
 
-export const GuardianGuard: CanActivateFn = (route, state) => {
-  // Sales Tools usa Supabase OAuth — su propio guard (revoreAuthGuard) se encarga
-  if (state.url.startsWith('/dashboard/sales-tools')) return true;
+export const GuardianGuard: CanActivateFn = async (route, state) => {
+  if (state.url.startsWith('/dashboard/sales-tools')) {
+    const supabaseS = inject(SupabaseService);
+    const { data } = await supabaseS.db.auth.getSession();
+    if (!data.session) {
+      inject(Router).navigateByUrl('/login');
+      return false;
+    }
+    return true;
+  }
 
   const commonService = inject(CommonService);
   const router = inject(Router);

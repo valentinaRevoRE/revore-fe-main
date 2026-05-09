@@ -39,14 +39,12 @@ export class DashboardLayouComponent implements OnInit {
   private _getGaphicsData() {
     this.graphicsS.getGraphics().subscribe({
       next: (resp: any) => {
-        console.log('Datos recibidos:', resp); // Debug
         this.graphicAppreciation = resp.appreciationModel?.graphicData || { header: [], body: [], value_text: 'Porcentaje' };
         this.graphicRevenueData = resp.revenuesModel?.graphicData || { breakpoints: [['Sample', 0, 0, 1000000, 1000000]] };
         this._setDataTocards(resp?.dashboardData);
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error al cargar datos:', err); // Debug
         this.toastData = {
           type: EStates.error,
           message: err?.error?.message ?? 'Error al cargar datos',

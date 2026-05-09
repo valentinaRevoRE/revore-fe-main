@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '@environments/environments.local';
 
 export interface AdminUser {
   id: string;
@@ -40,7 +41,7 @@ export interface AvailableRole {
   providedIn: 'root'
 })
 export class AdminUsersService {
-  private baseUrl = 'http://localhost:3000/api';
+  private baseUrl = `${environment.apiUrl}/api`;
 
   constructor(private http: HttpClient) {}
 
