@@ -9,9 +9,19 @@ export class AuthService {
 
   constructor(private hhtp: HttpClient) { }
 
-  login( data: ILogin ){
-    const url: string =  `${environment.apiUrl}${PATHS.LOGIN}`;
-    return this.hhtp.post(url, data);
+  login(data: ILogin) {
+    const url = `${environment.apiUrl}${PATHS.LOGIN}`;
+    return this.hhtp.post(url, data, { withCredentials: true });
+  }
+
+  me() {
+    const url = `${environment.apiUrl}/api/auth/me`;
+    return this.hhtp.get<any>(url, { withCredentials: true });
+  }
+
+  logout() {
+    const url = `${environment.apiUrl}/api/auth/logout`;
+    return this.hhtp.post(url, {}, { withCredentials: true });
   }
 
   createAccount( data: { email: string; password: string; name: string } ){

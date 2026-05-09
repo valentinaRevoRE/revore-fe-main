@@ -32,7 +32,7 @@ export class LoginComponent {
     private router: Router,
     private authS: AuthService,
     private commonService: CommonService,
-    private supabaseS: SupabaseService
+    private supabaseS: SupabaseService,
   ) {
     this.formLogin = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -48,9 +48,8 @@ export class LoginComponent {
       return;
     }
     this.isLoading = true;
-    const formValue: ILogin = {...this.formLogin.value};
-    delete formValue.remember;
-    this.authS.login(formValue).subscribe({
+    const { remember, ...credentials } = this.formLogin.value;
+    this.authS.login({ ...credentials, remember }).subscribe({
       next: (resp) => this.nextStep(resp) ,
       error: () => {
         this.toastData = {
@@ -63,24 +62,12 @@ export class LoginComponent {
     });
   }
 
-  private async nextStep(resp: any){
-    // Guardar token de acceso
-    this.commonService.localToken = resp.accessToken || resp.access_token;
-
+  private nextStep(resp: any): void {
     if (resp.user) {
-      sessionStorage.setItem('accessToken', resp.accessToken || resp.access_token);
-      sessionStorage.setItem('refreshToken', resp.refreshToken || resp.refresh_token);
       sessionStorage.setItem('user', JSON.stringify(resp.user));
       sessionStorage.setItem('userRoles', JSON.stringify(resp.user.roles || []));
     }
-
-    // Establecer sesión Supabase en el browser para que Sales Tools pueda acceder
-    await this.supabaseS.db.auth.setSession({
-      access_token: resp.accessToken || resp.access_token,
-      refresh_token: resp.refreshToken || resp.refresh_token,
-    });
-
-    const {remember} = this.formLogin.value;
+    const { remember } = this.formLogin.value;
     this.commonService.saveLimitDate(remember);
     this.router.navigate(['dashboard', 'home']);
   }
