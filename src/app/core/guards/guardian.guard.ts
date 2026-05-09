@@ -6,35 +6,34 @@ import { AuthService } from '@public/shared/services/auth.service';
 import { firstValueFrom } from 'rxjs';
 
 export const GuardianGuard: CanActivateFn = async (route, state) => {
-  const router   = inject(Router);
-  const commonS  = inject(CommonService);
+  const router  = inject(Router);
+  const commonS = inject(CommonService);
 
   if (state.url.startsWith('/dashboard/sales-tools')) {
-    const supabaseS = inject(SupabaseService);
-    const { data }  = await supabaseS.db.auth.getSession();
-    if (!data.session) {
-      router.navigateByUrl('/login');
-      return false;
-    }
+    const { data } = await inject(SupabaseService).db.auth.getSession();
+    if (!data.session) { router.navigateByUrl('/login'); return false; }
     return true;
   }
 
-  // Fast path: sessionStorage tiene usuario y la sesión no ha expirado
-  const userStr = sessionStorage.getItem('user');
-  if (userStr) {
-    const stillValid = new Date() <= new Date(commonS.localLimitDate);
-    if (stillValid) return true;
+  // Verificar inactividad (se evalúa aunque la cookie siga viva)
+  if (commonS.isInactive()) {
     commonS.clearTokens();
     router.navigateByUrl('/login');
     return false;
   }
 
-  // Slow path: no hay sesión en memoria, verificar cookie con el servidor
+  // Fast path: usuario en sessionStorage
+  if (sessionStorage.getItem('user')) {
+    commonS.touchActivity();
+    return true;
+  }
+
+  // Slow path: sessionStorage vacío (refresh / nueva pestaña) — verificar cookie
   try {
-    const authS = inject(AuthService);
-    const user  = await firstValueFrom(authS.me());
+    const user = await firstValueFrom(inject(AuthService).me());
     sessionStorage.setItem('user', JSON.stringify(user));
     sessionStorage.setItem('userRoles', JSON.stringify(user.roles || []));
+    commonS.touchActivity();
     return true;
   } catch {
     router.navigateByUrl('/login');
@@ -42,9 +41,8 @@ export const GuardianGuard: CanActivateFn = async (route, state) => {
   }
 };
 
-export const GuardianByProject: CanActivateFn = (route, state) => {
-  const _cmS = inject(CommonService);
-  if (!_cmS.activeProjectId) {
+export const GuardianByProject: CanActivateFn = () => {
+  if (!inject(CommonService).activeProjectId) {
     inject(Router).navigate(['dashboard', 'home']);
     return false;
   }

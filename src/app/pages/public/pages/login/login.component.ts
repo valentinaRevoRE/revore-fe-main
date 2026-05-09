@@ -48,8 +48,8 @@ export class LoginComponent {
       return;
     }
     this.isLoading = true;
-    const { remember, ...credentials } = this.formLogin.value;
-    this.authS.login({ ...credentials, remember }).subscribe({
+    const { email, password } = this.formLogin.value;
+    this.authS.login({ email, password }).subscribe({
       next: (resp) => this.nextStep(resp) ,
       error: () => {
         this.toastData = {
@@ -67,8 +67,7 @@ export class LoginComponent {
       sessionStorage.setItem('user', JSON.stringify(resp.user));
       sessionStorage.setItem('userRoles', JSON.stringify(resp.user.roles || []));
     }
-    const { remember } = this.formLogin.value;
-    this.commonService.saveLimitDate(remember);
+    this.commonService.touchActivity();
     this.router.navigate(['dashboard', 'home']);
   }
 

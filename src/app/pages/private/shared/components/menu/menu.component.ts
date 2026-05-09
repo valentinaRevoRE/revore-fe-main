@@ -102,8 +102,7 @@ export class MenuComponent implements OnInit{
   }
 
   closeSession(){
-    this.commonService.localToken = '';
     this.commonService.clearTokens();
-    this.router.navigateByUrl('/login')
+    this.router.navigateByUrl('/login');
   }
 }
