@@ -12,7 +12,7 @@ export class InterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const route = inject(Router);
     const commonS = inject(CommonService);
-    const token: string | null = localStorage.getItem('sT') ?? null;
+    const token: string | null = sessionStorage.getItem('sT') ?? null;
     let request = req;
     if (token) {
       request = req.clone({

@@ -42,8 +42,8 @@ export class MenuComponent implements OnInit{
 
   loadUserInfo(): void {
     // Obtener datos del usuario desde localStorage
-    const userStr = localStorage.getItem('user');
-    const userRolesStr = localStorage.getItem('userRoles');
+    const userStr = sessionStorage.getItem('user');
+    const userRolesStr = sessionStorage.getItem('userRoles');
     
     if (userStr) {
       const user = JSON.parse(userStr);
@@ -86,7 +86,7 @@ export class MenuComponent implements OnInit{
 
   filterMenuByRoles(): void {
     // Obtener roles del usuario desde localStorage
-    const userRolesStr = localStorage.getItem('userRoles');
+    const userRolesStr = sessionStorage.getItem('userRoles');
     const userRoles: string[] = userRolesStr ? JSON.parse(userRolesStr) : [];
 
     // Filtrar items del menú

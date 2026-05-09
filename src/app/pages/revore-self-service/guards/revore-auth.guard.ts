@@ -16,7 +16,19 @@ export const revoreAuthGuard: CanActivateFn = async () => {
     }
 
     const email = session.user.email ?? '';
-    if (!email.endsWith(`@${environment.revore.allowedDomain}`)) {
+    const isDomainUser = email.endsWith(`@${environment.revore.allowedDomain}`);
+
+    let hasAccess = isDomainUser;
+    if (!isDomainUser) {
+        const { data } = await supabaseS.db
+            .from('self_service_allowed_emails')
+            .select('email')
+            .eq('email', email)
+            .maybeSingle();
+        hasAccess = !!data;
+    }
+
+    if (!hasAccess) {
         await supabaseS.db.auth.signOut();
         router.navigateByUrl('/revore/access-denied');
         return false;

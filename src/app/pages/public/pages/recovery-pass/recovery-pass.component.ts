@@ -63,7 +63,7 @@ export class RecoveryPassComponent {
 
     if (accessToken && type === 'recovery') {
       // Guardar token para usar en el cambio de contraseña
-      localStorage.setItem('tmpT', accessToken);
+      sessionStorage.setItem('tmpT', accessToken);
       this.router.navigate(['login', 'recuperar-contrasena', 'actualizar']);
       return;
     }

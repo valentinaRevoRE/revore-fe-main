@@ -30,7 +30,7 @@ export class NewPasswordComponent {
     private router: Router,
     private authS: AuthService
   ) {
-    this.token = localStorage.getItem('tmpT') ?? null;
+    this.token = sessionStorage.getItem('tmpT') ?? null;
     if (!this.token) {
       this.router.navigate(['login']);
     }
@@ -75,7 +75,7 @@ export class NewPasswordComponent {
         
         // Limpiar formulario y token
         this.formNewPassword.reset();
-        localStorage.removeItem('tmpT');
+        sessionStorage.removeItem('tmpT');
         
         // Redirigir al login después de 3 segundos
         setTimeout(() => {

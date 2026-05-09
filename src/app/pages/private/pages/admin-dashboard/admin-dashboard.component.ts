@@ -131,7 +131,7 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     // Verificar que el admin no se cambie a sí mismo
-    const currentUserEmail = localStorage.getItem('user');
+    const currentUserEmail = sessionStorage.getItem('user');
     if (currentUserEmail) {
       const currentUser = JSON.parse(currentUserEmail);
       if (currentUser.email === this.selectedUser.email) {

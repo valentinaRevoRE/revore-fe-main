@@ -63,18 +63,23 @@ export class LoginComponent {
     });
   }
 
-  private nextStep(resp: any){
+  private async nextStep(resp: any){
     // Guardar token de acceso
     this.commonService.localToken = resp.accessToken || resp.access_token;
-    
-    // Guardar información del usuario y roles en localStorage
+
     if (resp.user) {
-      localStorage.setItem('accessToken', resp.accessToken || resp.access_token);
-      localStorage.setItem('refreshToken', resp.refreshToken || resp.refresh_token);
-      localStorage.setItem('user', JSON.stringify(resp.user));
-      localStorage.setItem('userRoles', JSON.stringify(resp.user.roles || []));
+      sessionStorage.setItem('accessToken', resp.accessToken || resp.access_token);
+      sessionStorage.setItem('refreshToken', resp.refreshToken || resp.refresh_token);
+      sessionStorage.setItem('user', JSON.stringify(resp.user));
+      sessionStorage.setItem('userRoles', JSON.stringify(resp.user.roles || []));
     }
-    
+
+    // Establecer sesión Supabase en el browser para que Sales Tools pueda acceder
+    await this.supabaseS.db.auth.setSession({
+      access_token: resp.accessToken || resp.access_token,
+      refresh_token: resp.refreshToken || resp.refresh_token,
+    });
+
     const {remember} = this.formLogin.value;
     this.commonService.saveLimitDate(remember);
     this.router.navigate(['dashboard', 'home']);

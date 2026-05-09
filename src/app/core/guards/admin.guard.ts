@@ -5,14 +5,14 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   // Verificar si hay token
-  const token = localStorage.getItem('accessToken');
+  const token = sessionStorage.getItem('accessToken');
   if (!token) {
     router.navigate(['/login']);
     return false;
   }
 
   // Verificar si tiene roles de admin
-  const rolesStr = localStorage.getItem('userRoles');
+  const rolesStr = sessionStorage.getItem('userRoles');
   if (!rolesStr) {
     router.navigate(['/']);
     return false;
