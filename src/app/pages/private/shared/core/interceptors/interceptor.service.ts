@@ -9,13 +9,9 @@ export class InterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const route   = inject(Router);
     const commonS = inject(CommonService);
-    const token   = sessionStorage.getItem('accessToken') ?? null;
-
     const request = req.clone({
-      setHeaders: {
-        ...(token ? { authorization: `Bearer ${token}` } : {}),
-        'Cache-Control': 'no-cache',
-      },
+      withCredentials: true,
+      setHeaders: { 'Cache-Control': 'no-cache' },
     });
 
     return next.handle(request).pipe(

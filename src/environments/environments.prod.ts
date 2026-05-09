@@ -2,7 +2,7 @@ export const environment = {
     production: true,
     name: 'production',
 
-    apiUrl: 'https://api.revore.mx',
+    apiUrl: 'https://revo-report-hub.fly.dev',
     encryptKey: 'RevoreCompany#2023',
 
     enableDebugMode: false,

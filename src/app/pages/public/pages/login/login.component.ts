@@ -62,8 +62,6 @@ export class LoginComponent {
   }
 
   private nextStep(resp: any): void {
-    const token = resp.accessToken || resp.access_token;
-    if (token) sessionStorage.setItem('accessToken', token);
     if (resp.user) {
       sessionStorage.setItem('user', JSON.stringify(resp.user));
       sessionStorage.setItem('userRoles', JSON.stringify(resp.user.roles || []));
