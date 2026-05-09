@@ -68,13 +68,13 @@ export class AuthCallbackComponent implements OnInit {
 
     private saveLocalUser(user: User): void {
         const meta = user.user_metadata;
-        const name = meta['full_name'] ?? meta['name'] ?? user.email ?? 'Usuario';
-        localStorage.setItem('user', JSON.stringify({
+        const full_name = meta['full_name'] ?? meta['name'] ?? user.email ?? 'Usuario';
+        sessionStorage.setItem('user', JSON.stringify({
             id: user.id,
             email: user.email,
-            name,
+            full_name,
             avatar_url: meta['avatar_url'] ?? meta['picture'] ?? null,
         }));
-        localStorage.setItem('userRoles', JSON.stringify([]));
+        sessionStorage.setItem('userRoles', JSON.stringify([]));
     }
 }
