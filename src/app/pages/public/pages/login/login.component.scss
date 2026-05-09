@@ -21,6 +21,8 @@
         }
         &__options {
             margin-bottom: 36px;
+            display: flex;
+            justify-content: flex-end;
         }
         &__submit {
             margin-bottom: 30px;
