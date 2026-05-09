@@ -76,6 +76,10 @@
     display: block;
     font-size: 11px;
     color: map.get(t.$primary-color, 300);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
 }
 
 .ss-actions {
