@@ -48,10 +48,8 @@ export class MenuComponent implements OnInit{
     if (userStr) {
       const user = JSON.parse(userStr);
       this.userEmail = user.email || '';
-      this.userName = user.name || 'Usuario';
-      
-      // Generar iniciales usando nombre o correo
-      this.userInitials = this.getInitials(user.name || user.email || 'Usuario');
+      this.userName = user.full_name || user.name || '';
+      this.userInitials = this.getInitials(this.userName || user.email || 'U');
     }
     
     if (userRolesStr) {
