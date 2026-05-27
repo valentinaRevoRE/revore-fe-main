@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
+import { SupabaseMetasService } from './supabase-metas.service';
 import {
     DbDeveloper, DbDeveloperGroup, DbSubProject, DbReportType,
     DbSchedule, DbExecution, ExecutionWithRelations, ScheduleWithRelations,
     ExecutionStatus, ServiceType,
+    DbDesarrollador, DbProyecto, DbMeta, MetaWithRelations, GoalType, MetaDetails,
 } from '../models/database.types';
 
 @Injectable({ providedIn: 'root' })
 export class SelfServiceService {
 
-    constructor(private supabaseS: SupabaseService) {}
+    constructor(
+        private supabaseS: SupabaseService,
+        private supabaseMetasS: SupabaseMetasService,
+    ) {}
 
     // ── Developers ────────────────────────────────────────────────────────────
 
@@ -115,6 +120,56 @@ export class SelfServiceService {
 
     async deleteSchedule(id: string): Promise<{ error: any }> {
         const { error } = await this.supabaseS.db.from('schedules').delete().eq('id', id);
+        return { error };
+    }
+
+    // ── Metas (proyecto Supabase separado: xujscamqorwckpqamnie) ──────────────
+
+    async getDesarrolladores(): Promise<DbDesarrollador[]> {
+        const { data } = await this.supabaseMetasS.db
+            .from('Desarrolladores')
+            .select('*')
+            .order('Desarrollador');
+        return (data ?? []) as DbDesarrollador[];
+    }
+
+    async getProyectos(desarrolladorId?: string): Promise<DbProyecto[]> {
+        let query = this.supabaseMetasS.db.from('Proyectos').select('*').order('Nombre');
+        if (desarrolladorId) query = (query as any).eq('Desarrollador_id', desarrolladorId);
+        const { data } = await query;
+        return (data ?? []) as DbProyecto[];
+    }
+
+    async getMetas(filters?: { desarrolladorId?: string; proyectoId?: string; period?: string }): Promise<MetaWithRelations[]> {
+        let query = this.supabaseMetasS.db
+            .from('Metas')
+            .select('*, Proyectos(Nombre, Desarrollador_id)')
+            .order('period', { ascending: false });
+
+        if (filters?.proyectoId)  query = (query as any).eq('Proyecto_id', filters.proyectoId);
+        if (filters?.period)      query = (query as any).eq('period', filters.period);
+
+        const { data } = await query;
+        let rows = (data ?? []) as MetaWithRelations[];
+        // El filtro por desarrollador se aplica en cliente (FK indirecta vía Proyectos)
+        if (filters?.desarrolladorId) {
+            rows = rows.filter(m => m.Proyectos?.Desarrollador_id === filters.desarrolladorId);
+        }
+        return rows;
+    }
+
+    async createMeta(payload: { Proyecto_id: string; goal_type: GoalType; period: string; details: MetaDetails }): Promise<{ error: any }> {
+        const { error } = await this.supabaseMetasS.db.from('Metas').insert(payload as any);
+        return { error };
+    }
+
+    async updateMeta(id: string, payload: Partial<Pick<DbMeta, 'goal_type' | 'period' | 'details' | 'Proyecto_id'>>): Promise<{ error: any }> {
+        const { error } = await this.supabaseMetasS.db.from('Metas').update(payload as any).eq('id', id);
+        return { error };
+    }
+
+    async deleteMeta(id: string): Promise<{ error: any }> {
+        const { error } = await this.supabaseMetasS.db.from('Metas').delete().eq('id', id);
         return { error };
     }
 }

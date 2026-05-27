@@ -35,6 +35,11 @@ export const routes: Routes = [
                 component: MarketingComponent
             },
             {
+                path: 'alertas',
+                loadChildren: () => import('./pages/alertas/alertas.routes').then(r => r.alertasRoutes),
+                canActivate: [revoreAuthGuard]
+            },
+            {
                 path: 'admin/users',
                 component: AdminDashboardComponent,
                 canActivate: [adminGuard]

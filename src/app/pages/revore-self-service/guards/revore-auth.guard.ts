@@ -7,15 +7,29 @@ export const revoreAuthGuard: CanActivateFn = async () => {
     const supabaseS = inject(SupabaseService);
     const router = inject(Router);
 
-    const { data: { session } } = await supabaseS.db.auth.getSession();
+    // Obtener email del usuario: primero localStorage (login normal), luego sesión Supabase (Google OAuth)
+    let email = '';
 
-    if (!session) {
-        // Redirigir al login para que haga Google OAuth
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('accessToken');
+    if (storedUser && storedToken) {
+        try {
+            email = JSON.parse(storedUser).email ?? '';
+        } catch { /* ignore */ }
+    }
+
+    if (!email) {
+        const { data: { session } } = await supabaseS.db.auth.getSession();
+        if (session?.user?.email) {
+            email = session.user.email;
+        }
+    }
+
+    if (!email) {
         router.navigateByUrl('/login');
         return false;
     }
 
-    const email = session.user.email ?? '';
     const isDomainUser = email.endsWith(`@${environment.revore.allowedDomain}`);
 
     let hasAccess = isDomainUser;
@@ -29,7 +43,6 @@ export const revoreAuthGuard: CanActivateFn = async () => {
     }
 
     if (!hasAccess) {
-        await supabaseS.db.auth.signOut();
         router.navigateByUrl('/revore/access-denied');
         return false;
     }

@@ -38,6 +38,11 @@
         "name": "Historial",
         "link": "/dashboard/sales-tools/historial",
         "active": true
+      },
+      {
+        "name": "Configuración",
+        "link": "/dashboard/sales-tools/configuracion",
+        "active": true
       }
     ]
   },
@@ -54,6 +59,29 @@
     "link": "/dashboard/marketing",
     "active": true,
     "children": []
+  },
+  {
+    "name": "Alertas",
+    "icon": "information.svg",
+    "link": "/dashboard/alertas",
+    "active": true,
+    "children": [
+      {
+        "name": "Listado",
+        "link": "/dashboard/alertas/listado",
+        "active": true
+      },
+      {
+        "name": "Crear alerta",
+        "link": "/dashboard/alertas/crear",
+        "active": true
+      },
+      {
+        "name": "Historial",
+        "link": "/dashboard/alertas/historial",
+        "active": true
+      }
+    ]
   },
   {
     "name": "Administración",

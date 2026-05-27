@@ -21,6 +21,49 @@ export type ServiceType =
 
 export type GroupType = 'líder' | 'proyecto';
 
+export type GoalType = 'General' | 'Digital' | 'Brokers' | 'Offline' | 'Prospeccion';
+
+export interface MetaDetails {
+    Inversion?: number;
+    Leads: number;
+    Visitas: number;
+    Apartados: number;
+    Ventas: number;
+}
+
+export interface DbDesarrollador {
+    id: string;
+    Desarrollador: string;
+    Detalles: Record<string, any> | null;
+}
+
+export interface DbProyecto {
+    id: string;
+    Nombre: string;
+    Desarrollador_id: string;
+}
+
+export interface DbMeta {
+    id: string;
+    created_at: string;
+    Proyecto_id: string;
+    goal_type: GoalType;
+    period: string;       // ISO date (siempre primer día del mes)
+    details: MetaDetails;
+}
+
+export interface MetaWithRelations extends DbMeta {
+    Proyectos?: { Nombre: string; Desarrollador_id: string } | null;
+}
+
+export const GOAL_TYPES: { value: GoalType; label: string }[] = [
+    { value: 'General',     label: 'General' },
+    { value: 'Digital',     label: 'Digital' },
+    { value: 'Brokers',     label: 'Brokers' },
+    { value: 'Offline',     label: 'Offline' },
+    { value: 'Prospeccion', label: 'Prospección' },
+];
+
 // ─── Table Interfaces ───────────────────────────────────────────────────────
 
 export interface DbUser {

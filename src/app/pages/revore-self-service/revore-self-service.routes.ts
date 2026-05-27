@@ -32,6 +32,13 @@ export const revoreRoutes: Routes = [
                 c => c.HistorialComponent
             ),
     },
+    {
+        path: 'configuracion',
+        loadComponent: () =>
+            import('./pages/configuracion/configuracion.component').then(
+                c => c.ConfiguracionComponent
+            ),
+    },
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: '**', redirectTo: 'dashboard' },
 ];

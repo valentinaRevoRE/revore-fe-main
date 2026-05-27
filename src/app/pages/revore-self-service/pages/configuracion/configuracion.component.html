@@ -1,0 +1,219 @@
+<section class="ss-configuracion">
+
+  <header class="ss-configuracion__header">
+    <div>
+      <h1 class="ss-configuracion__title">Configuración</h1>
+      @if (selectedConfig === 'metas') {
+        <p class="ss-configuracion__subtitle">Gestiona las metas mensuales por proyecto</p>
+      } @else {
+        <p class="ss-configuracion__subtitle">Selecciona qué deseas configurar</p>
+      }
+    </div>
+    @if (selectedConfig !== 'none') {
+      <button class="ss-btn ss-btn--outline" (click)="selectedConfig = 'none'">← Volver</button>
+    }
+  </header>
+
+  @if (isLoading) {
+    <div class="ss-loading">Cargando configuración…</div>
+
+  } @else if (selectedConfig === 'none') {
+
+    <!-- ── SELECTOR DE CONFIGURACIÓN ── -->
+    <div class="ss-config-cards">
+      <button class="ss-config-card" (click)="selectedConfig = 'metas'">
+        <span class="ss-config-card__icon">🎯</span>
+        <span class="ss-config-card__label">Metas</span>
+        <span class="ss-config-card__desc">Metas mensuales por proyecto (Inversión, Leads, Visitas, Apartados, Ventas)</span>
+      </button>
+    </div>
+
+  } @else if (selectedConfig === 'metas') {
+
+    <!-- ── METAS ── -->
+    <div class="ss-section-header" style="gap:.75rem; flex-wrap:wrap;">
+      <div style="display:flex; gap:.5rem; flex-wrap:wrap; align-items:center;">
+        <select class="ss-form__select" [value]="selectedMetaDesarrolladorId"
+                (change)="onMetaDesarrolladorFilter($any($event.target).value)">
+          <option value="">Todos los desarrolladores</option>
+          @for (d of desarrolladores; track d.id) {
+            <option [value]="d.id">{{ d.Desarrollador }}</option>
+          }
+        </select>
+
+        <select class="ss-form__select" [value]="selectedMetaProyectoId"
+                (change)="onMetaProyectoFilter($any($event.target).value)">
+          <option value="">Todos los proyectos</option>
+          @for (p of proyectosDelFiltro(); track p.id) {
+            <option [value]="p.id">{{ p.Nombre }}</option>
+          }
+        </select>
+
+        <span class="ss-section-count">{{ metas.length }} meta(s)</span>
+      </div>
+      <button class="ss-btn ss-btn--primary" (click)="openCreateMeta()">+ Agregar meta</button>
+    </div>
+
+    @if (metasLoading) {
+      <div class="ss-loading">Cargando metas…</div>
+    } @else if (metas.length === 0) {
+      <div class="ss-empty">
+        <p>No hay metas configuradas con estos filtros.</p>
+        <button class="ss-btn ss-btn--outline" (click)="openCreateMeta()">Agregar la primera</button>
+      </div>
+    } @else {
+      <div class="ss-table-wrap">
+        <table class="ss-table">
+          <thead>
+            <tr>
+              <th>Desarrollador</th>
+              <th>Proyecto</th>
+              <th>Tipo</th>
+              <th>Mes</th>
+              <th>Inversión</th>
+              <th>Leads</th>
+              <th>Visitas</th>
+              <th>Apartados</th>
+              <th>Ventas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (m of metas; track m.id) {
+              <tr>
+                <td>{{ desarrolladorDeProyecto(m.Proyecto_id) }}</td>
+                <td><strong>{{ proyectoNombre(m.Proyecto_id) }}</strong></td>
+                <td><span class="ss-badge">{{ m.goal_type }}</span></td>
+                <td>{{ periodLabel(m.period) }}</td>
+                <td>{{ m.details?.Inversion ?? '—' }}</td>
+                <td>{{ m.details?.Leads ?? 0 }}</td>
+                <td>{{ m.details?.Visitas ?? 0 }}</td>
+                <td>{{ m.details?.Apartados ?? 0 }}</td>
+                <td>{{ m.details?.Ventas ?? 0 }}</td>
+                <td>
+                  <div class="ss-actions">
+                    <button class="ss-btn ss-btn--outline ss-btn--sm" (click)="openEditMeta(m)">Editar</button>
+                    <button class="ss-btn ss-btn--danger ss-btn--sm" (click)="requestDeleteMeta(m.id)">Eliminar</button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+
+</section>
+
+<!-- ═══════════════════ MODAL META ═══════════════════ -->
+@if (showMetaModal) {
+  <div class="ss-overlay" (click)="closeMetaModal()">
+    <div class="ss-modal" (click)="$event.stopPropagation()">
+      <div class="ss-modal__header">
+        <h2>{{ isEditingMeta ? 'Editar meta' : 'Nueva meta mensual' }}</h2>
+        <button class="ss-modal__close" (click)="closeMetaModal()">✕</button>
+      </div>
+      <div class="ss-modal__body">
+        <form [formGroup]="metaForm" class="ss-form">
+
+          <div class="ss-form__row">
+            <div class="ss-form__group">
+              <label class="ss-form__label">Desarrollador *</label>
+              <select class="ss-form__select" formControlName="desarrollador_id"
+                      (change)="onMetaDesarrolladorChangeInForm($any($event.target).value)">
+                <option value="">Seleccionar…</option>
+                @for (d of desarrolladores; track d.id) {
+                  <option [value]="d.id">{{ d.Desarrollador }}</option>
+                }
+              </select>
+            </div>
+            <div class="ss-form__group">
+              <label class="ss-form__label">Sub-proyecto *</label>
+              <select class="ss-form__select" formControlName="Proyecto_id"
+                      [disabled]="!metaForm.get('desarrollador_id')?.value">
+                <option value="">Seleccionar…</option>
+                @for (p of proyectosFiltrados; track p.id) {
+                  <option [value]="p.id">{{ p.Nombre }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="ss-form__row">
+            <div class="ss-form__group">
+              <label class="ss-form__label">Tipo de meta *</label>
+              <select class="ss-form__select" formControlName="goal_type">
+                @for (g of GOAL_TYPES; track g.value) {
+                  <option [value]="g.value">{{ g.label }}</option>
+                }
+              </select>
+            </div>
+            <div class="ss-form__group">
+              <label class="ss-form__label">
+                Mes *
+                <span class="ss-form__hint">(se guarda el primer día del mes)</span>
+              </label>
+              <input class="ss-form__input" type="month"
+                     [value]="metaForm.get('period')?.value?.substring(0,7)"
+                     (change)="metaForm.patchValue({ period: $any($event.target).value + '-01' })" />
+            </div>
+          </div>
+
+          <div class="ss-form__group">
+            <label class="ss-form__label">Inversión <span class="ss-form__hint">(MXN)</span></label>
+            <input class="ss-form__input" type="number" min="0" step="any" formControlName="Inversion" />
+          </div>
+
+          <div class="ss-form__row">
+            <div class="ss-form__group">
+              <label class="ss-form__label">Leads *</label>
+              <input class="ss-form__input" type="number" min="0" step="any" formControlName="Leads" />
+            </div>
+            <div class="ss-form__group">
+              <label class="ss-form__label">Visitas *</label>
+              <input class="ss-form__input" type="number" min="0" step="any" formControlName="Visitas" />
+            </div>
+          </div>
+
+          <div class="ss-form__row">
+            <div class="ss-form__group">
+              <label class="ss-form__label">Apartados *</label>
+              <input class="ss-form__input" type="number" min="0" step="any" formControlName="Apartados" />
+            </div>
+            <div class="ss-form__group">
+              <label class="ss-form__label">Ventas *</label>
+              <input class="ss-form__input" type="number" min="0" step="any" formControlName="Ventas" />
+            </div>
+          </div>
+
+          @if (metaError) {
+            <div class="ss-error">{{ metaError }}</div>
+          }
+        </form>
+      </div>
+      <div class="ss-modal__footer">
+        <button class="ss-btn ss-btn--outline" (click)="closeMetaModal()">Cancelar</button>
+        <button class="ss-btn ss-btn--primary"
+                [disabled]="metaForm.invalid || isSavingMeta"
+                (click)="saveMeta()">
+          {{ isSavingMeta ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════════════════ CONFIRM DELETE META ═══════════════════ -->
+@if (confirmDeleteMetaId) {
+  <div class="ss-overlay">
+    <div class="ss-dialog">
+      <h3>¿Eliminar meta?</h3>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="ss-dialog__actions">
+        <button class="ss-btn ss-btn--outline" (click)="cancelDeleteMeta()">Cancelar</button>
+        <button class="ss-btn ss-btn--danger" (click)="confirmDeleteMeta()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}
