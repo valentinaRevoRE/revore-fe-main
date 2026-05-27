@@ -20,6 +20,13 @@ export interface Alerta {
     id?: string;
     developer_id: string;
     developer_name?: string;   // populated client-side para mostrar en listado
+    /** Alcance opcional: una alerta puede apuntar a un proyecto (sub_project)
+     *  o líder/proyecto (developer_group) específico. Si ambos van vacíos,
+     *  la alerta cubre todo el developer. */
+    sub_project_id?: string | null;
+    developer_group_id?: string | null;
+    sub_project_name?: string;        // populated client-side para mostrar en listado
+    developer_group_name?: string;    // populated client-side para mostrar en listado
     nombre?: string;           // si está vacío, el front muestra autoname
     tipo: TipoAlerta;
     canal: CanalAlerta;

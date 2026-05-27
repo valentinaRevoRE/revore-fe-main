@@ -29,7 +29,7 @@ export class AlertasService {
     list(): Observable<Alerta[]> {
         const promise = this.supabase.db
             .from('alerts')
-            .select('*, developers(name)')
+            .select('*, developers(name), developer_groups(name), sub_projects(name)')
             .order('created_at', { ascending: false })
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -164,6 +164,10 @@ export class AlertasService {
         id: row.id,
         developer_id: row.developer_id,
         developer_name: row.developers?.name,
+        sub_project_id: row.sub_project_id ?? null,
+        developer_group_id: row.developer_group_id ?? null,
+        sub_project_name: row.sub_projects?.name,
+        developer_group_name: row.developer_groups?.name,
         nombre: row.nombre ?? undefined,
         tipo: row.tipo,
         canal: row.canal,
@@ -177,6 +181,8 @@ export class AlertasService {
     private toDb(alerta: Alerta): Record<string, any> {
         return {
             developer_id: alerta.developer_id,
+            sub_project_id: alerta.sub_project_id ?? null,
+            developer_group_id: alerta.developer_group_id ?? null,
             nombre: alerta.nombre || null,
             tipo: alerta.tipo,
             canal: alerta.canal,

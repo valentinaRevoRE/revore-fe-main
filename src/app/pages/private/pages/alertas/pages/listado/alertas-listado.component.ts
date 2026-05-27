@@ -218,7 +218,10 @@ export class AlertasListadoComponent implements OnInit {
     }
 
     nombreMostrado(a: Alerta): string {
-        return a.nombre || autoName(a);
+        if (a.nombre) return a.nombre;
+        const base = autoName(a);
+        const scope = a.developer_group_name || a.sub_project_name;
+        return scope ? `${base} · ${scope}` : base;
     }
 
     countDestinatarios(a: Alerta): string {

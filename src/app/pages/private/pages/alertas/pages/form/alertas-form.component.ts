@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderComponent } from '@private/shared/components/header/header.component';
 import { IHeader } from '@private/shared/interfaces/header.interface';
 import { SelfServiceService } from '@revore/services/self-service.service';
-import { DbDeveloper } from '@revore/models/database.types';
+import { DbDeveloper, DbDeveloperGroup, DbSubProject } from '@revore/models/database.types';
 import { ToastComponent } from '@shared/components/toast/toast.component';
 import { EStates } from '@shared/enums/states.enum';
 import { IToast } from '@shared/interfaces/toast.interface';
@@ -59,6 +59,21 @@ import {
                         </select>
                     </label>
                 </div>
+
+                @if (alcanceOpciones().length > 0) {
+                    <div class="row">
+                        <label>
+                            Alcance (proyecto / líder)
+                            <select formControlName="alcance">
+                                <option value="">Todo el cliente</option>
+                                @for (o of alcanceOpciones(); track o.value) {
+                                    <option [value]="o.value">{{ o.label }}</option>
+                                }
+                            </select>
+                        </label>
+                        <small class="hint">Limita la alerta a un proyecto o líder específico del cliente. "Todo el cliente" cubre todos sus proyectos.</small>
+                    </div>
+                }
 
                 <div class="row">
                     <label>
@@ -223,11 +238,21 @@ export class AlertasFormComponent implements OnInit {
 
     readonly diasSeleccionados = signal<DiaSemana[]>([]);
     readonly developers = signal<DbDeveloper[]>([]);
+    readonly grupos = signal<DbDeveloperGroup[]>([]);
+    readonly subproyectos = signal<DbSubProject[]>([]);
     readonly bccEnabled = signal(false);
     readonly destinatarios = signal(emptyDestinatarios());
 
+    /** Opciones del selector de alcance: grupos (líder/proyecto) + sub-proyectos.
+     *  value codificado como 'g:<id>' o 's:<id>'. */
+    readonly alcanceOpciones = computed(() => [
+        ...this.grupos().map(g => ({ value: `g:${g.id}`, label: `${g.name} (${g.group_type})` })),
+        ...this.subproyectos().map(s => ({ value: `s:${s.id}`, label: s.name })),
+    ]);
+
     form: FormGroup = this.fb.group({
         developer_id: ['', Validators.required],
+        alcance: [''],
         tipo: ['leads', Validators.required],
         canal: ['email', Validators.required],
         hora: ['09:00', Validators.required],
@@ -248,12 +273,33 @@ export class AlertasFormComponent implements OnInit {
         const list = await this.selfSvc.getDevelopers();
         this.developers.set(list);
 
+        // Al cambiar de developer (interacción del usuario): recargar opciones de
+        // alcance y resetear la selección.
+        this.form.get('developer_id')!.valueChanges.subscribe((devId: string) => {
+            this.form.patchValue({ alcance: '' });
+            this.loadScopeOptions(devId);
+        });
+
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.modo.set('editar');
             this.headerData = { ...this.headerData, title: 'Editar alerta' };
             this.svc.getById(id).subscribe(a => a && this.cargarAlerta(a));
         }
+    }
+
+    private async loadScopeOptions(developerId: string): Promise<void> {
+        if (!developerId) {
+            this.grupos.set([]);
+            this.subproyectos.set([]);
+            return;
+        }
+        const [gs, sps] = await Promise.all([
+            this.selfSvc.getDeveloperGroups(developerId),
+            this.selfSvc.getSubProjects(developerId),
+        ]);
+        this.grupos.set(gs);
+        this.subproyectos.set(sps);
     }
 
     destText(key: 'to' | 'cc' | 'bcc' | 'telefonos'): string {
@@ -292,14 +338,25 @@ export class AlertasFormComponent implements OnInit {
         );
     }
 
-    private cargarAlerta(a: Alerta): void {
+    private async cargarAlerta(a: Alerta): Promise<void> {
+        // emitEvent:false para no disparar la suscripción de developer_id (que
+        // resetearía el alcance).
         this.form.patchValue({
             developer_id: a.developer_id,
             tipo: a.tipo,
             canal: a.canal,
             hora: a.periodicidad.hora,
             activo: a.activo,
-        });
+        }, { emitEvent: false });
+
+        await this.loadScopeOptions(a.developer_id);
+        const alcance = a.developer_group_id
+            ? `g:${a.developer_group_id}`
+            : a.sub_project_id
+                ? `s:${a.sub_project_id}`
+                : '';
+        this.form.patchValue({ alcance }, { emitEvent: false });
+
         this.diasSeleccionados.set(a.periodicidad.dias);
         this.destinatarios.set({ ...emptyDestinatarios(), ...a.destinatarios });
         this.bccEnabled.set((a.destinatarios?.bcc?.length ?? 0) > 0);
@@ -323,8 +380,11 @@ export class AlertasFormComponent implements OnInit {
 
         this.guardando.set(true);
         const v = this.form.value;
+        const alcance: string = v.alcance || '';
         const alerta: Alerta = {
             developer_id: v.developer_id,
+            developer_group_id: alcance.startsWith('g:') ? alcance.slice(2) : null,
+            sub_project_id: alcance.startsWith('s:') ? alcance.slice(2) : null,
             tipo: v.tipo,
             canal,
             periodicidad: { dias: this.diasSeleccionados(), hora: v.hora },
