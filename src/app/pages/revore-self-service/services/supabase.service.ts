@@ -4,13 +4,15 @@ import { environment } from '@environments/environments.local';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
-    private readonly _client: SupabaseClient;
+    private readonly _client: SupabaseClient<any, any, any>;
 
     constructor() {
         this._client = createClient(
             environment.supabase.url,
             environment.supabase.anonKey,
             {
+                // Las tablas operativas viven en el schema `app` de la DB general.
+                db: { schema: 'app' },
                 auth: {
                     persistSession: true,
                     autoRefreshToken: true,
@@ -22,7 +24,7 @@ export class SupabaseService {
     }
 
     /** Cliente Supabase listo para usar */
-    get db(): SupabaseClient {
+    get db(): SupabaseClient<any, any, any> {
         return this._client;
     }
 }
