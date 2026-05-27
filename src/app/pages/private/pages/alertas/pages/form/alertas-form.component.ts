@@ -63,7 +63,7 @@ import {
                 @if (alcanceOpciones().length > 0) {
                     <div class="row">
                         <label>
-                            Alcance (proyecto / líder)
+                            Alcance (proyecto)
                             <select formControlName="alcance">
                                 <option value="">Todo el cliente</option>
                                 @for (o of alcanceOpciones(); track o.value) {
@@ -71,7 +71,7 @@ import {
                                 }
                             </select>
                         </label>
-                        <small class="hint">Limita la alerta a un proyecto o líder específico del cliente. "Todo el cliente" cubre todos sus proyectos.</small>
+                        <small class="hint">Limita la alerta a un proyecto específico del cliente. "Todo el cliente" cubre todos sus proyectos.</small>
                     </div>
                 }
 
