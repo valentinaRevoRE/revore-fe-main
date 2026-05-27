@@ -243,10 +243,14 @@ export class AlertasFormComponent implements OnInit {
     readonly bccEnabled = signal(false);
     readonly destinatarios = signal(emptyDestinatarios());
 
-    /** Opciones del selector de alcance: grupos (líder/proyecto) + sub-proyectos.
+    /** Opciones del selector de alcance: SOLO proyectos (sub-proyectos + grupos
+     *  de tipo 'proyecto'). Los líderes no se eligen aquí — quién recibe el
+     *  correo se define en los campos de destinatarios (TO/CC/BCC).
      *  value codificado como 'g:<id>' o 's:<id>'. */
     readonly alcanceOpciones = computed(() => [
-        ...this.grupos().map(g => ({ value: `g:${g.id}`, label: `${g.name} (${g.group_type})` })),
+        ...this.grupos()
+            .filter(g => g.group_type === 'proyecto')
+            .map(g => ({ value: `g:${g.id}`, label: g.name })),
         ...this.subproyectos().map(s => ({ value: `s:${s.id}`, label: s.name })),
     ]);
 
