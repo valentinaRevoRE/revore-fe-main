@@ -4,7 +4,7 @@ import { environment } from '@environments/environments.local';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
-    private readonly _client: SupabaseClient<any, any, any>;
+    private readonly _client: SupabaseClient;
 
     constructor() {
         this._client = createClient(
@@ -22,7 +22,7 @@ export class SupabaseService {
     }
 
     /** Cliente Supabase listo para usar */
-    get db(): SupabaseClient<any, any, any> {
+    get db(): SupabaseClient {
         return this._client;
     }
 }

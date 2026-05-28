@@ -101,10 +101,7 @@ export interface DbSubProject {
     id: string;
     developer_id: string;
     name: string;
-    created_at?: string;
-    // Mapeo de qué módulos de reporte soporta este proyecto (claves: diarios/ventas/marketing).
-    // Si es null/undefined, el proyecto es válido para todos los tipos (fallback al nombre).
-    report_args?: Record<string, any> | null;
+    created_at: string;
 }
 
 export interface DbReportType {
@@ -120,6 +117,7 @@ export interface DbSchedule {
     id: string;
     developer_id: string;
     sub_project_id: string | null;
+    developer_group_id: string | null;
     report_type_id: string;
     frequency: ScheduleFrequency;
     day_of_week: number | null;   // 0=domingo … 6=sábado
@@ -140,6 +138,7 @@ export interface DbExecution {
     schedule_id: string | null;
     developer_id: string;
     sub_project_id: string | null;
+    developer_group_id: string | null;
     report_type_id: string;
     triggered_by: TriggeredBy;
     triggered_by_user: string | null;

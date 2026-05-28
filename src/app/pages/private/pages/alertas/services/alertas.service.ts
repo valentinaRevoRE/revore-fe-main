@@ -29,7 +29,7 @@ export class AlertasService {
     list(): Observable<Alerta[]> {
         const promise = this.supabase.db
             .from('alerts')
-            .select('*, developers:Desarrolladores(name:Desarrollador), sub_projects:Proyectos(name:Nombre)')
+            .select('*, developers(name), developer_groups(name), sub_projects(name)')
             .order('created_at', { ascending: false })
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -41,7 +41,7 @@ export class AlertasService {
     getById(id: string): Observable<Alerta | undefined> {
         const promise = this.supabase.db
             .from('alerts')
-            .select('*, developers:Desarrolladores(name:Desarrollador)')
+            .select('*, developers(name)')
             .eq('id', id)
             .single()
             .then(({ data, error }) => {
@@ -55,7 +55,7 @@ export class AlertasService {
         const payload = this.toDb(alerta);
         const promise = this.table
             .insert(payload)
-            .select('*, developers:Desarrolladores(name:Desarrollador)')
+            .select('*, developers(name)')
             .single()
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -70,7 +70,7 @@ export class AlertasService {
         const promise = this.table
             .update(payload)
             .eq('id', id)
-            .select('*, developers:Desarrolladores(name:Desarrollador)')
+            .select('*, developers(name)')
             .single()
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -120,7 +120,7 @@ export class AlertasService {
     historial(alertId?: string): Observable<AlertaHistorialItem[]> {
         let query = this.supabase.db
             .from('alert_executions')
-            .select('*, alerts(nombre, tipo, canal, destinatarios, developers:Desarrolladores(name:Desarrollador))')
+            .select('*, alerts(nombre, tipo, canal, destinatarios, developers(name))')
             .order('started_at', { ascending: false })
             .limit(100);
         if (alertId) query = query.eq('alert_id', alertId);
@@ -182,6 +182,7 @@ export class AlertasService {
         return {
             developer_id: alerta.developer_id,
             sub_project_id: alerta.sub_project_id ?? null,
+            developer_group_id: alerta.developer_group_id ?? null,
             nombre: alerta.nombre || null,
             tipo: alerta.tipo,
             canal: alerta.canal,

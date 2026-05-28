@@ -18,34 +18,39 @@ export class SelfServiceService {
 
     // ── Developers ────────────────────────────────────────────────────────────
 
-    // Modelo consolidado: developers/sub_projects viven en public.Desarrolladores/
-    // Proyectos (DB general). Se mapean a la forma {id, name} que usan los componentes.
-
     async getDevelopers(): Promise<DbDeveloper[]> {
-        const { data } = await this.supabaseMetasS.db
-            .from('Desarrolladores')
-            .select('id, Desarrollador')
-            .order('Desarrollador');
-        return (data ?? []).map((d: any) => ({ id: d.id, name: d.Desarrollador, active: true })) as DbDeveloper[];
+        const { data } = await this.supabaseS.db
+            .from('developers')
+            .select('*')
+            .eq('active', true)
+            .order('name');
+        return (data ?? []) as DbDeveloper[];
     }
 
-    // Ya no existen "grupos" (líder/sub-cuenta) en el modelo consolidado.
-    async getDeveloperGroups(_developerId: string, _service?: string): Promise<DbDeveloperGroup[]> {
-        return [];
+    async getDeveloperGroups(developerId: string, service?: string): Promise<DbDeveloperGroup[]> {
+        const { data } = await this.supabaseS.db
+            .from('developer_groups')
+            .select('*')
+            .eq('developer_id', developerId)
+            .order('display_order');
+        const all = (data ?? []) as DbDeveloperGroup[];
+        if (!service) return all;
+        return all.filter(g => {
+            if (!g.available_for_services) return true;
+            const arr = Array.isArray(g.available_for_services)
+                ? g.available_for_services
+                : String(g.available_for_services).replace(/[{}]/g, '').split(',');
+            return arr.includes(service);
+        });
     }
 
     async getSubProjects(developerId: string): Promise<DbSubProject[]> {
-        const { data } = await this.supabaseMetasS.db
-            .from('Proyectos')
-            .select('id, Nombre, Desarrollador_id, Detalles')
-            .eq('Desarrollador_id', developerId)
-            .order('Nombre');
-        return (data ?? []).map((p: any) => ({
-            id: p.id,
-            developer_id: p.Desarrollador_id,
-            name: p.Nombre,
-            report_args: p.Detalles?.report_args ?? null,
-        })) as DbSubProject[];
+        const { data } = await this.supabaseS.db
+            .from('sub_projects')
+            .select('*')
+            .eq('developer_id', developerId)
+            .order('name');
+        return (data ?? []) as DbSubProject[];
     }
 
     // ── Report Types ──────────────────────────────────────────────────────────
@@ -66,7 +71,7 @@ export class SelfServiceService {
     }): Promise<ExecutionWithRelations[]> {
         let query = this.supabaseS.db
             .from('executions')
-            .select('*, developers:Desarrolladores(name:Desarrollador), sub_projects:Proyectos(name:Nombre), report_types(name, service)')
+            .select('*, developers(name), sub_projects(name), report_types(name, service), developer_groups(name, script_arg, group_type)')
             .order('created_at', { ascending: false });
 
         if (filters?.status) query = (query as any).eq('status', filters.status);
@@ -98,7 +103,7 @@ export class SelfServiceService {
     async getSchedules(): Promise<ScheduleWithRelations[]> {
         const { data } = await this.supabaseS.db
             .from('schedules')
-            .select('*, developers:Desarrolladores(name:Desarrollador), sub_projects:Proyectos(name:Nombre), report_types(name, service)')
+            .select('*, developers(name), sub_projects(name), report_types(name, service), developer_groups(name, script_arg, group_type)')
             .order('created_at', { ascending: false });
         return (data ?? []) as ScheduleWithRelations[];
     }

@@ -40,66 +40,6 @@ export class ProgramacionesComponent implements OnInit {
 
     form!: FormGroup;
 
-    /** Módulo del reporte seleccionado en el form (diarios/ventas/marketing) para filtrar sub-proyectos. */
-    get currentModule(): 'diarios' | 'ventas' | 'marketing' | null {
-        const rtId = this.form?.get('report_type_id')?.value;
-        if (!rtId) return null;
-        const rt = this.reportTypes.find(r => r.id === rtId);
-        if (!rt) return null;
-        const name = (rt.name || '').toLowerCase();
-        if (name.includes('diario')) return 'diarios';
-        if (rt.service === 'marketing') return 'marketing';
-        return 'ventas';
-    }
-
-    private isLider(sp: DbSubProject): boolean {
-        const ra = sp.report_args;
-        if (!ra) return false;
-        const keys = Object.keys(ra);
-        return keys.length === 1 && keys[0] === 'diarios' && ra['diarios']?.subproyecto == null;
-    }
-
-    /** Sub-proyectos visibles para el tipo de reporte actual.
-     *  Si el desarrollador tiene líderes (caso GSC), en diarios y ventas se
-     *  muestran SOLO los líderes. */
-    get visibleSubProjects(): DbSubProject[] {
-        const m = this.currentModule;
-        if (!m) return this.subProjects;
-
-        const lideres = this.subProjects.filter(sp => this.isLider(sp));
-        if (lideres.length > 0 && (m === 'diarios' || m === 'ventas')) {
-            return lideres;
-        }
-
-        return this.subProjects.filter(sp => {
-            const ra = sp.report_args;
-            return !ra || !!ra[m];
-        });
-    }
-
-    /** Agencias MKT derivadas: solo agrupa si el script_arg está en MKT_AGENCY_NAMES (caso GSC = Madake). */
-    get marketingAgencies(): { key: string; label: string; projects: DbSubProject[] }[] {
-        if (this.currentModule !== 'marketing') return [];
-        const groups = new Map<string, DbSubProject[]>();
-        for (const sp of this.visibleSubProjects) {
-            const arg = sp.report_args?.['marketing']?.script_arg;
-            if (!arg || !this.MKT_AGENCY_NAMES[arg]) continue;
-            const arr = groups.get(arg) ?? [];
-            arr.push(sp);
-            groups.set(arg, arr);
-        }
-        return Array.from(groups.entries()).map(([key, projects]) => ({
-            key,
-            label: this.MKT_AGENCY_NAMES[key] ?? key,
-            projects,
-        }));
-    }
-
-    projectsForAgencyKey(key: string): string {
-        const a = this.marketingAgencies.find(x => x.key === key);
-        return a ? a.projects.map(p => p.name).join(', ') : '';
-    }
-
     readonly DAYS = [
         { value: -1, label: 'Todos los días' },
         { value: 0,  label: 'Todos los domingos' },
@@ -142,15 +82,14 @@ export class ProgramacionesComponent implements OnInit {
 
     private buildForm(): void {
         this.form = this.fb.group({
-            developer_id:           ['', Validators.required],
-            developer_group_id:     [null],
-            sub_project_id:         [null],
-            marketing_agency_key:   [null],
-            report_type_id:         ['', Validators.required],
-            day_of_week:            [1],
-            hour:                   [9],
-            recipients:             ['', Validators.required],
-            active:                 [true],
+            developer_id:       ['', Validators.required],
+            developer_group_id: [null],
+            sub_project_id:     [null],
+            report_type_id:     ['', Validators.required],
+            day_of_week:        [1],
+            hour:               [9],
+            recipients:         ['', Validators.required],
+            active:             [true],
         });
 
         this.form.get('developer_id')!.valueChanges.subscribe(id => {
@@ -161,7 +100,7 @@ export class ProgramacionesComponent implements OnInit {
     async onDeveloperChange(developerId: string): Promise<void> {
         this.developerGroups = [];
         this.subProjects = [];
-        this.form.patchValue({ developer_group_id: null, sub_project_id: null, marketing_agency_key: null });
+        this.form.patchValue({ developer_group_id: null, sub_project_id: null });
         const [groups, subProjects] = await Promise.all([
             this.svc.getDeveloperGroups(developerId),
             this.svc.getSubProjects(developerId),
@@ -170,18 +109,27 @@ export class ProgramacionesComponent implements OnInit {
         this.subProjects = subProjects;
     }
 
+    private get selectedDeveloperName(): string {
+        const developerId = this.form?.get('developer_id')?.value;
+        return this.developers.find(d => d.id === developerId)?.name ?? '';
+    }
+
     get subProjectLabel(): string {
-        if (this.visibleSubProjects.length > 0 && this.visibleSubProjects.every(sp => this.isLider(sp))) return 'Líder';
-        return 'Proyecto';
+        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Proyecto' : 'Sub-proyecto';
     }
 
     get subProjectEmptyLabel(): string {
-        if (this.visibleSubProjects.length > 0 && this.visibleSubProjects.every(sp => this.isLider(sp))) return 'Sin líder';
-        return 'Sin proyecto';
+        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Sin proyecto' : 'Sin sub-proyecto';
     }
 
     formatDeveloperDropdownName(name: string): string {
         return name.toLowerCase() === 'procsa-data' ? 'PROCSA' : name;
+    }
+
+    private isProjectDeveloper(name: string): boolean {
+        const normalized = name.toLowerCase();
+        return ['grupo san carlos', 'grupoveq', 'veq', 'gran ciudad', 'nova habita', 'otacc', 'procsa', 'procs', 'tare']
+            .some(term => normalized.includes(term));
     }
 
     openCreate(): void {
@@ -201,6 +149,7 @@ export class ProgramacionesComponent implements OnInit {
         this.showModal = true;
         this.form.patchValue({
             developer_id:       s.developer_id,
+            developer_group_id: s.developer_group_id ?? null,
             sub_project_id:     s.sub_project_id ?? null,
             report_type_id:     s.report_type_id,
             day_of_week:        s.day_of_week,
@@ -226,8 +175,10 @@ export class ProgramacionesComponent implements OnInit {
         this.saveError = '';
         const v = this.form.value;
         const today = new Date().toISOString().split('T')[0];
-        const basePayload = {
+        const payload = {
             developer_id:       v.developer_id,
+            sub_project_id:     v.sub_project_id || null,
+            developer_group_id: v.developer_group_id || null,
             report_type_id:     v.report_type_id,
             frequency:          'weekly' as const,
             day_of_week:        v.day_of_week,
@@ -241,26 +192,14 @@ export class ProgramacionesComponent implements OnInit {
             created_by:         null,
         };
 
-        // En edición seguimos editando un solo proyecto.
-        if (this.isEditing && this.editingId) {
-            const { error } = await this.svc.updateSchedule(this.editingId, {
-                ...basePayload,
-                sub_project_id: v.sub_project_id || null,
-            });
-            if (error) { this.saveError = error.message; this.isSaving = false; return; }
-        } else {
-            // En creación, si hay agencia MKT seleccionada, expandir a una programación por proyecto.
-            const agency = v.marketing_agency_key
-                ? this.marketingAgencies.find(a => a.key === v.marketing_agency_key)
-                : null;
-            const subProjectIds: (string | null)[] = agency
-                ? agency.projects.map(p => p.id)
-                : [v.sub_project_id || null];
+        const { error } = this.isEditing && this.editingId
+            ? await this.svc.updateSchedule(this.editingId, payload)
+            : await this.svc.createSchedule(payload as any);
 
-            for (const subId of subProjectIds) {
-                const { error } = await this.svc.createSchedule({ ...basePayload, sub_project_id: subId } as any);
-                if (error) { this.saveError = error.message; this.isSaving = false; return; }
-            }
+        if (error) {
+            this.saveError = error.message;
+            this.isSaving = false;
+            return;
         }
 
         this.schedules = await this.svc.getSchedules();
