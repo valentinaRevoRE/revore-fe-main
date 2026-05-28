@@ -101,7 +101,10 @@ export interface DbSubProject {
     id: string;
     developer_id: string;
     name: string;
-    created_at: string;
+    created_at?: string;
+    // Mapeo de qué módulos de reporte soporta este proyecto (claves: diarios/ventas/marketing).
+    // Si es null/undefined, el proyecto es válido para todos los tipos (fallback al nombre).
+    report_args?: Record<string, any> | null;
 }
 
 export interface DbReportType {

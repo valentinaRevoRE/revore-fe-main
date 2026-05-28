@@ -40,6 +40,28 @@ export class ProgramacionesComponent implements OnInit {
 
     form!: FormGroup;
 
+    /** Módulo del reporte seleccionado en el form (diarios/ventas/marketing) para filtrar sub-proyectos. */
+    get currentModule(): 'diarios' | 'ventas' | 'marketing' | null {
+        const rtId = this.form?.get('report_type_id')?.value;
+        if (!rtId) return null;
+        const rt = this.reportTypes.find(r => r.id === rtId);
+        if (!rt) return null;
+        const name = (rt.name || '').toLowerCase();
+        if (name.includes('diario')) return 'diarios';
+        if (rt.service === 'marketing') return 'marketing';
+        return 'ventas';
+    }
+
+    /** Sub-proyectos válidos para el tipo de reporte actual. */
+    get visibleSubProjects(): DbSubProject[] {
+        const m = this.currentModule;
+        if (!m) return this.subProjects;
+        return this.subProjects.filter(sp => {
+            const ra = sp.report_args;
+            return !ra || !!ra[m];
+        });
+    }
+
     readonly DAYS = [
         { value: -1, label: 'Todos los días' },
         { value: 0,  label: 'Todos los domingos' },

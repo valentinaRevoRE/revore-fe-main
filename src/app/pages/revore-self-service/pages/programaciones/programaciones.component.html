@@ -113,12 +113,12 @@
             </div>
           }
 
-          @if (subProjects.length > 0) {
+          @if (visibleSubProjects.length > 0) {
             <div class="ss-form__group">
               <label class="ss-form__label">{{ subProjectLabel }}</label>
               <select class="ss-form__select" formControlName="sub_project_id">
                 <option [value]="null">{{ subProjectEmptyLabel }}</option>
-                @for (sp of subProjects; track sp.id) {
+                @for (sp of visibleSubProjects; track sp.id) {
                   <option [value]="sp.id">{{ sp.name }}</option>
                 }
               </select>

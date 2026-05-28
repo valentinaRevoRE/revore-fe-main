@@ -56,6 +56,25 @@ export class GenerarComponent implements OnInit {
     subProjects: DbSubProject[] = [];
     loadingRelated = false;
 
+    /** Módulo de reporte derivado del tipo seleccionado (para filtrar sub-proyectos). */
+    get currentModule(): 'diarios' | 'ventas' | 'marketing' | null {
+        if (!this.selectedReportType) return null;
+        const name = (this.selectedReportType.name || '').toLowerCase();
+        if (name.includes('diario') || (this.selectedReportType.id || '').startsWith('diario-')) return 'diarios';
+        if (this.selectedService === 'marketing') return 'marketing';
+        return 'ventas';
+    }
+
+    /** Sub-proyectos válidos para el tipo de reporte actual: sin report_args = todos; con report_args = solo si tiene la llave del módulo. */
+    get visibleSubProjects(): DbSubProject[] {
+        const m = this.currentModule;
+        if (!m) return this.subProjects;
+        return this.subProjects.filter(sp => {
+            const ra = sp.report_args;
+            return !ra || !!ra[m];
+        });
+    }
+
     get groupLabel(): string {
         const type = this.developerGroups[0]?.group_type;
         if (type === 'líder' && this.selectedService === 'marketing') return 'Agencia';

@@ -37,10 +37,15 @@ export class SelfServiceService {
     async getSubProjects(developerId: string): Promise<DbSubProject[]> {
         const { data } = await this.supabaseMetasS.db
             .from('Proyectos')
-            .select('id, Nombre, Desarrollador_id')
+            .select('id, Nombre, Desarrollador_id, Detalles')
             .eq('Desarrollador_id', developerId)
             .order('Nombre');
-        return (data ?? []).map((p: any) => ({ id: p.id, developer_id: p.Desarrollador_id, name: p.Nombre })) as DbSubProject[];
+        return (data ?? []).map((p: any) => ({
+            id: p.id,
+            developer_id: p.Desarrollador_id,
+            name: p.Nombre,
+            report_args: p.Detalles?.report_args ?? null,
+        })) as DbSubProject[];
     }
 
     // ── Report Types ──────────────────────────────────────────────────────────
