@@ -64,7 +64,7 @@ import {
                 @if (alcanceOpciones().length > 0) {
                     <div class="row">
                         <label>
-                            Alcance (proyecto / líder)
+                            Alcance (proyecto)
                             <select formControlName="alcance">
                                 <option value="">Todos los proyectos</option>
                                 @for (o of alcanceOpciones(); track o.value) {
