@@ -29,7 +29,7 @@ export class AlertasService {
     list(): Observable<Alerta[]> {
         const promise = this.supabase.db
             .from('alerts')
-            .select('*, developers:Desarrolladores(name:Desarrollador), sub_projects:Proyectos(name:Nombre)')
+            .select('*, developers(name), sub_projects(name)')
             .order('created_at', { ascending: false })
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -41,7 +41,7 @@ export class AlertasService {
     getById(id: string): Observable<Alerta | undefined> {
         const promise = this.supabase.db
             .from('alerts')
-            .select('*, developers:Desarrolladores(name:Desarrollador)')
+            .select('*, developers(name)')
             .eq('id', id)
             .single()
             .then(({ data, error }) => {
@@ -55,7 +55,7 @@ export class AlertasService {
         const payload = this.toDb(alerta);
         const promise = this.table
             .insert(payload)
-            .select('*, developers:Desarrolladores(name:Desarrollador)')
+            .select('*, developers(name)')
             .single()
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -70,7 +70,7 @@ export class AlertasService {
         const promise = this.table
             .update(payload)
             .eq('id', id)
-            .select('*, developers:Desarrolladores(name:Desarrollador)')
+            .select('*, developers(name)')
             .single()
             .then(({ data, error }) => {
                 if (error) throw error;
