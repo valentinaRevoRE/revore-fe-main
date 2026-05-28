@@ -305,10 +305,15 @@ export class AlertasFormComponent implements OnInit {
             .eq('Desarrollador_id', developerId)
             .order('Nombre');
         const reales = (data ?? []).filter((p: any) => {
-            const args = (p?.Detalles?.report_args ?? {}) as Record<string, any>;
-            return Object.values(args).some(
-                (m: any) => m && typeof m === 'object' && m.subproyecto,
+            const args = p?.Detalles?.report_args;
+            if (!args) return true; // sin metadata = proyecto regular (PROCSA, Tare, OTACC, etc.)
+            const modules = Object.values(args) as any[];
+            if (modules.length === 0) return true;
+            // Es agregador/líder solo si TODOS los módulos tienen subproyecto null/missing
+            const isAggregator = modules.every(
+                (m: any) => !m || typeof m !== 'object' || m.subproyecto == null,
             );
+            return !isAggregator;
         });
         this.subproyectos.set(
             reales.map((p: any) => ({ id: p.id, name: p.Nombre, developer_id: developerId })) as any,
