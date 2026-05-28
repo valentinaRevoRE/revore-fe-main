@@ -65,14 +65,54 @@ export class GenerarComponent implements OnInit {
         return 'ventas';
     }
 
-    /** Sub-proyectos válidos para el tipo de reporte actual: sin report_args = todos; con report_args = solo si tiene la llave del módulo. */
+    /** Detecta un proyecto "líder" (asesor): única llave en report_args es `diarios` y `subproyecto` es null. */
+    private isLider(sp: DbSubProject): boolean {
+        const ra = sp.report_args;
+        if (!ra) return false;
+        const keys = Object.keys(ra);
+        return keys.length === 1 && keys[0] === 'diarios' && ra['diarios']?.subproyecto == null;
+    }
+
+    /** Sub-proyectos visibles para el tipo de reporte actual.
+     *  Regla pre-migración: si el desarrollador tiene líderes (caso GSC), en
+     *  diarios y ventas se muestran SOLO los líderes (no los proyectos).
+     *  En el resto de casos: filtro estándar por llave del módulo. */
     get visibleSubProjects(): DbSubProject[] {
         const m = this.currentModule;
         if (!m) return this.subProjects;
+
+        const lideres = this.subProjects.filter(sp => this.isLider(sp));
+        if (lideres.length > 0 && (m === 'diarios' || m === 'ventas')) {
+            return lideres;
+        }
+
         return this.subProjects.filter(sp => {
             const ra = sp.report_args;
             return !ra || !!ra[m];
         });
+    }
+
+    /** Agencias MKT derivadas: agrupa proyectos visibles por report_args.marketing.script_arg. */
+    get marketingAgencies(): { key: string; label: string; projects: DbSubProject[] }[] {
+        if (this.selectedService !== 'marketing') return [];
+        const groups = new Map<string, DbSubProject[]>();
+        for (const sp of this.visibleSubProjects) {
+            const arg = sp.report_args?.['marketing']?.script_arg;
+            if (!arg) continue;
+            const arr = groups.get(arg) ?? [];
+            arr.push(sp);
+            groups.set(arg, arr);
+        }
+        return Array.from(groups.entries()).map(([key, projects]) => ({
+            key,
+            label: this.MKT_AGENCY_NAMES[key] ?? key,
+            projects,
+        }));
+    }
+
+    projectsForAgencyKey(key: string): string {
+        const a = this.marketingAgencies.find(x => x.key === key);
+        return a ? a.projects.map(p => p.name).join(', ') : '';
     }
 
     get groupLabel(): string {
@@ -83,17 +123,14 @@ export class GenerarComponent implements OnInit {
         return 'Grupo / Proyecto';
     }
 
-    private get selectedDeveloperName(): string {
-        const developerId = this.form?.get('developer_id')?.value;
-        return this.developers.find(d => d.id === developerId)?.name ?? '';
-    }
-
     get subProjectLabel(): string {
-        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Proyecto' : 'Sub-proyecto';
+        if (this.visibleSubProjects.length > 0 && this.visibleSubProjects.every(sp => this.isLider(sp))) return 'Líder';
+        return 'Proyecto';
     }
 
     get subProjectEmptyLabel(): string {
-        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Sin proyecto' : 'Sin sub-proyecto';
+        if (this.visibleSubProjects.length > 0 && this.visibleSubProjects.every(sp => this.isLider(sp))) return 'Sin líder';
+        return 'Sin proyecto';
     }
 
     formatDeveloperDropdownName(name: string): string {
@@ -119,12 +156,6 @@ export class GenerarComponent implements OnInit {
             return this.MKT_AGENCY_NAMES[g.script_arg] ?? g.name;
         }
         return this.LEADER_NAMES[g.name.toLowerCase()] ?? g.name;
-    }
-
-    private isProjectDeveloper(name: string): boolean {
-        const normalized = name.toLowerCase();
-        return ['grupo san carlos', 'grupoveq', 'veq', 'gran ciudad', 'nova habita', 'otacc', 'procsa', 'procs', 'tare']
-            .some(term => normalized.includes(term));
     }
 
     form!: FormGroup;
@@ -174,10 +205,11 @@ export class GenerarComponent implements OnInit {
 
     private buildForm(): void {
         this.form = this.fb.group({
-            developer_id:       ['', Validators.required],
-            developer_group_id: [null],
-            sub_project_id:     [null],
-            recipients:         [''],
+            developer_id:           ['', Validators.required],
+            developer_group_id:     [null],
+            sub_project_id:         [null],
+            marketing_agency_key:   [null],
+            recipients:             [''],
             // on_demand
             fecha_corte:        [null],
             // recurring
@@ -197,7 +229,7 @@ export class GenerarComponent implements OnInit {
     async onDeveloperChange(developerId: string): Promise<void> {
         this.developerGroups = [];
         this.subProjects = [];
-        this.form.patchValue({ developer_group_id: null, sub_project_id: null });
+        this.form.patchValue({ developer_group_id: null, sub_project_id: null, marketing_agency_key: null });
         this.loadingRelated = true;
         const [groups, subProjects] = await Promise.all([
             this.svc.getDeveloperGroups(developerId, this.selectedService ?? undefined),
@@ -259,8 +291,10 @@ export class GenerarComponent implements OnInit {
         if (this.step === 3) return this.selectedModalidad !== null;
         if (this.step === 4) {
             const devOk = !!this.form.get('developer_id')!.value;
-            if (this.selectedModalidad === 'on_demand') return devOk;
-            return devOk && this.form.get('a_las')!.value != null;
+            const agencyOk = this.marketingAgencies.length === 0
+                || !!this.form.get('marketing_agency_key')!.value;
+            if (this.selectedModalidad === 'on_demand') return devOk && agencyOk;
+            return devOk && agencyOk && this.form.get('a_las')!.value != null;
         }
         return false;
     }
@@ -284,37 +318,47 @@ export class GenerarComponent implements OnInit {
         const v = this.form.value;
         const recipients = this.parseRecipients(v.recipients);
 
-        if (this.selectedModalidad === 'on_demand') {
-            const { error } = await this.svc.createExecution({
-                schedule_id:        null,
-                developer_id:       v.developer_id,
-                sub_project_id:     v.sub_project_id || null,
-                report_type_id:     this.selectedReportType.id,
-                triggered_by:       'manual',
-                triggered_by_user:  null,
-                recipients,
-                status:             'queued',
-                date_range_start:   v.fecha_corte || null,
-                date_range_end:     v.fecha_corte || null,
-            });
-            if (error) { this.submitError = error.message; this.isSubmitting = false; return; }
-        } else {
-            const { error } = await this.svc.createSchedule({
-                developer_id:       v.developer_id,
-                sub_project_id:     v.sub_project_id || null,
-                report_type_id:     this.selectedReportType.id,
-                frequency:          'weekly',
-                day_of_week:        v.cada_dia,
-                day_of_month:       null,
-                hour:               v.a_las,
-                timezone:           'America/Mexico_City',
-                start_date:         this.todayIso(),
-                end_date:           null,
-                recipients,
-                active:             true,
-                created_by:         null,
-            });
-            if (error) { this.submitError = error.message; this.isSubmitting = false; return; }
+        // Si se eligió agencia MKT, expandir a una fila por cada proyecto del grupo.
+        const agency = v.marketing_agency_key
+            ? this.marketingAgencies.find(a => a.key === v.marketing_agency_key)
+            : null;
+        const subProjectIds: (string | null)[] = agency
+            ? agency.projects.map(p => p.id)
+            : [v.sub_project_id || null];
+
+        for (const subId of subProjectIds) {
+            if (this.selectedModalidad === 'on_demand') {
+                const { error } = await this.svc.createExecution({
+                    schedule_id:        null,
+                    developer_id:       v.developer_id,
+                    sub_project_id:     subId,
+                    report_type_id:     this.selectedReportType.id,
+                    triggered_by:       'manual',
+                    triggered_by_user:  null,
+                    recipients,
+                    status:             'queued',
+                    date_range_start:   v.fecha_corte || null,
+                    date_range_end:     v.fecha_corte || null,
+                });
+                if (error) { this.submitError = error.message; this.isSubmitting = false; return; }
+            } else {
+                const { error } = await this.svc.createSchedule({
+                    developer_id:       v.developer_id,
+                    sub_project_id:     subId,
+                    report_type_id:     this.selectedReportType.id,
+                    frequency:          'weekly',
+                    day_of_week:        v.cada_dia,
+                    day_of_month:       null,
+                    hour:               v.a_las,
+                    timezone:           'America/Mexico_City',
+                    start_date:         this.todayIso(),
+                    end_date:           null,
+                    recipients,
+                    active:             true,
+                    created_by:         null,
+                });
+                if (error) { this.submitError = error.message; this.isSubmitting = false; return; }
+            }
         }
 
         this.submitSuccess = true;

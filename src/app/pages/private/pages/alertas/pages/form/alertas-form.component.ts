@@ -243,15 +243,25 @@ export class AlertasFormComponent implements OnInit {
     readonly bccEnabled = signal(false);
     readonly destinatarios = signal(emptyDestinatarios());
 
-    /** Opciones del selector de alcance: SOLO proyectos (sub-proyectos + grupos
-     *  de tipo 'proyecto'). Los líderes no se eligen aquí — quién recibe el
-     *  correo se define en los campos de destinatarios (TO/CC/BCC).
+    /** Opciones del selector de alcance: SOLO proyectos. Los líderes no se eligen
+     *  aquí — quién recibe el correo se define en los destinatarios (TO/CC/BCC).
+     *  Post-consolidación, los líderes viven en `Proyectos` con report_args que
+     *  contiene únicamente `diarios` y `subproyecto: null`; los descartamos.
      *  value codificado como 'g:<id>' o 's:<id>'. */
     readonly alcanceOpciones = computed(() => [
         ...this.grupos()
             .filter(g => g.group_type === 'proyecto')
             .map(g => ({ value: `g:${g.id}`, label: g.name })),
-        ...this.subproyectos().map(s => ({ value: `s:${s.id}`, label: s.name })),
+        ...this.subproyectos()
+            .filter(sp => {
+                const ra = sp.report_args;
+                if (!ra) return true;
+                const keys = Object.keys(ra);
+                const isLiderOnly = keys.length === 1 && keys[0] === 'diarios'
+                    && ra['diarios']?.subproyecto == null;
+                return !isLiderOnly;
+            })
+            .map(s => ({ value: `s:${s.id}`, label: s.name })),
     ]);
 
     form: FormGroup = this.fb.group({

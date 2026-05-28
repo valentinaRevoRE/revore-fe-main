@@ -113,18 +113,6 @@
             </div>
           }
 
-          @if (visibleSubProjects.length > 0) {
-            <div class="ss-form__group">
-              <label class="ss-form__label">{{ subProjectLabel }}</label>
-              <select class="ss-form__select" formControlName="sub_project_id">
-                <option [value]="null">{{ subProjectEmptyLabel }}</option>
-                @for (sp of visibleSubProjects; track sp.id) {
-                  <option [value]="sp.id">{{ sp.name }}</option>
-                }
-              </select>
-            </div>
-          }
-
           <div class="ss-form__group">
             <label class="ss-form__label">Tipo de reporte *</label>
             <select class="ss-form__select" formControlName="report_type_id">
@@ -134,6 +122,31 @@
               }
             </select>
           </div>
+
+          @if (!isEditing && marketingAgencies.length > 0) {
+            <div class="ss-form__group">
+              <label class="ss-form__label">Agencia</label>
+              <select class="ss-form__select" formControlName="marketing_agency_key">
+                <option [value]="null">Selecciona una agencia</option>
+                @for (a of marketingAgencies; track a.key) {
+                  <option [value]="a.key">{{ a.label }}</option>
+                }
+              </select>
+              @if (form.get('marketing_agency_key')?.value; as key) {
+                <span class="ss-form__hint">Incluye: {{ projectsForAgencyKey(key) }}</span>
+              }
+            </div>
+          } @else if (visibleSubProjects.length > 0) {
+            <div class="ss-form__group">
+              <label class="ss-form__label">{{ subProjectLabel }}</label>
+              <select class="ss-form__select" formControlName="sub_project_id">
+                <option [ngValue]="null" disabled hidden>Selecciona {{ subProjectLabel.toLowerCase() }}</option>
+                @for (sp of visibleSubProjects; track sp.id) {
+                  <option [value]="sp.id">{{ sp.name }}</option>
+                }
+              </select>
+            </div>
+          }
 
           <div class="ss-form__group">
             <label class="ss-form__label">Día de la semana</label>
