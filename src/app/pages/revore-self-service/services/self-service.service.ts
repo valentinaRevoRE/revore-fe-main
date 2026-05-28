@@ -66,7 +66,7 @@ export class SelfServiceService {
     }): Promise<ExecutionWithRelations[]> {
         let query = this.supabaseS.db
             .from('executions')
-            .select('*, developers(name), sub_projects(name), report_types(name, service)')
+            .select('*, developers:Desarrolladores(name:Desarrollador), sub_projects:Proyectos(name:Nombre), report_types(name, service)')
             .order('created_at', { ascending: false });
 
         if (filters?.status) query = (query as any).eq('status', filters.status);
@@ -98,7 +98,7 @@ export class SelfServiceService {
     async getSchedules(): Promise<ScheduleWithRelations[]> {
         const { data } = await this.supabaseS.db
             .from('schedules')
-            .select('*, developers(name), sub_projects(name), report_types(name, service)')
+            .select('*, developers:Desarrolladores(name:Desarrollador), sub_projects:Proyectos(name:Nombre), report_types(name, service)')
             .order('created_at', { ascending: false });
         return (data ?? []) as ScheduleWithRelations[];
     }

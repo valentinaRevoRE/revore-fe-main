@@ -29,7 +29,7 @@ export class AlertasService {
     list(): Observable<Alerta[]> {
         const promise = this.supabase.db
             .from('alerts')
-            .select('*, developers(name), sub_projects(name)')
+            .select('*, developers:Desarrolladores(name:Desarrollador), sub_projects:Proyectos(name:Nombre)')
             .order('created_at', { ascending: false })
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -41,7 +41,7 @@ export class AlertasService {
     getById(id: string): Observable<Alerta | undefined> {
         const promise = this.supabase.db
             .from('alerts')
-            .select('*, developers(name)')
+            .select('*, developers:Desarrolladores(name:Desarrollador)')
             .eq('id', id)
             .single()
             .then(({ data, error }) => {
@@ -55,7 +55,7 @@ export class AlertasService {
         const payload = this.toDb(alerta);
         const promise = this.table
             .insert(payload)
-            .select('*, developers(name)')
+            .select('*, developers:Desarrolladores(name:Desarrollador)')
             .single()
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -70,7 +70,7 @@ export class AlertasService {
         const promise = this.table
             .update(payload)
             .eq('id', id)
-            .select('*, developers(name)')
+            .select('*, developers:Desarrolladores(name:Desarrollador)')
             .single()
             .then(({ data, error }) => {
                 if (error) throw error;
@@ -120,7 +120,7 @@ export class AlertasService {
     historial(alertId?: string): Observable<AlertaHistorialItem[]> {
         let query = this.supabase.db
             .from('alert_executions')
-            .select('*, alerts(nombre, tipo, canal, destinatarios, developers(name))')
+            .select('*, alerts(nombre, tipo, canal, destinatarios, developers:Desarrolladores(name:Desarrollador))')
             .order('started_at', { ascending: false })
             .limit(100);
         if (alertId) query = query.eq('alert_id', alertId);
