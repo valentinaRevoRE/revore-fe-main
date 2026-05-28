@@ -270,7 +270,6 @@ export class GenerarComponent implements OnInit {
                 schedule_id:        null,
                 developer_id:       v.developer_id,
                 sub_project_id:     v.sub_project_id || null,
-                developer_group_id: v.developer_group_id || null,
                 report_type_id:     this.selectedReportType.id,
                 triggered_by:       'manual',
                 triggered_by_user:  null,
@@ -284,7 +283,6 @@ export class GenerarComponent implements OnInit {
             const { error } = await this.svc.createSchedule({
                 developer_id:       v.developer_id,
                 sub_project_id:     v.sub_project_id || null,
-                developer_group_id: v.developer_group_id || null,
                 report_type_id:     this.selectedReportType.id,
                 frequency:          'weekly',
                 day_of_week:        v.cada_dia,

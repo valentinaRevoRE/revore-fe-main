@@ -149,7 +149,6 @@ export class ProgramacionesComponent implements OnInit {
         this.showModal = true;
         this.form.patchValue({
             developer_id:       s.developer_id,
-            developer_group_id: s.developer_group_id ?? null,
             sub_project_id:     s.sub_project_id ?? null,
             report_type_id:     s.report_type_id,
             day_of_week:        s.day_of_week,
@@ -178,7 +177,6 @@ export class ProgramacionesComponent implements OnInit {
         const payload = {
             developer_id:       v.developer_id,
             sub_project_id:     v.sub_project_id || null,
-            developer_group_id: v.developer_group_id || null,
             report_type_id:     v.report_type_id,
             frequency:          'weekly' as const,
             day_of_week:        v.day_of_week,

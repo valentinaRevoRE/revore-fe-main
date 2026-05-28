@@ -117,7 +117,6 @@ export interface DbSchedule {
     id: string;
     developer_id: string;
     sub_project_id: string | null;
-    developer_group_id: string | null;
     report_type_id: string;
     frequency: ScheduleFrequency;
     day_of_week: number | null;   // 0=domingo … 6=sábado
@@ -138,7 +137,6 @@ export interface DbExecution {
     schedule_id: string | null;
     developer_id: string;
     sub_project_id: string | null;
-    developer_group_id: string | null;
     report_type_id: string;
     triggered_by: TriggeredBy;
     triggered_by_user: string | null;
