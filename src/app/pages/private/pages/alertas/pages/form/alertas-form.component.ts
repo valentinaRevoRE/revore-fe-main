@@ -291,9 +291,7 @@ export class AlertasFormComponent implements OnInit {
     }
 
     private async loadScopeOptions(developerId: string): Promise<void> {
-        // Las alertas no usan developer_groups (ya no hay routing por líder).
-        // Solo proyectos reales — excluimos los Proyectos "agregadores de líder"
-        // (los que tienen Detalles.report_args.*.subproyecto = null).
+        // Alertas = developer + proyecto. No hay líderes/grupos aquí.
         this.grupos.set([]);
         if (!developerId) {
             this.subproyectos.set([]);
@@ -301,22 +299,11 @@ export class AlertasFormComponent implements OnInit {
         }
         const { data } = await this.supabase.db
             .from('Proyectos')
-            .select('id, Nombre, Detalles')
+            .select('id, Nombre')
             .eq('Desarrollador_id', developerId)
             .order('Nombre');
-        const reales = (data ?? []).filter((p: any) => {
-            const args = p?.Detalles?.report_args;
-            if (!args) return true; // sin metadata = proyecto regular (PROCSA, Tare, OTACC, etc.)
-            const modules = Object.values(args) as any[];
-            if (modules.length === 0) return true;
-            // Es agregador/líder solo si TODOS los módulos tienen subproyecto null/missing
-            const isAggregator = modules.every(
-                (m: any) => !m || typeof m !== 'object' || m.subproyecto == null,
-            );
-            return !isAggregator;
-        });
         this.subproyectos.set(
-            reales.map((p: any) => ({ id: p.id, name: p.Nombre, developer_id: developerId })) as any,
+            (data ?? []).map((p: any) => ({ id: p.id, name: p.Nombre, developer_id: developerId })) as any,
         );
     }
 
