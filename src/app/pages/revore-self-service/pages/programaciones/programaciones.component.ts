@@ -77,13 +77,13 @@ export class ProgramacionesComponent implements OnInit {
         });
     }
 
-    /** Agencias MKT derivadas: agrupa proyectos visibles por report_args.marketing.script_arg. */
+    /** Agencias MKT derivadas: solo agrupa si el script_arg está en MKT_AGENCY_NAMES (caso GSC = Madake). */
     get marketingAgencies(): { key: string; label: string; projects: DbSubProject[] }[] {
         if (this.currentModule !== 'marketing') return [];
         const groups = new Map<string, DbSubProject[]>();
         for (const sp of this.visibleSubProjects) {
             const arg = sp.report_args?.['marketing']?.script_arg;
-            if (!arg) continue;
+            if (!arg || !this.MKT_AGENCY_NAMES[arg]) continue;
             const arr = groups.get(arg) ?? [];
             arr.push(sp);
             groups.set(arg, arr);
