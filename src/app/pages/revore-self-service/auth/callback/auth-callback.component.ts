@@ -54,7 +54,7 @@ export class AuthCallbackComponent implements OnInit {
 
     private async upsertUserProfile(user: User): Promise<void> {
         const meta = user.user_metadata;
-        await this.supabaseS.db.from('users').upsert(
+        await this.supabaseS.db.from('app_users').upsert(
             {
                 id: user.id,
                 email: user.email!,

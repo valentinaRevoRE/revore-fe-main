@@ -11,8 +11,6 @@ export class SupabaseService {
             environment.supabase.url,
             environment.supabase.anonKey,
             {
-                // Las tablas operativas viven en el schema `app` de la DB general.
-                db: { schema: 'app' },
                 auth: {
                     persistSession: true,
                     autoRefreshToken: true,
