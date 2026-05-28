@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderComponent } from '@private/shared/components/header/header.component';
 import { IHeader } from '@private/shared/interfaces/header.interface';
 import { SelfServiceService } from '@revore/services/self-service.service';
+import { SupabaseService } from '@revore/services/supabase.service';
 import { DbDeveloper, DbDeveloperGroup, DbSubProject } from '@revore/models/database.types';
 import { ToastComponent } from '@shared/components/toast/toast.component';
 import { EStates } from '@shared/enums/states.enum';
@@ -65,13 +66,13 @@ import {
                         <label>
                             Alcance (proyecto / líder)
                             <select formControlName="alcance">
-                                <option value="">Todo el cliente</option>
+                                <option value="">Todos los proyectos</option>
                                 @for (o of alcanceOpciones(); track o.value) {
                                     <option [value]="o.value">{{ o.label }}</option>
                                 }
                             </select>
                         </label>
-                        <small class="hint">Limita la alerta a un proyecto o líder específico del cliente. "Todo el cliente" cubre todos sus proyectos.</small>
+                        <small class="hint">Limita la alerta a un proyecto específico. "Todos los proyectos" cubre todos los del cliente.</small>
                     </div>
                 }
 
@@ -225,6 +226,7 @@ export class AlertasFormComponent implements OnInit {
     private readonly fb = inject(FormBuilder);
     private readonly svc = inject(AlertasService);
     private readonly selfSvc = inject(SelfServiceService);
+    private readonly supabase = inject(SupabaseService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
 
@@ -289,17 +291,28 @@ export class AlertasFormComponent implements OnInit {
     }
 
     private async loadScopeOptions(developerId: string): Promise<void> {
+        // Las alertas no usan developer_groups (ya no hay routing por líder).
+        // Solo proyectos reales — excluimos los Proyectos "agregadores de líder"
+        // (los que tienen Detalles.report_args.*.subproyecto = null).
+        this.grupos.set([]);
         if (!developerId) {
-            this.grupos.set([]);
             this.subproyectos.set([]);
             return;
         }
-        const [gs, sps] = await Promise.all([
-            this.selfSvc.getDeveloperGroups(developerId),
-            this.selfSvc.getSubProjects(developerId),
-        ]);
-        this.grupos.set(gs);
-        this.subproyectos.set(sps);
+        const { data } = await this.supabase.db
+            .from('Proyectos')
+            .select('id, Nombre, Detalles')
+            .eq('Desarrollador_id', developerId)
+            .order('Nombre');
+        const reales = (data ?? []).filter((p: any) => {
+            const args = (p?.Detalles?.report_args ?? {}) as Record<string, any>;
+            return Object.values(args).some(
+                (m: any) => m && typeof m === 'object' && m.subproyecto,
+            );
+        });
+        this.subproyectos.set(
+            reales.map((p: any) => ({ id: p.id, name: p.Nombre, developer_id: developerId })) as any,
+        );
     }
 
     destText(key: 'to' | 'cc' | 'bcc' | 'telefonos'): string {
