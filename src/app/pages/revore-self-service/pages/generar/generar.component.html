@@ -134,7 +134,7 @@
             </div>
           }
 
-          @if (!loadingRelated && subProjects.length > 0 && developerGroups[0]?.group_type !== 'líder') {
+          @if (!loadingRelated && subProjects.length > 0 && developerGroups[0]?.group_type !== 'líder' && developerGroups[0]?.group_type !== 'proyecto') {
             <div class="ss-form__group">
               <label class="ss-form__label">{{ subProjectLabel }}</label>
               <select class="ss-form__select" formControlName="sub_project_id">
