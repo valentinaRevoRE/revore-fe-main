@@ -53,7 +53,7 @@
                 @if (ex.developer_groups?.name) {
                   <span class="ss-sub">{{ formatGroupName(ex) }}</span>
                 }
-                @if (ex.sub_projects?.name) {
+                @if (ex.sub_projects?.name && ex.developer_groups?.group_type !== 'proyecto' && ex.developer_groups?.group_type !== 'líder') {
                   <span class="ss-sub">{{ ex.sub_projects?.name }}</span>
                 }
               </td>

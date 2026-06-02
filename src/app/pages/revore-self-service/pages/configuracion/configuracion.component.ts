@@ -28,6 +28,7 @@ export class ConfiguracionComponent implements OnInit {
     metasLoading = false;
     selectedMetaDesarrolladorId = '';
     selectedMetaProyectoId = '';
+    selectedMetaGoalType = '';
 
     showMetaModal = false;
     isEditingMeta = false;

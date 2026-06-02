@@ -158,7 +158,7 @@ export interface ExecutionWithRelations extends DbExecution {
     developers?: { name: string } | null;
     sub_projects?: { name: string } | null;
     report_types?: { name: string; service: ServiceType } | null;
-    developer_groups?: { name: string } | null;
+    developer_groups?: { name: string; script_arg: string; group_type: string } | null;
 }
 
 export interface ScheduleWithRelations extends DbSchedule {
