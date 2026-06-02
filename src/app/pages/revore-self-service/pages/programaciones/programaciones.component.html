@@ -36,8 +36,7 @@
                 {{ s.developers?.name ?? '—' }}
                 @if (s.developer_groups?.name) {
                   <span class="ss-sub">{{ formatGroupName(s) }}</span>
-                }
-                @if (s.sub_projects?.name) {
+                } @else if (s.sub_projects?.name) {
                   <span class="ss-sub">{{ s.sub_projects?.name }}</span>
                 }
               </td>

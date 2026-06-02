@@ -147,6 +147,16 @@ export class ProgramacionesComponent implements OnInit {
         this.developerGroups = [];
         this.subProjects = [];
         this.showModal = true;
+
+        if (s.developer_id) {
+            const [groups, subProjects] = await Promise.all([
+                this.svc.getDeveloperGroups(s.developer_id),
+                this.svc.getSubProjects(s.developer_id),
+            ]);
+            this.developerGroups = groups;
+            this.subProjects = subProjects;
+        }
+
         this.form.patchValue({
             developer_id:       s.developer_id,
             developer_group_id: s.developer_group_id ?? null,
@@ -156,8 +166,7 @@ export class ProgramacionesComponent implements OnInit {
             hour:               s.hour,
             recipients:         s.recipients.join(', '),
             active:             s.active,
-        });
-        if (s.developer_id) await this.onDeveloperChange(s.developer_id);
+        }, { emitEvent: false });
     }
 
     closeModal(): void {
