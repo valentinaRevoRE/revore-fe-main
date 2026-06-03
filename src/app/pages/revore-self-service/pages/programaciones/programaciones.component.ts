@@ -33,6 +33,7 @@ export class ProgramacionesComponent implements OnInit {
     saveError = '';
     confirmDeleteId: string | null = null;
     loadingRelated = false;
+    private loadingToken = 0;
 
     developers: DbDeveloper[] = [];
     developerGroups: DbDeveloperGroup[] = [];
@@ -112,9 +113,12 @@ export class ProgramacionesComponent implements OnInit {
         this.developerGroups = [];
         this.form.patchValue({ developer_group_id: null }, { emitEvent: false });
         this.loadingRelated = true;
+        const token = ++this.loadingToken;
         const selectedTypeId = this.form.get('report_type_id')?.value;
         const service = this.reportTypes.find(r => r.id === selectedTypeId)?.service;
-        this.developerGroups = await this.svc.getDeveloperGroups(developerId, service ?? undefined);
+        const groups = await this.svc.getDeveloperGroups(developerId, service ?? undefined);
+        if (token !== this.loadingToken) return;
+        this.developerGroups = groups;
         this.loadingRelated = false;
     }
 
@@ -149,12 +153,14 @@ export class ProgramacionesComponent implements OnInit {
         this.developerGroups = [];
         this.showModal = true;
         this.loadingRelated = true;
+        const token = ++this.loadingToken;
 
         if (s.developer_id) {
             const service = this.reportTypes.find(r => r.id === s.report_type_id)?.service;
-            this.developerGroups = await this.svc.getDeveloperGroups(s.developer_id, service ?? undefined);
+            const groups = await this.svc.getDeveloperGroups(s.developer_id, service ?? undefined);
+            if (token === this.loadingToken) this.developerGroups = groups;
         }
-        this.loadingRelated = false;
+        if (token === this.loadingToken) this.loadingRelated = false;
 
         this.form.patchValue({
             developer_id:       s.developer_id,

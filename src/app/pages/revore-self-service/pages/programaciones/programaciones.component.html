@@ -100,6 +100,16 @@
             </select>
           </div>
 
+          <div class="ss-form__group">
+            <label class="ss-form__label">Tipo de reporte *</label>
+            <select class="ss-form__select" formControlName="report_type_id">
+              <option value="">Selecciona un tipo</option>
+              @for (rt of reportTypes; track rt.id) {
+                <option [value]="rt.id">{{ rt.name }}</option>
+              }
+            </select>
+          </div>
+
           @if (loadingRelated) {
             <p class="ss-loading-sm">Cargando…</p>
           }
@@ -114,16 +124,6 @@
               </select>
             </div>
           }
-
-          <div class="ss-form__group">
-            <label class="ss-form__label">Tipo de reporte *</label>
-            <select class="ss-form__select" formControlName="report_type_id">
-              <option value="">Selecciona un tipo</option>
-              @for (rt of reportTypes; track rt.id) {
-                <option [value]="rt.id">{{ rt.name }}</option>
-              }
-            </select>
-          </div>
 
           <div class="ss-form__group">
             <label class="ss-form__label">Día de la semana</label>
