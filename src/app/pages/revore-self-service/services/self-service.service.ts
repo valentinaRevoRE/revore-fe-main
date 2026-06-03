@@ -34,14 +34,17 @@ export class SelfServiceService {
             .eq('developer_id', developerId)
             .order('display_order');
         const all = (data ?? []) as DbDeveloperGroup[];
-        if (!service) return all;
-        return all.filter(g => {
-            if (!g.available_for_services) return true;
-            const arr = Array.isArray(g.available_for_services)
+        const visible = all.filter(g => {
+            const svcs = Array.isArray(g.available_for_services)
                 ? g.available_for_services
-                : String(g.available_for_services).replace(/[{}]/g, '').split(',');
-            return arr.includes(service);
+                : g.available_for_services
+                    ? String(g.available_for_services).replace(/[{}]/g, '').split(',')
+                    : null;
+            if (svcs?.includes('hidden')) return false;
+            if (!service) return true;
+            return !svcs || svcs.includes(service);
         });
+        return visible;
     }
 
     async getSubProjects(developerId: string): Promise<DbSubProject[]> {
