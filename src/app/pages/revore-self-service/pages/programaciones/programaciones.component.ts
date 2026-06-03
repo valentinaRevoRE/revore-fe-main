@@ -131,8 +131,13 @@ export class ProgramacionesComponent implements OnInit {
         'GRUPO SAN CARLOS 2': 'Madake (PV & SI)',
     };
 
+    private get selectedService(): string | undefined {
+        const typeId = this.form?.get('report_type_id')?.value;
+        return typeId ? this.reportTypes.find(r => r.id === typeId)?.service : undefined;
+    }
+
     formatGroupOption(g: DbDeveloperGroup): string {
-        if (g.group_type === 'líder') {
+        if (g.group_type === 'líder' && this.selectedService === 'marketing') {
             return this.MKT_AGENCY_NAMES[g.script_arg] ?? g.name;
         }
         return g.name;
