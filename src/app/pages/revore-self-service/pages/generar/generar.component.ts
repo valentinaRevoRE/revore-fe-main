@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelfServiceService } from '@revore/services/self-service.service';
 import {
-    DbDeveloper, DbDeveloperGroup, DbSubProject, DbReportType,
+    DbDeveloper, DbDeveloperGroup, DbReportType,
     ServiceType, SERVICE_LABELS,
 } from '@revore/models/database.types';
 
@@ -53,7 +53,6 @@ export class GenerarComponent implements OnInit {
     // Step 4
     developers: DbDeveloper[] = [];
     developerGroups: DbDeveloperGroup[] = [];
-    subProjects: DbSubProject[] = [];
     loadingRelated = false;
 
     get groupLabel(): string {
@@ -67,14 +66,6 @@ export class GenerarComponent implements OnInit {
     private get selectedDeveloperName(): string {
         const developerId = this.form?.get('developer_id')?.value;
         return this.developers.find(d => d.id === developerId)?.name ?? '';
-    }
-
-    get subProjectLabel(): string {
-        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Proyecto' : 'Sub-proyecto';
-    }
-
-    get subProjectEmptyLabel(): string {
-        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Sin proyecto' : 'Sin sub-proyecto';
     }
 
     formatDeveloperDropdownName(name: string): string {
@@ -100,12 +91,6 @@ export class GenerarComponent implements OnInit {
             return this.MKT_AGENCY_NAMES[g.script_arg] ?? g.name;
         }
         return this.LEADER_NAMES[g.name.toLowerCase()] ?? g.name;
-    }
-
-    private isProjectDeveloper(name: string): boolean {
-        const normalized = name.toLowerCase();
-        return ['grupo san carlos', 'grupoveq', 'veq', 'gran ciudad', 'nova habita', 'otacc', 'procsa', 'procs', 'tare']
-            .some(term => normalized.includes(term));
     }
 
     form!: FormGroup;
@@ -157,7 +142,6 @@ export class GenerarComponent implements OnInit {
         this.form = this.fb.group({
             developer_id:       ['', Validators.required],
             developer_group_id: [null],
-            sub_project_id:     [null],
             recipients:         [''],
             // on_demand
             fecha_corte:        [null],
@@ -177,15 +161,9 @@ export class GenerarComponent implements OnInit {
 
     async onDeveloperChange(developerId: string): Promise<void> {
         this.developerGroups = [];
-        this.subProjects = [];
-        this.form.patchValue({ developer_group_id: null, sub_project_id: null });
+        this.form.patchValue({ developer_group_id: null });
         this.loadingRelated = true;
-        const [groups, subProjects] = await Promise.all([
-            this.svc.getDeveloperGroups(developerId, this.selectedService ?? undefined),
-            this.svc.getSubProjects(developerId),
-        ]);
-        this.developerGroups = groups;
-        this.subProjects = subProjects;
+        this.developerGroups = await this.svc.getDeveloperGroups(developerId, this.selectedService ?? undefined);
         this.loadingRelated = false;
     }
 
@@ -269,7 +247,7 @@ export class GenerarComponent implements OnInit {
             const { error } = await this.svc.createExecution({
                 schedule_id:        null,
                 developer_id:       v.developer_id,
-                sub_project_id:     v.sub_project_id || null,
+                sub_project_id:     null,
                 developer_group_id: v.developer_group_id || null,
                 report_type_id:     this.selectedReportType.id,
                 triggered_by:       'manual',
@@ -283,7 +261,7 @@ export class GenerarComponent implements OnInit {
         } else {
             const { error } = await this.svc.createSchedule({
                 developer_id:       v.developer_id,
-                sub_project_id:     v.sub_project_id || null,
+                sub_project_id:     null,
                 developer_group_id: v.developer_group_id || null,
                 report_type_id:     this.selectedReportType.id,
                 frequency:          'weekly',

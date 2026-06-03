@@ -134,18 +134,6 @@
             </div>
           }
 
-          @if (!loadingRelated && subProjects.length > 0 && developerGroups[0]?.group_type !== 'líder' && developerGroups[0]?.group_type !== 'proyecto') {
-            <div class="ss-form__group">
-              <label class="ss-form__label">{{ subProjectLabel }}</label>
-              <select class="ss-form__select" formControlName="sub_project_id">
-                <option [value]="null">{{ subProjectEmptyLabel }}</option>
-                @for (sp of subProjects; track sp.id) {
-                  <option [value]="sp.id">{{ sp.name }}</option>
-                }
-              </select>
-            </div>
-          }
-
           <div class="ss-form__divider"></div>
 
           <!-- ── Fecha de corte (on_demand) ── -->

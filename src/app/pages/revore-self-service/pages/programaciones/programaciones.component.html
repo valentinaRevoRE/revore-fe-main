@@ -100,25 +100,16 @@
             </select>
           </div>
 
-          @if (developerGroups.length > 0) {
+          @if (loadingRelated) {
+            <p class="ss-loading-sm">Cargando…</p>
+          }
+          @if (!loadingRelated && developerGroups.length > 0) {
             <div class="ss-form__group">
-              <label class="ss-form__label">Grupo</label>
+              <label class="ss-form__label">{{ groupLabel }}</label>
               <select class="ss-form__select" formControlName="developer_group_id">
                 <option [value]="null">Sin grupo específico</option>
                 @for (g of developerGroups; track g.id) {
-                  <option [value]="g.id">{{ g.name }}</option>
-                }
-              </select>
-            </div>
-          }
-
-          @if (subProjects.length > 0) {
-            <div class="ss-form__group">
-              <label class="ss-form__label">{{ subProjectLabel }}</label>
-              <select class="ss-form__select" formControlName="sub_project_id">
-                <option [value]="null">{{ subProjectEmptyLabel }}</option>
-                @for (sp of subProjects; track sp.id) {
-                  <option [value]="sp.id">{{ sp.name }}</option>
+                  <option [value]="g.id">{{ formatGroupOption(g) }}</option>
                 }
               </select>
             </div>

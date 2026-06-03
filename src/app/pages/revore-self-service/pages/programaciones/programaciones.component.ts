@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { SelfServiceService } from '@revore/services/self-service.service';
 import {
     ScheduleWithRelations, DbDeveloper, DbDeveloperGroup,
-    DbSubProject, DbReportType,
+    DbReportType,
 } from '@revore/models/database.types';
 
 function formatHourRange(h: number): string {
@@ -32,10 +32,10 @@ export class ProgramacionesComponent implements OnInit {
     isSaving = false;
     saveError = '';
     confirmDeleteId: string | null = null;
+    loadingRelated = false;
 
     developers: DbDeveloper[] = [];
     developerGroups: DbDeveloperGroup[] = [];
-    subProjects: DbSubProject[] = [];
     reportTypes: DbReportType[] = [];
 
     form!: FormGroup;
@@ -84,7 +84,6 @@ export class ProgramacionesComponent implements OnInit {
         this.form = this.fb.group({
             developer_id:       ['', Validators.required],
             developer_group_id: [null],
-            sub_project_id:     [null],
             report_type_id:     ['', Validators.required],
             day_of_week:        [1],
             hour:               [9],
@@ -95,48 +94,51 @@ export class ProgramacionesComponent implements OnInit {
         this.form.get('developer_id')!.valueChanges.subscribe(id => {
             if (id) this.onDeveloperChange(id);
         });
+
+        this.form.get('report_type_id')!.valueChanges.subscribe(() => {
+            const devId = this.form.get('developer_id')?.value;
+            if (devId) this.onDeveloperChange(devId);
+        });
+    }
+
+    get groupLabel(): string {
+        const type = this.developerGroups[0]?.group_type;
+        if (type === 'proyecto') return 'Proyecto';
+        if (type === 'líder') return 'Líder';
+        return 'Grupo';
     }
 
     async onDeveloperChange(developerId: string): Promise<void> {
         this.developerGroups = [];
-        this.subProjects = [];
-        this.form.patchValue({ developer_group_id: null, sub_project_id: null });
-        const [groups, subProjects] = await Promise.all([
-            this.svc.getDeveloperGroups(developerId),
-            this.svc.getSubProjects(developerId),
-        ]);
-        this.developerGroups = groups;
-        this.subProjects = subProjects;
-    }
-
-    private get selectedDeveloperName(): string {
-        const developerId = this.form?.get('developer_id')?.value;
-        return this.developers.find(d => d.id === developerId)?.name ?? '';
-    }
-
-    get subProjectLabel(): string {
-        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Proyecto' : 'Sub-proyecto';
-    }
-
-    get subProjectEmptyLabel(): string {
-        return this.isProjectDeveloper(this.selectedDeveloperName) ? 'Sin proyecto' : 'Sin sub-proyecto';
+        this.form.patchValue({ developer_group_id: null }, { emitEvent: false });
+        this.loadingRelated = true;
+        const selectedTypeId = this.form.get('report_type_id')?.value;
+        const service = this.reportTypes.find(r => r.id === selectedTypeId)?.service;
+        this.developerGroups = await this.svc.getDeveloperGroups(developerId, service ?? undefined);
+        this.loadingRelated = false;
     }
 
     formatDeveloperDropdownName(name: string): string {
         return name.toLowerCase() === 'procsa-data' ? 'PROCSA' : name;
     }
 
-    private isProjectDeveloper(name: string): boolean {
-        const normalized = name.toLowerCase();
-        return ['grupo san carlos', 'grupoveq', 'veq', 'gran ciudad', 'nova habita', 'otacc', 'procsa', 'procs', 'tare']
-            .some(term => normalized.includes(term));
+    private readonly MKT_AGENCY_NAMES: Record<string, string> = {
+        'GRUPO SAN CARLOS 1': 'Madake (P & C)',
+        'GRUPO SAN CARLOS 2': 'Madake (PV & SI)',
+    };
+
+    formatGroupOption(g: DbDeveloperGroup): string {
+        if (g.group_type === 'líder') {
+            return this.MKT_AGENCY_NAMES[g.script_arg] ?? g.name;
+        }
+        return g.name;
     }
 
     openCreate(): void {
         this.isEditing = false;
         this.editingId = null;
         this.developerGroups = [];
-        this.subProjects = [];
+        this.loadingRelated = false;
         this.form.reset({ day_of_week: 1, hour: 9, active: true });
         this.showModal = true;
     }
@@ -145,22 +147,18 @@ export class ProgramacionesComponent implements OnInit {
         this.isEditing = true;
         this.editingId = s.id;
         this.developerGroups = [];
-        this.subProjects = [];
         this.showModal = true;
+        this.loadingRelated = true;
 
         if (s.developer_id) {
-            const [groups, subProjects] = await Promise.all([
-                this.svc.getDeveloperGroups(s.developer_id),
-                this.svc.getSubProjects(s.developer_id),
-            ]);
-            this.developerGroups = groups;
-            this.subProjects = subProjects;
+            const service = this.reportTypes.find(r => r.id === s.report_type_id)?.service;
+            this.developerGroups = await this.svc.getDeveloperGroups(s.developer_id, service ?? undefined);
         }
+        this.loadingRelated = false;
 
         this.form.patchValue({
             developer_id:       s.developer_id,
             developer_group_id: s.developer_group_id ?? null,
-            sub_project_id:     s.sub_project_id ?? null,
             report_type_id:     s.report_type_id,
             day_of_week:        s.day_of_week,
             hour:               s.hour,
@@ -186,7 +184,7 @@ export class ProgramacionesComponent implements OnInit {
         const today = new Date().toISOString().split('T')[0];
         const payload = {
             developer_id:       v.developer_id,
-            sub_project_id:     v.sub_project_id || null,
+            sub_project_id:     null,
             developer_group_id: v.developer_group_id || null,
             report_type_id:     v.report_type_id,
             frequency:          'weekly' as const,
@@ -240,11 +238,6 @@ export class ProgramacionesComponent implements OnInit {
         const day = this.DAYS.find(d => d.value === s.day_of_week)?.label ?? '';
         return `${day} · ${formatHourRange(s.hour)}`;
     }
-
-    private readonly MKT_AGENCY_NAMES: Record<string, string> = {
-        'GRUPO SAN CARLOS 1': 'Madake (P & C)',
-        'GRUPO SAN CARLOS 2': 'Madake (PV & SI)',
-    };
 
     formatGroupName(s: ScheduleWithRelations): string {
         const g = s.developer_groups as any;
