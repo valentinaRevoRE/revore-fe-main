@@ -35,14 +35,14 @@ export class SelfServiceService {
             .order('display_order');
         const all = (data ?? []) as DbDeveloperGroup[];
         const visible = all.filter(g => {
-            const svcs = Array.isArray(g.available_for_services)
+            const raw: string[] = Array.isArray(g.available_for_services)
                 ? g.available_for_services
                 : g.available_for_services
-                    ? String(g.available_for_services).replace(/[{}]/g, '').split(',')
-                    : null;
-            if (svcs?.includes('hidden')) return false;
+                    ? String(g.available_for_services).replace(/[{}]/g, '').split(',').map((s: string) => s.trim()).filter(Boolean)
+                    : [];
+            if (raw.includes('hidden')) return false;
             if (!service) return true;
-            return !svcs || svcs.includes(service);
+            return raw.length === 0 || raw.includes(service);
         });
         return visible;
     }
