@@ -122,15 +122,24 @@
             <p class="ss-loading-sm">Cargando datos…</p>
           }
 
-          @if (!loadingRelated && developerGroups.length > 0) {
+          @if (!loadingRelated && hasSelection) {
             <div class="ss-form__group">
               <label class="ss-form__label">{{ groupLabel }}</label>
-              <select class="ss-form__select" formControlName="developer_group_id">
-                <option [value]="null">Sin grupo específico</option>
-                @for (g of developerGroups; track g.id) {
-                  <option [value]="g.id">{{ formatGroupName(g) }}</option>
-                }
-              </select>
+              @if (developerGroups.length > 0) {
+                <select class="ss-form__select" formControlName="developer_group_id">
+                  <option [value]="null">Sin grupo específico</option>
+                  @for (g of developerGroups; track g.id) {
+                    <option [value]="g.id">{{ formatGroupName(g) }}</option>
+                  }
+                </select>
+              } @else {
+                <select class="ss-form__select" formControlName="sub_project_id">
+                  <option [value]="null">Sin proyecto específico</option>
+                  @for (sp of subProjects; track sp.id) {
+                    <option [value]="sp.id">{{ sp.name }}</option>
+                  }
+                </select>
+              }
             </div>
           }
 

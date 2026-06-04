@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelfServiceService } from '@revore/services/self-service.service';
 import {
-    DbDeveloper, DbDeveloperGroup, DbReportType,
+    DbDeveloper, DbDeveloperGroup, DbSubProject, DbReportType,
     ServiceType, SERVICE_LABELS,
 } from '@revore/models/database.types';
 
@@ -53,14 +53,20 @@ export class GenerarComponent implements OnInit {
     // Step 4
     developers: DbDeveloper[] = [];
     developerGroups: DbDeveloperGroup[] = [];
+    subProjects: DbSubProject[] = [];
     loadingRelated = false;
 
     get groupLabel(): string {
+        if (this.subProjects.length > 0) return 'Proyecto';
         const type = this.developerGroups[0]?.group_type;
         if (type === 'líder' && this.selectedService === 'marketing') return 'Agencia';
         if (type === 'líder') return 'Líder';
         if (type === 'proyecto') return 'Proyecto';
         return 'Grupo / Proyecto';
+    }
+
+    get hasSelection(): boolean {
+        return this.developerGroups.length > 0 || this.subProjects.length > 0;
     }
 
     private get selectedDeveloperName(): string {
@@ -142,6 +148,7 @@ export class GenerarComponent implements OnInit {
         this.form = this.fb.group({
             developer_id:       ['', Validators.required],
             developer_group_id: [null],
+            sub_project_id:     [null],
             recipients:         [''],
             // on_demand
             fecha_corte:        [null],
@@ -161,9 +168,15 @@ export class GenerarComponent implements OnInit {
 
     async onDeveloperChange(developerId: string): Promise<void> {
         this.developerGroups = [];
-        this.form.patchValue({ developer_group_id: null });
+        this.subProjects = [];
+        this.form.patchValue({ developer_group_id: null, sub_project_id: null });
         this.loadingRelated = true;
-        this.developerGroups = await this.svc.getDeveloperGroups(developerId, this.selectedService ?? undefined);
+        const groups = await this.svc.getDeveloperGroups(developerId, this.selectedService ?? undefined);
+        if (groups.length > 0) {
+            this.developerGroups = groups;
+        } else {
+            this.subProjects = await this.svc.getSubProjects(developerId);
+        }
         this.loadingRelated = false;
     }
 
@@ -247,7 +260,7 @@ export class GenerarComponent implements OnInit {
             const { error } = await this.svc.createExecution({
                 schedule_id:        null,
                 developer_id:       v.developer_id,
-                sub_project_id:     null,
+                sub_project_id:     v.sub_project_id || null,
                 developer_group_id: v.developer_group_id || null,
                 report_type_id:     this.selectedReportType.id,
                 triggered_by:       'manual',
@@ -261,7 +274,7 @@ export class GenerarComponent implements OnInit {
         } else {
             const { error } = await this.svc.createSchedule({
                 developer_id:       v.developer_id,
-                sub_project_id:     null,
+                sub_project_id:     v.sub_project_id || null,
                 developer_group_id: v.developer_group_id || null,
                 report_type_id:     this.selectedReportType.id,
                 frequency:          'weekly',
