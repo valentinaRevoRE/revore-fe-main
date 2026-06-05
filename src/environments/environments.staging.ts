@@ -10,8 +10,7 @@ export const environment = {
     enableDebugMode: false,
     apiTimeout: 30000,
 
-    // WhatsApp en alertas deshabilitado en staging
-    enableWhatsappAlerts: false,
+    enableWhatsappAlerts: true,
 
     // RevoRE Self-Service — Supabase (anon key es pública por diseño)
     supabase: {

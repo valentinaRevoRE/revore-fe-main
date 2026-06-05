@@ -50,11 +50,11 @@ export interface AlertaHistorialItem {
     mensaje?: string;
 }
 
-export const TIPOS_ALERTA: Array<{ value: TipoAlerta; label: string; disabled: boolean }> = [
+export const TIPOS_ALERTA: Array<{ value: TipoAlerta; label: string; disabled: boolean; soloCanal?: CanalAlerta }> = [
     { value: 'leads', label: 'Leads', disabled: false },
     { value: 'visitas', label: 'Visitas', disabled: false },
+    { value: 'reporte_programado', label: 'Reporte programado', disabled: false, soloCanal: 'whatsapp' },
     { value: 'metrica_custom', label: 'Métrica custom (próximamente)', disabled: true },
-    { value: 'reporte_programado', label: 'Reporte programado (próximamente)', disabled: true },
 ];
 
 export const CANALES_ALERTA: Array<{ value: CanalAlerta; label: string; disabled: boolean }> = [
@@ -72,11 +72,12 @@ export const DIAS_SEMANA: Array<{ value: DiaSemana; label: string }> = [
     { value: 'dom', label: 'D' },
 ];
 
-/** Auto-name: "Alerta de leads faltantes — TARE" / "Alerta de visitas mensual — TARE" */
+/** Auto-name: "Alerta de leads faltantes — TARE" / "Reporte programado — TARE" */
 export function autoName(alerta: Pick<Alerta, 'tipo' | 'developer_name'>): string {
     const dev = alerta.developer_name ?? '';
     if (alerta.tipo === 'leads') return `Alerta de leads faltantes${dev ? ' — ' + dev : ''}`;
     if (alerta.tipo === 'visitas') return `Alerta de visitas mensual${dev ? ' — ' + dev : ''}`;
+    if (alerta.tipo === 'reporte_programado') return `Reporte programado${dev ? ' — ' + dev : ''}`;
     return 'Alerta';
 }
 

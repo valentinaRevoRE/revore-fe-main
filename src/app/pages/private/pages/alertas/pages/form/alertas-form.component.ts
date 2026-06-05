@@ -54,7 +54,7 @@ import {
                     <label>
                         Tipo
                         <select formControlName="tipo">
-                            @for (t of tipos; track t.value) {
+                            @for (t of tiposDisponibles(); track t.value) {
                                 <option [value]="t.value" [disabled]="t.disabled">{{ t.label }}</option>
                             }
                         </select>
@@ -215,10 +215,21 @@ import {
     `]
 })
 export class AlertasFormComponent implements OnInit {
-    readonly tipos = TIPOS_ALERTA;
+    readonly todosLosTipos = TIPOS_ALERTA;
     readonly canales = environment.enableWhatsappAlerts
         ? CANALES_ALERTA
         : CANALES_ALERTA.filter(c => c.value !== 'whatsapp');
+
+    /** Tipos disponibles según el canal seleccionado.
+     *  WhatsApp → solo reporte_programado. Email → leads y visitas. */
+    readonly tiposDisponibles = computed(() => {
+        const canal = this.formValue()?.canal as string;
+        if (canal === 'whatsapp') {
+            return this.todosLosTipos.filter(t => t.soloCanal === 'whatsapp' || t.value === 'metrica_custom');
+        }
+        // email: oculta los tipos exclusivos de whatsapp
+        return this.todosLosTipos.filter(t => !t.soloCanal);
+    });
     readonly diasSemana = DIAS_SEMANA;
 
     headerData: IHeader = { title: 'Nueva alerta', margin_top: '45px' };
@@ -324,12 +335,18 @@ export class AlertasFormComponent implements OnInit {
     }
 
     onCanalChange(): void {
-        // Al cambiar canal, limpio destinatarios del canal opuesto
-        if (this.form.value.canal === 'email') {
+        const canal = this.form.value.canal;
+        if (canal === 'email') {
             this.destinatarios.update(d => ({ ...d, telefonos: [] }));
+            // Si venía de whatsapp con reporte_programado, resetear tipo a leads
+            if (this.form.value.tipo === 'reporte_programado') {
+                this.form.patchValue({ tipo: 'leads' });
+            }
         } else {
             this.destinatarios.update(d => ({ ...d, to: [], cc: [], bcc: [] }));
             this.bccEnabled.set(false);
+            // WhatsApp solo soporta reporte_programado
+            this.form.patchValue({ tipo: 'reporte_programado' });
         }
     }
 
