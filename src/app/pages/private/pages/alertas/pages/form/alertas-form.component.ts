@@ -53,8 +53,8 @@ import {
 
                     <label>
                         Tipo
-                        <select formControlName="tipo">
-                            @for (t of tiposDisponibles(); track t.value) {
+                        <select formControlName="tipo" (change)="onTipoChange()">
+                            @for (t of tiposDisponibles; track t.value) {
                                 <option [value]="t.value" [disabled]="t.disabled">{{ t.label }}</option>
                             }
                         </select>
@@ -80,7 +80,7 @@ import {
                     <label>
                         Canal de envío
                         <select formControlName="canal" (change)="onCanalChange()">
-                            @for (c of canales; track c.value) {
+                            @for (c of canalesDisponibles(); track c.value) {
                                 <option [value]="c.value" [disabled]="c.disabled">{{ c.label }}</option>
                             }
                         </select>
@@ -215,20 +215,14 @@ import {
     `]
 })
 export class AlertasFormComponent implements OnInit {
-    readonly todosLosTipos = TIPOS_ALERTA;
-    readonly canales = environment.enableWhatsappAlerts
-        ? CANALES_ALERTA
-        : CANALES_ALERTA.filter(c => c.value !== 'whatsapp');
+    readonly tiposDisponibles = TIPOS_ALERTA;
 
-    /** Tipos disponibles según el canal seleccionado.
-     *  WhatsApp → solo reporte_programado. Email → leads y visitas. */
-    readonly tiposDisponibles = computed(() => {
-        const canal = this.formValue()?.canal as string;
-        if (canal === 'whatsapp') {
-            return this.todosLosTipos.filter(t => t.soloCanal === 'whatsapp' || t.value === 'metrica_custom');
-        }
-        // email: oculta los tipos exclusivos de whatsapp
-        return this.todosLosTipos.filter(t => !t.soloCanal);
+    /** Canal disponible según el tipo: reporte_programado → solo WA; resto → solo email. */
+    readonly canalesDisponibles = computed(() => {
+        const tipo = this.formValue()?.tipo as string;
+        if (!environment.enableWhatsappAlerts) return CANALES_ALERTA.filter(c => c.value !== 'whatsapp');
+        if (tipo === 'reporte_programado') return CANALES_ALERTA.filter(c => c.value === 'whatsapp');
+        return CANALES_ALERTA.filter(c => c.value === 'email');
     });
     readonly diasSemana = DIAS_SEMANA;
 
@@ -334,19 +328,25 @@ export class AlertasFormComponent implements OnInit {
         if (!next) this.destinatarios.update(d => ({ ...d, bcc: [] }));
     }
 
+    onTipoChange(): void {
+        const tipo = this.form.value.tipo;
+        if (tipo === 'reporte_programado') {
+            this.form.patchValue({ canal: 'whatsapp' });
+            this.destinatarios.update(d => ({ ...d, to: [], cc: [], bcc: [] }));
+            this.bccEnabled.set(false);
+        } else {
+            this.form.patchValue({ canal: 'email' });
+            this.destinatarios.update(d => ({ ...d, telefonos: [] }));
+        }
+    }
+
     onCanalChange(): void {
         const canal = this.form.value.canal;
         if (canal === 'email') {
             this.destinatarios.update(d => ({ ...d, telefonos: [] }));
-            // Si venía de whatsapp con reporte_programado, resetear tipo a leads
-            if (this.form.value.tipo === 'reporte_programado') {
-                this.form.patchValue({ tipo: 'leads' });
-            }
         } else {
             this.destinatarios.update(d => ({ ...d, to: [], cc: [], bcc: [] }));
             this.bccEnabled.set(false);
-            // WhatsApp solo soporta reporte_programado
-            this.form.patchValue({ tipo: 'reporte_programado' });
         }
     }
 
