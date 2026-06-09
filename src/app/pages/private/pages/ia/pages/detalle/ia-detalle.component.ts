@@ -1,12 +1,17 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 import { SkillsService } from '../../services/skills.service';
 import { isNew, NIVEL_COLORS, Skill } from '../../models/skill.model';
 
-type Tab = 'manual' | 'changelog';
+function stripFrontmatter(md: string): string {
+  const trimmed = md.trimStart();
+  if (!trimmed.startsWith('---')) return trimmed;
+  const end = trimmed.indexOf('\n---', 3);
+  return end === -1 ? trimmed : trimmed.slice(end + 4).trimStart();
+}
 
 @Component({
   selector: 'app-ia-detalle',
@@ -76,47 +81,14 @@ type Tab = 'manual' | 'changelog';
           </div>
         </header>
 
-        <!-- Tabs -->
-        <div class="tabs" role="tablist">
-          <button
-            class="tab"
-            [class.tab--active]="activeTab() === 'manual'"
-            (click)="activeTab.set('manual')"
-            role="tab"
-            [attr.aria-selected]="activeTab() === 'manual'"
-            aria-controls="tab-panel">
-            Manual
-          </button>
-          <button
-            class="tab"
-            [class.tab--active]="activeTab() === 'changelog'"
-            (click)="loadChangelog()"
-            role="tab"
-            [attr.aria-selected]="activeTab() === 'changelog'"
-            aria-controls="tab-panel">
-            Changelog
-          </button>
-        </div>
-
-        <!-- Tab panel -->
-        <div class="tab-panel" id="tab-panel" role="tabpanel">
-          @if (activeTab() === 'manual') {
-            @if (manualLoading()) {
-              <div class="skeleton-body"></div>
-            } @else if (manualHtml()) {
-              <div class="markdown-body" [innerHTML]="manualHtml()"></div>
-            } @else {
-              <div class="empty-tab">No hay manual disponible para este skill.</div>
-            }
-          }
-          @if (activeTab() === 'changelog') {
-            @if (changelogLoading()) {
-              <div class="skeleton-body"></div>
-            } @else if (changelogHtml()) {
-              <div class="markdown-body" [innerHTML]="changelogHtml()"></div>
-            } @else {
-              <div class="empty-tab">No hay changelog disponible.</div>
-            }
+        <!-- Manual -->
+        <div class="manual-panel" role="region" aria-label="Manual del skill">
+          @if (manualLoading()) {
+            <div class="skeleton-body"></div>
+          } @else if (manualHtml()) {
+            <div class="markdown-body" [innerHTML]="manualHtml()"></div>
+          } @else {
+            <div class="empty-tab">No hay manual disponible para este skill.</div>
           }
         </div>
       }
@@ -244,30 +216,10 @@ type Tab = 'manual' | 'changelog';
       border: 1px solid #f5c6a8;
     }
 
-    /* ── Tabs ── */
-    .tabs {
-      display: flex;
-      border-bottom: 2px solid #f1f2f4;
-      margin-bottom: 24px;
-      gap: 4px;
-    }
-    .tab {
-      padding: 10px 20px;
-      border: none;
-      background: none;
-      color: #6b7280;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -2px;
-      transition: color 0.15s ease, border-color 0.15s ease;
-    }
-    .tab:hover { color: #2E3C59; }
-    .tab--active {
-      color: #DD7244;
-      border-bottom-color: #DD7244;
-      font-weight: 600;
+    /* ── Manual panel ── */
+    .manual-panel {
+      border-top: 2px solid #f1f2f4;
+      padding-top: 24px;
     }
 
     /* ── Markdown body ── */
@@ -408,12 +360,7 @@ export class IaDetalleComponent implements OnInit {
   readonly manualHtml = signal<SafeHtml | null>(null);
   readonly manualLoading = signal(false);
 
-  readonly changelogHtml = signal<SafeHtml | null>(null);
-  readonly changelogLoading = signal(false);
-  readonly changelogLoaded = signal(false);
-
   readonly downloading = signal(false);
-  readonly activeTab = signal<Tab>('manual');
 
   nivelColor(): string {
     return NIVEL_COLORS[this.skill()?.nivel ?? 'Auxiliar'] ?? '#2E3C59';
@@ -453,26 +400,11 @@ export class IaDetalleComponent implements OnInit {
     this.manualLoading.set(true);
     this.svc.manual(name).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (md) => {
-        const html = marked.parse(md, { async: false }) as string;
+        const html = marked.parse(stripFrontmatter(md), { async: false }) as string;
         this.manualHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
         this.manualLoading.set(false);
       },
       error: () => this.manualLoading.set(false),
-    });
-  }
-
-  loadChangelog(): void {
-    this.activeTab.set('changelog');
-    if (this.changelogLoaded()) return;
-    this.changelogLoading.set(true);
-    this.svc.changelog().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (md) => {
-        const html = marked.parse(md, { async: false }) as string;
-        this.changelogHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
-        this.changelogLoading.set(false);
-        this.changelogLoaded.set(true);
-      },
-      error: () => this.changelogLoading.set(false),
     });
   }
 
