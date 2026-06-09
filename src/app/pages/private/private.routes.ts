@@ -40,6 +40,10 @@ export const routes: Routes = [
                 canActivate: [revoreAuthGuard]
             },
             {
+                path: 'ia',
+                loadChildren: () => import('./pages/ia/ia.routes').then(r => r.iaRoutes),
+            },
+            {
                 path: 'admin/users',
                 component: AdminDashboardComponent,
                 canActivate: [adminGuard]
