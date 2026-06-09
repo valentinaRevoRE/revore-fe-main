@@ -20,9 +20,14 @@ function stripFrontmatter(md: string): string {
   template: `
     <section class="detalle">
 
-      <!-- Breadcrumb -->
+      <!-- Breadcrumb + back -->
       <nav class="breadcrumb" aria-label="Ruta de navegación">
-        <a routerLink="/dashboard/ia" class="breadcrumb__link">IA / Asistentes</a>
+        <a routerLink="/dashboard/ia" class="breadcrumb__back" aria-label="Volver al catálogo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+          </svg>
+          Skills
+        </a>
         <span class="breadcrumb__sep">›</span>
         <span class="breadcrumb__current">{{ skillName() }}</span>
       </nav>
@@ -99,6 +104,7 @@ function stripFrontmatter(md: string): string {
     .detalle {
       padding: 32px 24px 60px;
       max-width: 860px;
+      text-align: left;
     }
 
     /* ── Breadcrumb ── */
@@ -109,14 +115,26 @@ function stripFrontmatter(md: string): string {
       font-size: 13px;
       margin-bottom: 24px;
     }
-    .breadcrumb__link {
+    .breadcrumb__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       color: #DD7244;
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 5px 10px 5px 8px;
+      border-radius: 6px;
+      border: 1.5px solid #f5c6a8;
+      background: #fff8f5;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
-    .breadcrumb__link:hover { text-decoration: underline; }
-    .breadcrumb__sep { color: #9ca3af; }
-    .breadcrumb__current { color: #4b5563; }
+    .breadcrumb__back:hover {
+      background: #FEF0E7;
+      border-color: #DD7244;
+    }
+    .breadcrumb__sep { color: #d1d5db; }
+    .breadcrumb__current { color: #6b7280; font-size: 13px; }
 
     /* ── Header ── */
     .detalle__header {
@@ -224,35 +242,43 @@ function stripFrontmatter(md: string): string {
 
     /* ── Markdown body ── */
     .markdown-body {
-      font-size: 14px;
-      line-height: 1.7;
+      font-size: 15px;
+      line-height: 1.75;
       color: #374151;
+      text-align: left;
     }
+    .markdown-body * { text-align: left; box-sizing: border-box; }
     .markdown-body h1 {
-      font-size: 22px; font-weight: 700; color: #2E3C59;
-      margin: 0 0 16px; padding-bottom: 8px;
-      border-bottom: 2px solid #f1f2f4;
+      font-size: 20px; font-weight: 700; color: #2E3C59;
+      margin: 0 0 20px; padding-bottom: 10px;
+      border-bottom: 2px solid #eef0f3;
+      text-align: left;
     }
     .markdown-body h2 {
-      font-size: 18px; font-weight: 700; color: #2E3C59;
-      margin: 28px 0 12px;
+      font-size: 16px; font-weight: 700; color: #2E3C59;
+      margin: 32px 0 10px; padding-bottom: 6px;
+      border-bottom: 1px solid #eef0f3;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      text-align: left;
     }
     .markdown-body h3 {
-      font-size: 15px; font-weight: 600; color: #374151;
-      margin: 20px 0 8px;
+      font-size: 14px; font-weight: 600; color: #374151;
+      margin: 20px 0 8px; text-align: left;
     }
-    .markdown-body p { margin: 0 0 14px; }
+    .markdown-body p { margin: 0 0 14px; text-align: left; }
     .markdown-body ul, .markdown-body ol {
-      padding-left: 24px; margin: 0 0 14px;
+      padding-left: 20px; margin: 0 0 14px; text-align: left;
     }
-    .markdown-body li { margin-bottom: 6px; }
+    .markdown-body li { margin-bottom: 5px; }
     .markdown-body code {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 13px;
-      background: #f5f6f8;
+      font-size: 12.5px;
+      background: #f0f4ff;
       padding: 2px 6px;
       border-radius: 4px;
-      color: #DD7244;
+      color: #2E3C59;
+      border: 1px solid #dce4f5;
+      white-space: nowrap;
     }
     .markdown-body pre {
       background: #1e2a3a;
@@ -260,48 +286,48 @@ function stripFrontmatter(md: string): string {
       border-radius: 8px;
       overflow-x: auto;
       margin: 0 0 16px;
+      text-align: left;
     }
     .markdown-body pre code {
-      background: none;
-      color: #e2e8f0;
-      padding: 0;
-      font-size: 13px;
+      background: none; border: none;
+      color: #e2e8f0; padding: 0;
+      font-size: 13px; white-space: pre;
     }
     .markdown-body blockquote {
       border-left: 4px solid #DD7244;
-      padding: 8px 16px;
-      margin: 0 0 14px;
-      background: #FEF0E7;
+      padding: 10px 16px;
+      margin: 0 0 16px;
+      background: #fff8f5;
       border-radius: 0 6px 6px 0;
       color: #7c3d1a;
+      text-align: left;
     }
     .markdown-body table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0 0 16px;
-      font-size: 13px;
-    }
-    .markdown-body th {
-      background: #f5f6f8;
-      padding: 8px 12px;
+      width: 100%; border-collapse: collapse;
+      margin: 0 0 20px; font-size: 13px;
       text-align: left;
-      font-weight: 600;
-      border: 1px solid #e5e7eb;
+    }
+    .markdown-body thead { background: #f5f7fa; }
+    .markdown-body th {
+      padding: 10px 14px; text-align: left;
+      font-weight: 600; color: #2E3C59;
+      border-bottom: 2px solid #e5e7eb;
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px;
     }
     .markdown-body td {
-      padding: 8px 12px;
-      border: 1px solid #e5e7eb;
+      padding: 9px 14px; text-align: left;
+      border-bottom: 1px solid #f0f0f4;
+      vertical-align: top;
     }
-    .markdown-body a {
-      color: #DD7244;
-      text-decoration: none;
-    }
+    .markdown-body tr:last-child td { border-bottom: none; }
+    .markdown-body tbody tr:hover { background: #fafbfc; }
+    .markdown-body a { color: #DD7244; text-decoration: none; }
     .markdown-body a:hover { text-decoration: underline; }
     .markdown-body hr {
-      border: none;
-      border-top: 2px solid #f1f2f4;
-      margin: 24px 0;
+      border: none; border-top: 1px solid #eef0f3; margin: 28px 0;
     }
+    .markdown-body strong { color: #1f2937; }
+    .markdown-body em { color: #4b5563; }
 
     /* ── Skeletons ── */
     .skeleton-header {

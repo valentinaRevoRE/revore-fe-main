@@ -88,7 +88,13 @@
     "icon": "ia.svg",
     "link": "/dashboard/ia",
     "active": true,
-    "children": []
+    "children": [
+      {
+        "name": "Skills",
+        "link": "/dashboard/ia",
+        "active": true
+      }
+    ]
   },
   {
     "name": "Administración",
