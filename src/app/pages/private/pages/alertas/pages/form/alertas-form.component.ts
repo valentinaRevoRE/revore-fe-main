@@ -77,14 +77,9 @@ import {
                 }
 
                 <div class="row">
-                    <label>
-                        Canal de envío
-                        <select formControlName="canal" (change)="onCanalChange()">
-                            @for (c of canalesDisponibles(); track c.value) {
-                                <option [value]="c.value" [disabled]="c.disabled">{{ c.label }}</option>
-                            }
-                        </select>
-                    </label>
+                    <label class="block-label">Canal de envío</label>
+                    <div class="canal-display">{{ canalLabel() }}</div>
+                    <input type="hidden" formControlName="canal" />
                 </div>
 
                 <!-- ── Destinatarios EMAIL ── -->
@@ -212,17 +207,15 @@ import {
         .btn-primary { background: #ec6e3c; color: white; border: none; padding: 10px 22px; border-radius: 6px; font-weight: 500; cursor: pointer; }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-secondary { background: white; color: #374151; border: 1px solid #d1d5db; padding: 10px 18px; border-radius: 6px; font-weight: 500; cursor: pointer; }
+        .canal-display { margin-top: 6px; padding: 10px 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; color: #374151; }
     `]
 })
 export class AlertasFormComponent implements OnInit {
     readonly tiposDisponibles = TIPOS_ALERTA;
 
-    /** Canal disponible según el tipo: reporte_programado → solo WA; resto → solo email. */
-    readonly canalesDisponibles = computed(() => {
+    readonly canalLabel = computed(() => {
         const tipo = this.formValue()?.tipo as string;
-        if (!environment.enableWhatsappAlerts) return CANALES_ALERTA.filter(c => c.value !== 'whatsapp');
-        if (tipo === 'reporte_programado') return CANALES_ALERTA.filter(c => c.value === 'whatsapp');
-        return CANALES_ALERTA.filter(c => c.value === 'email');
+        return tipo === 'reporte_programado' ? 'WhatsApp' : 'Email';
     });
     readonly diasSemana = DIAS_SEMANA;
 
