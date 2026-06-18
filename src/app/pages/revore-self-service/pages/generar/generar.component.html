@@ -112,7 +112,7 @@
             <label class="ss-form__label">Desarrollador *</label>
             <select class="ss-form__select" formControlName="developer_id">
               <option value="">Selecciona un desarrollador</option>
-              @for (dev of developers; track dev.id) {
+              @for (dev of visibleDevelopers; track dev.id) {
                 <option [value]="dev.id">{{ formatDeveloperDropdownName(dev.name) }}</option>
               }
             </select>
