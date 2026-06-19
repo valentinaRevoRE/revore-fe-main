@@ -74,6 +74,14 @@ export class GenerarComponent implements OnInit {
         return !!this.selectedReportType && /broker/i.test(this.selectedReportType.name);
     }
 
+    /**
+     * El C-Level es a nivel portafolio: cubre todos los proyectos del desarrollo
+     * en un solo deck, por lo que no aplica selección de proyecto/grupo.
+     */
+    get isCLevelType(): boolean {
+        return !!this.selectedReportType && /c-?level/i.test(this.selectedReportType.name);
+    }
+
     private isGsc(d: DbDeveloper): boolean {
         return d.name.trim().toUpperCase() === 'GRUPO SAN CARLOS';
     }
@@ -187,6 +195,9 @@ export class GenerarComponent implements OnInit {
         // Brokers usa solo el developer (GSC → script_arg "GRUPO SAN CARLOS 1");
         // no aplica selección de líder ni sub-proyecto.
         if (this.isBrokersType) return;
+        // El C-Level es a nivel portafolio (todos los proyectos del desarrollo),
+        // así que no se elige proyecto/grupo.
+        if (this.isCLevelType) return;
         this.loadingRelated = true;
         const groups = await this.svc.getDeveloperGroups(developerId, this.selectedService ?? undefined);
         if (groups.length > 0) {

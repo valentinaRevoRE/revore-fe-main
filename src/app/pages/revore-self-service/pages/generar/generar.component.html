@@ -122,7 +122,7 @@
             <p class="ss-loading-sm">Cargando datos…</p>
           }
 
-          @if (!loadingRelated && hasSelection) {
+          @if (!loadingRelated && hasSelection && !isCLevelType) {
             <div class="ss-form__group">
               <label class="ss-form__label">{{ groupLabel }}</label>
               @if (developerGroups.length > 0) {
