@@ -69,7 +69,7 @@ export class GenerarComponent implements OnInit {
         return this.developerGroups.length > 0 || this.subProjects.length > 0;
     }
 
-    /** El reporte de brokers es exclusivo de GSC (Grupo San Carlos). */
+    /** El reporte de brokers aplica a todos los desarrollos (uno por desarrollo). */
     get isBrokersType(): boolean {
         return !!this.selectedReportType && /broker/i.test(this.selectedReportType.name);
     }
@@ -82,13 +82,9 @@ export class GenerarComponent implements OnInit {
         return !!this.selectedReportType && /c-?level/i.test(this.selectedReportType.name);
     }
 
-    private isGsc(d: DbDeveloper): boolean {
-        return d.name.trim().toUpperCase() === 'GRUPO SAN CARLOS';
-    }
-
-    /** Developers visibles en el dropdown: solo GSC cuando el tipo es Brokers. */
+    /** Developers visibles en el dropdown. */
     get visibleDevelopers(): DbDeveloper[] {
-        return this.isBrokersType ? this.developers.filter(d => this.isGsc(d)) : this.developers;
+        return this.developers;
     }
 
     private get selectedDeveloperName(): string {
@@ -192,8 +188,8 @@ export class GenerarComponent implements OnInit {
         this.developerGroups = [];
         this.subProjects = [];
         this.form.patchValue({ developer_group_id: null, sub_project_id: null });
-        // Brokers usa solo el developer (GSC → script_arg "GRUPO SAN CARLOS 1");
-        // no aplica selección de líder ni sub-proyecto.
+        // Brokers usa solo el developer (un reporte por desarrollo, vía su
+        // script_arg); no aplica selección de líder ni sub-proyecto.
         if (this.isBrokersType) return;
         // El C-Level es a nivel portafolio (todos los proyectos del desarrollo),
         // así que no se elige proyecto/grupo.
@@ -248,16 +244,8 @@ export class GenerarComponent implements OnInit {
         if (this.isSyntheticType(rt)) return;
         this.selectedReportType = rt;
 
-        const devCtrl = this.form?.get('developer_id');
-        if (this.isBrokersType) {
-            // Brokers solo aplica a GSC: lo auto-seleccionamos.
-            const gsc = this.developers.find(d => this.isGsc(d));
-            if (gsc && devCtrl?.value !== gsc.id) {
-                devCtrl?.setValue(gsc.id);   // dispara valueChanges → onDeveloperChange
-                return;
-            }
-        }
         // Refrescar grupos/sub-proyectos según el tipo recién elegido.
+        const devCtrl = this.form?.get('developer_id');
         if (devCtrl?.value) this.onDeveloperChange(devCtrl.value);
     }
 
