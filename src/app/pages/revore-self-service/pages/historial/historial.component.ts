@@ -3,12 +3,16 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { SelfServiceService } from '@revore/services/self-service.service';
+import { RevoreAuthService } from '@revore/services/revore-auth.service';
 import {
     ExecutionWithRelations, ExecutionStatus,
     EXECUTION_STATUS_LABELS, DbDeveloper,
 } from '@revore/models/database.types';
 
 const IN_PROGRESS: ExecutionStatus[] = ['queued', 'generating', 'enriching', 'sending'];
+
+/** Correos con permiso para exportar el historial a Excel. */
+const EXPORT_ALLOWED_EMAILS = ['valentina@revore.mx'];
 
 @Component({
     selector: 'app-revore-historial',
@@ -39,7 +43,16 @@ export class HistorialComponent implements OnInit, OnDestroy {
 
     private pollInterval: any;
 
-    constructor(private svc: SelfServiceService) {}
+    constructor(
+        private svc: SelfServiceService,
+        private auth: RevoreAuthService,
+    ) {}
+
+    /** Solo ciertos correos pueden descargar el historial en Excel. */
+    get canExport(): boolean {
+        const email = this.auth.currentUser?.email?.toLowerCase().trim();
+        return !!email && EXPORT_ALLOWED_EMAILS.includes(email);
+    }
 
     async ngOnInit(): Promise<void> {
         const [executions, developers] = await Promise.all([
@@ -112,5 +125,35 @@ export class HistorialComponent implements OnInit, OnDestroy {
             return this.MKT_AGENCY_NAMES[g.script_arg] ?? g.name;
         }
         return g.name;
+    }
+
+    isExporting = false;
+    exportError = '';
+
+    /**
+     * Descarga el historial filtrado como .xlsx generado por el backend
+     * (que además valida el permiso por correo server-side).
+     */
+    async exportToExcel(): Promise<void> {
+        this.isExporting = true;
+        this.exportError = '';
+        try {
+            const blob = await this.svc.downloadExecutionsXlsx({
+                status: this.filterStatus || undefined,
+                developerId: this.filterDeveloper || undefined,
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'historial-reportes.xlsx';
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (err: any) {
+            this.exportError = err?.status === 403
+                ? 'No tienes permiso para exportar el historial.'
+                : 'No se pudo generar el Excel. Intenta de nuevo.';
+        } finally {
+            this.isExporting = false;
+        }
     }
 }

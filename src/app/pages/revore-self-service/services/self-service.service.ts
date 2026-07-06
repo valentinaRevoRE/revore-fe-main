@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '@environments/environments.local';
 import { SupabaseService } from './supabase.service';
 import { SupabaseMetasService } from './supabase-metas.service';
 import {
@@ -14,7 +17,32 @@ export class SelfServiceService {
     constructor(
         private supabaseS: SupabaseService,
         private supabaseMetasS: SupabaseMetasService,
+        private http: HttpClient,
     ) {}
+
+    /**
+     * Descarga el historial (filtrado) como .xlsx generado por el backend.
+     * El BE valida el correo contra su allow-list (candado real, server-side).
+     */
+    async downloadExecutionsXlsx(filters?: {
+        status?: ExecutionStatus;
+        developerId?: string;
+    }): Promise<Blob> {
+        const { data } = await this.supabaseS.db.auth.getSession();
+        const token = data.session?.access_token;
+        const headers: Record<string, string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        let params = new HttpParams();
+        if (filters?.status) params = params.set('status', filters.status);
+        if (filters?.developerId) params = params.set('developer_id', filters.developerId);
+
+        return firstValueFrom(
+            this.http.get(`${environment.revore.backendUrl}/api/executions/export.xlsx`, {
+                params, headers, withCredentials: true, responseType: 'blob' as const,
+            }),
+        );
+    }
 
     // ── Developers ────────────────────────────────────────────────────────────
 

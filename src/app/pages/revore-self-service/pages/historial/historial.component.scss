@@ -12,6 +12,13 @@
         margin-bottom: 24px;
     }
 
+    &__actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
     &__title {
         font-family: "g-bold", sans-serif;
         font-size: 28px;
