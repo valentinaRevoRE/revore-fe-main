@@ -112,13 +112,35 @@ export class ProgramacionesComponent implements OnInit {
         return 'Grupo';
     }
 
+    /** El reporte de brokers aplica a todos los desarrollos (uno por desarrollo). */
+    private isBrokersReportType(reportTypeId: string | null | undefined): boolean {
+        const name = this.reportTypes.find(r => r.id === reportTypeId)?.name ?? '';
+        return /broker/i.test(name);
+    }
+
+    /** El C-Level es a nivel portafolio: cubre todos los proyectos del desarrollo. */
+    private isCLevelReportType(reportTypeId: string | null | undefined): boolean {
+        const name = this.reportTypes.find(r => r.id === reportTypeId)?.name ?? '';
+        return /c-?level/i.test(name);
+    }
+
+    /** Estos tipos no eligen proyecto/grupo (brokers y C-Level). */
+    private hidesProjectSelection(reportTypeId: string | null | undefined): boolean {
+        return this.isBrokersReportType(reportTypeId) || this.isCLevelReportType(reportTypeId);
+    }
+
     async onDeveloperChange(developerId: string): Promise<void> {
         this.developerGroups = [];
         this.subProjects = [];
         this.form.patchValue({ developer_group_id: null, sub_project_id: null }, { emitEvent: false });
+        const selectedTypeId = this.form.get('report_type_id')?.value;
+        // Brokers (uno por desarrollo) y C-Level (nivel portafolio) no eligen proyecto.
+        if (this.hidesProjectSelection(selectedTypeId)) {
+            this.loadingRelated = false;
+            return;
+        }
         this.loadingRelated = true;
         const token = ++this.loadingToken;
-        const selectedTypeId = this.form.get('report_type_id')?.value;
         const service = this.reportTypes.find(r => r.id === selectedTypeId)?.service;
         const groups = await this.svc.getDeveloperGroups(developerId, service ?? undefined);
         if (token !== this.loadingToken) return;
@@ -174,7 +196,7 @@ export class ProgramacionesComponent implements OnInit {
         this.loadingRelated = true;
         const token = ++this.loadingToken;
 
-        if (s.developer_id) {
+        if (s.developer_id && !this.hidesProjectSelection(s.report_type_id)) {
             const service = this.reportTypes.find(r => r.id === s.report_type_id)?.service;
             const groups = await this.svc.getDeveloperGroups(s.developer_id, service ?? undefined);
             if (token === this.loadingToken) {
