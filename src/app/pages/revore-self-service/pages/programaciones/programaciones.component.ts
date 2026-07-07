@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SelfServiceService } from '@revore/services/self-service.service';
 import {
-    ScheduleWithRelations, DbDeveloper, DbDeveloperGroup,
+    ScheduleWithRelations, DbDeveloper, DbDeveloperGroup, DbSubProject,
     DbReportType,
 } from '@revore/models/database.types';
 
@@ -37,6 +37,7 @@ export class ProgramacionesComponent implements OnInit {
 
     developers: DbDeveloper[] = [];
     developerGroups: DbDeveloperGroup[] = [];
+    subProjects: DbSubProject[] = [];
     reportTypes: DbReportType[] = [];
 
     form!: FormGroup;
@@ -85,6 +86,7 @@ export class ProgramacionesComponent implements OnInit {
         this.form = this.fb.group({
             developer_id:       ['', Validators.required],
             developer_group_id: [null],
+            sub_project_id:     [null],
             report_type_id:     ['', Validators.required],
             day_of_week:        [1],
             hour:               [9],
@@ -103,6 +105,7 @@ export class ProgramacionesComponent implements OnInit {
     }
 
     get groupLabel(): string {
+        if (this.subProjects.length > 0) return 'Proyecto';
         const type = this.developerGroups[0]?.group_type;
         if (type === 'proyecto') return 'Proyecto';
         if (type === 'líder') return 'Líder';
@@ -111,14 +114,23 @@ export class ProgramacionesComponent implements OnInit {
 
     async onDeveloperChange(developerId: string): Promise<void> {
         this.developerGroups = [];
-        this.form.patchValue({ developer_group_id: null }, { emitEvent: false });
+        this.subProjects = [];
+        this.form.patchValue({ developer_group_id: null, sub_project_id: null }, { emitEvent: false });
         this.loadingRelated = true;
         const token = ++this.loadingToken;
         const selectedTypeId = this.form.get('report_type_id')?.value;
         const service = this.reportTypes.find(r => r.id === selectedTypeId)?.service;
         const groups = await this.svc.getDeveloperGroups(developerId, service ?? undefined);
         if (token !== this.loadingToken) return;
-        this.developerGroups = groups;
+        if (groups.length > 0) {
+            this.developerGroups = groups;
+        } else {
+            // Desarrolladores sin developer_groups (Tare, PROCSA, Nova Habita, …)
+            // eligen proyecto vía sub_projects.
+            const subs = await this.svc.getSubProjects(developerId);
+            if (token !== this.loadingToken) return;
+            this.subProjects = subs;
+        }
         this.loadingRelated = false;
     }
 
@@ -147,6 +159,7 @@ export class ProgramacionesComponent implements OnInit {
         this.isEditing = false;
         this.editingId = null;
         this.developerGroups = [];
+        this.subProjects = [];
         this.loadingRelated = false;
         this.form.reset({ day_of_week: 1, hour: 9, active: true });
         this.showModal = true;
@@ -156,6 +169,7 @@ export class ProgramacionesComponent implements OnInit {
         this.isEditing = true;
         this.editingId = s.id;
         this.developerGroups = [];
+        this.subProjects = [];
         this.showModal = true;
         this.loadingRelated = true;
         const token = ++this.loadingToken;
@@ -163,13 +177,20 @@ export class ProgramacionesComponent implements OnInit {
         if (s.developer_id) {
             const service = this.reportTypes.find(r => r.id === s.report_type_id)?.service;
             const groups = await this.svc.getDeveloperGroups(s.developer_id, service ?? undefined);
-            if (token === this.loadingToken) this.developerGroups = groups;
+            if (token === this.loadingToken) {
+                if (groups.length > 0) {
+                    this.developerGroups = groups;
+                } else {
+                    this.subProjects = await this.svc.getSubProjects(s.developer_id);
+                }
+            }
         }
         if (token === this.loadingToken) this.loadingRelated = false;
 
         this.form.patchValue({
             developer_id:       s.developer_id,
             developer_group_id: s.developer_group_id ?? null,
+            sub_project_id:     s.sub_project_id ?? null,
             report_type_id:     s.report_type_id,
             day_of_week:        s.day_of_week,
             hour:               s.hour,
@@ -195,7 +216,7 @@ export class ProgramacionesComponent implements OnInit {
         const today = new Date().toISOString().split('T')[0];
         const payload = {
             developer_id:       v.developer_id,
-            sub_project_id:     null,
+            sub_project_id:     v.sub_project_id || null,
             developer_group_id: v.developer_group_id || null,
             report_type_id:     v.report_type_id,
             frequency:          'weekly' as const,
