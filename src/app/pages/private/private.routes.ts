@@ -3,7 +3,6 @@ import { DashboardLayoutComponent } from './shared/layout/dashboard-layout/dashb
 import { HomeLayoutComponent } from './pages/home/layout/home-layout/home-layout.component';
 import { GuardianByProject } from '@core/guards/guardian.guard';
 import { adminGuard } from '@core/guards/admin.guard';
-import { ProductDefinitionComponent } from './pages/product-definition/product-definition.component';
 import { MarketingComponent } from './pages/marketing/marketing.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
 import { revoreAuthGuard } from '@revore/guards/revore-auth.guard';
@@ -28,7 +27,7 @@ export const routes: Routes = [
             },
             {
                 path: 'product-definition',
-                component: ProductDefinitionComponent
+                loadChildren: () => import('./pages/product-definition/product-definition.routes').then(r => r.productDefinitionRoutes)
             },
             {
                 path: 'marketing',
