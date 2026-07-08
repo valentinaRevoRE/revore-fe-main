@@ -29,6 +29,7 @@ export interface PlanComercialParams {
 export interface PlanComercialPreview {
   ff_ventas_total: number;
   ff_ventas_por_mes: number;
+  ventas_por_canal: Record<string, number>;
   ventas_digital: number;
   apartados_necesarios: number;
   visitas_necesarias: number;
