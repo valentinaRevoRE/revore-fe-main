@@ -93,6 +93,11 @@
         "name": "Skills",
         "link": "/dashboard/ia",
         "active": true
+      },
+      {
+        "name": "Agentes",
+        "link": "/dashboard/ia/agentes",
+        "active": true
       }
     ]
   },
