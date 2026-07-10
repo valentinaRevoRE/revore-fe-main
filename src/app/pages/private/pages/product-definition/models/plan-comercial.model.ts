@@ -24,6 +24,8 @@ export interface PlanComercialParams {
     conv_lead_visita: number;
     cpl: number;
   };
+  /** 12 factores por mes calendario (índice 0 = enero). null = plan plano. */
+  estacionalidad: number[] | null;
 }
 
 export interface PlanComercialPreview {

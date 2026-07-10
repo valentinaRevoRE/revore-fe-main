@@ -123,6 +123,27 @@ const CANALES = [
           </label>
         </div>
 
+        <h3>{{ form.value.is_launch ? '5' : '4' }} · Estacionalidad
+          <span class="sum" [class.bad]="seasonDesbalance()">
+            {{ seasonDesbalance() ? 'año no neutro: suma ' + seasonSum() : '✓ año neutro (suma 12.0)' }}
+          </span>
+        </h3>
+        <p class="section-hint">No todos los meses venden igual. 1.0 = mes normal, 1.2 = mes fuerte (+20%),
+        0.7 = mes flojo (-30%). La pauta se ajusta sola al mes en que aterriza cada venta.</p>
+        <label class="check" style="margin: 0 0 10px;">
+          <input type="checkbox" formControlName="usar_estacionalidad" />
+          Aplicar estacionalidad al plan mensual
+        </label>
+        @if (form.value.usar_estacionalidad) {
+          <div class="grid season" formArrayName="estacionalidad">
+            @for (m of meses; track m; let i = $index) {
+              <label>{{ m }}
+                <input type="number" [formControlName]="i" min="0.2" max="3" step="0.1" />
+              </label>
+            }
+          </div>
+        }
+
         <div class="actions">
           <button type="button" (click)="calcular()"
                   [disabled]="form.invalid || distSum() !== 100 || loading()">
@@ -154,12 +175,16 @@ const CANALES = [
           </div>
 
           <div class="kpis">
-            <div><span>{{ p.presupuesto_digital | currency:'MXN':'symbol-narrow':'1.0-0' }}</span>
-              pauta digital/mes</div>
             <div><span>{{ p.presupuesto_total | currency:'MXN':'symbol-narrow':'1.0-0' }}</span>
-              marketing total/mes<em>pauta + offline + agencia + brokers</em></div>
+              marketing total/mes
+              <em>Digital {{ fmtK(p.presupuesto_lineas['digital']) }} ·
+                  Offline {{ fmtK(p.presupuesto_lineas['offline']) }} ·
+                  Agencia {{ fmtK(p.presupuesto_lineas['operativos']) }} ·
+                  Brokers {{ fmtK(p.presupuesto_lineas['brokers']) }}</em></div>
             <div><span>{{ p.ventas_mensuales_valor | currency:'MXN':'symbol-narrow':'1.0-0' }}</span>
               valor de ventas/mes</div>
+            <div><span>{{ (p.ratio * 100).toFixed(2) }}%</span>
+              costo de venta<em>marketing total ÷ valor de ventas</em></div>
             @if (form.value.is_launch) {
               <div><span>{{ p.ff_ventas_total | number:'1.0-1' }}</span>
                 ventas F&F<em>repartidas en los primeros 4 meses</em></div>
@@ -200,6 +225,7 @@ const CANALES = [
     h3:first-child { margin-top: 0; }
     .section-hint { color: #657A9B; font-size: 12.5px; margin: 0 0 12px; max-width: 640px; line-height: 1.5; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 14px; }
+    .grid.season { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; }
     label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: #2E3C59; font-weight: 600; }
     label.check { flex-direction: row; align-items: center; gap: 8px; margin-top: 18px; }
     .hint { font-weight: 400; color: #98A5BA; font-size: 11.5px; line-height: 1.4; }
@@ -235,6 +261,7 @@ const CANALES = [
 export class PlanComercialComponent {
   headerData: IHeader = { title: 'Plan Comercial', margin_top: '45px' };
   readonly canales = CANALES;
+  readonly meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
   private readonly fb = inject(FormBuilder);
   private readonly svc = inject(PlanComercialService);
@@ -261,6 +288,11 @@ export class PlanComercialComponent {
     funnel: this.fb.nonNullable.group({
       conv_apartado_firma: [80], conv_visita_apartado: [12.5], conv_lead_visita: [5], cpl: [400],
     }),
+    usar_estacionalidad: [true],
+    // Curva RevoRE por defecto (mensualización); editable por proyecto
+    estacionalidad: this.fb.nonNullable.array(
+      [1, 0.9, 1.1, 0.8, 1.2, 1, 0.9, 1, 1.1, 1.1, 1.2, 0.7].map(f => this.fb.nonNullable.control(f)),
+    ),
   });
 
   private readonly formValues = signal(this.form.getRawValue());
@@ -274,6 +306,18 @@ export class PlanComercialComponent {
     const t = this.formValues().ticket;
     return t ? `$${Number(t).toLocaleString('es-MX')} MXN por unidad` : '';
   });
+
+  readonly seasonSum = computed(() => {
+    const s = this.formValues().estacionalidad ?? [];
+    return (s.reduce((a, b) => a + Number(b || 0), 0)).toFixed(1);
+  });
+
+  readonly seasonDesbalance = computed(() =>
+    this.formValues().usar_estacionalidad && Math.abs(Number(this.seasonSum()) - 12) > 0.6);
+
+  fmtK(v: number | undefined): string {
+    return v != null ? `$${Math.round(v / 1000)}k` : '—';
+  }
 
   constructor() {
     this.form.valueChanges.subscribe(() => this.formValues.set(this.form.getRawValue()));
@@ -319,6 +363,7 @@ export class PlanComercialComponent {
         conv_lead_visita: v.funnel.conv_lead_visita / 100,
         cpl: v.funnel.cpl,
       },
+      estacionalidad: v.usar_estacionalidad ? v.estacionalidad.map(Number) : null,
     };
   }
 
